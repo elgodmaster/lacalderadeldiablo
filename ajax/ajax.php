@@ -71,7 +71,7 @@ function modificarProducto($serviciosProductos) {
 	$precio_unit	=	$_POST['precio_unit'];
 	$precio_venta	=	$_POST['precio_venta'];
 
-	$res 			= $serviciosProductos->modificarProducto($id,$nombre,$precio_unit,$precio_venta);
+	$res 			= $serviciosProductos->modificarProducto($id,$nombre, $precio_unit, $precio_venta, $stock, $stock_min, $reftipoproducto, $refproveedor, $codigo, $codigobarra, $caracteristicas);
 	echo $res;
 }
 
@@ -97,7 +97,7 @@ function insertarProducto($serviciosProductos) {
 	$precio_unit	=	$_POST['precio_unit'];
 	$precio_venta	=	$_POST['precio_venta'];
 	
-	$res 			= $serviciosProductos->($nombre, $precio_unit, $precio_venta  /*, $stock, $stock_min, $reftipoproducto, $refproveedor, $codigo, $codigobarra, $caracteristicas*/ );
+	$res 			= $serviciosProductos->insertarProducto($nombre, $precio_unit, $precio_venta, $stock, $stock_min, $reftipoproducto, $refproveedor, $codigo, $codigobarra, $caracteristicas);
 	echo $res;
 }
 

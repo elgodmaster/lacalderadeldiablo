@@ -59,7 +59,7 @@ function traerProductoPorId($id,$orden) {
 
 					where		p.idproducto = ".$id." order by ".$orden;
 	$res = $this->query($sql,0) or die ('Hubo un error');
-	return = $res;
+	return $res;
 }
 
 function traerProductoPorCodigo($codigo,$orden) {
@@ -77,7 +77,7 @@ function traerProductoPorCodigo($codigo,$orden) {
 
 					where		p.codigo = ".$codigo." order by ".$orden;
 	$res = $this->query($sql,0) or die ('Hubo un error');
-	return = $res;
+	return $res;
 }
 
 function traerProductoPorCodigoBarra($codigobarra,$orden) {
@@ -95,22 +95,22 @@ function traerProductoPorCodigoBarra($codigobarra,$orden) {
 
 					where		p.codigobarra = ".$codigobarra." order by ".$orden;
 	$res = $this->query($sql,0) or die ('Hubo un error');
-	return = $res;
+	return $res;
 }
 
-function insertarProducto($nombre, $precio_unit, $precio_venta  /*, $stock, $stock_min, $reftipoproducto, $refproveedor, $codigo, $codigobarra, $caracteristicas*/ ) {
+function insertarProducto($nombre, $precio_unit, $precio_venta, $stock, $stock_min, $reftipoproducto, $refproveedor, $codigo, $codigobarra, $caracteristicas ) {
 	$sql = "INSERT INTO lcdd_productos
 						(idproducto,
 						nombre,
 						precio_unit,
-						precio_venta, /*
+						precio_venta,
 						stock,
 						stock_min,
 						reftipoproducto,
 						refproveedor,
 						codigo,
 						codigobarra,
-						caracteristicas*/)
+						caracteristicas)
 					VALUES
 						('',
 							'".$nombre."',

@@ -1,12 +1,60 @@
+
 * {
   margin:0;
   padding:0;
 }
+
 body {
-	background:url(../imagenes/fabric_of_squares_gray.png) repeat;
+/*	background:url(../imagenes/ricepaper_v3.png) repeat;*/
+
+	background:url(../imagenes/congruent_pentagon.png) repeat;
+/*background:#FFF;*/
 }
 
+body > h3 {
+	border-bottom:1px solid #000;
+	margin-left:100px;
+	margin-right:80px;
+	padding-top:10px;
+	padding-left:15px;
+	padding-bottom:16px;
+	font-weight: bold;
+	font-size:1.9em;
+	color:#000;
+}
 
+h5 {
+	margin-left:100px;
+	margin-right:80px;
+	padding-top:10px;
+	padding-left:15px;
+	padding-bottom:16px;
+	font-weight: bold;
+}
+
+.fdizquierda {float: left; width: 29%;}
+
+.fdderecha {float: right; width: 68%; }
+
+
+header {
+    background-image: -webkit-gradient(
+	linear,
+	left top,
+	left bottom,
+	color-stop(0, #454A4E),
+	color-stop(1, #464F52)
+);
+background-image: -o-linear-gradient(bottom, #454A4E 0%, #464F52 100%);
+background-image: -moz-linear-gradient(bottom, #454A4E 0%, #464F52 100%);
+background-image: -webkit-linear-gradient(bottom, #454A4E 0%, #464F52 100%);
+background-image: -ms-linear-gradient(bottom, #454A4E 0%, #464F52 100%);
+background-image: linear-gradient(to bottom, #454A4E 0%, #464F52 100%);
+	background-color:#454A4E;
+	height:100px;
+	margin:0;
+	padding-left:100px;
+}
 
 #header {
     background-image: -webkit-gradient(
@@ -28,7 +76,9 @@ background-image: linear-gradient(to bottom, #454A4E 0%, #464F52 100%);
 }
 
 .logueo {
-	height:auto;
+	background-color:#2b2f32;
+	height:800px;
+	padding-left:100px;
 }
 
 
@@ -50,47 +100,33 @@ padding-bottom: 10px;
     width: 1050px;
 }
 
-
-
-.bs-callout-info {
-background-color: #dff0d8;
-border-color: #3c763d;
-width: 400px;
-}
-.bs-callout {
-margin: 20px 0;
-padding: 20px;
-border-left: 3px solid #3c763d;
-}
-.bs-callout-info h4 {
-color: #3c763d;
-}
-.bs-callout h4 {
-margin-top: 0;
-margin-bottom: 5px;
+.donde {
+    width: 700px;
+    margin-left: 100px;
+    margin-top: 20px;
 }
 
-.bs-callout p:last-child {
-margin-bottom: 0;
+#menu li.active a {
+	font-weight: bold;
+	color:#222;
+	text-shadow: 0 0 0.1em #F6CED8, 0 0 0.2em #F6CED8;
 }
 
-.letraChica {
-	font-size:12px;
+#menu li a {
+	color:#EBEBEB;
+	font-weight: bold;
+	text-shadow: 0.1em 0.1em 0.05em #333;
 }
 
-.izq {
-	width:49%;
-	padding:20px;
-	float:left;
-	height:auto;
+#menu li a:hover {
+	color:#656565;
+	font-weight: bold;
+	text-shadow: -1px -1px white, 1px 1px #fff;
 }
 
-.der {
-	width:49%;
-	padding:20px;
-	float:right;
-	height:auto;
-}
+
+
+
 
 
 
