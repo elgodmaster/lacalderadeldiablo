@@ -10,7 +10,7 @@ date_default_timezone_set('America/Buenos_Aires');
 class ServiciosUsuarios {
 
 
-Function login($usuario,$pass) {
+function login($usuario,$pass) {
 	
 	$sqlusu = "select * from se_usuarios where email = '".$usuario."'";
 
@@ -56,12 +56,12 @@ if (mysql_num_rows($respusu) > 0) {
 	
 }
 
-Function query($sql,$accion) {
+function query($sql,$accion) {
 		
 		
 		
 		$hostname = "localhost";
-		$database = "sistemaentradas";
+		$database = "lacalderadeldiablo";
 		$username = "root";
 		$password = "";
 		

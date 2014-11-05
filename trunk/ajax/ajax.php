@@ -46,7 +46,51 @@ switch ($accion) {
 	case 'insertarProducto':
 		insertarProducto($serviciosProductos);
 		break;	
+	case 'eliminarProveedores':
+		eliminarProveedores($serviciosProductos);
+		break;
+	case 'modificarProveedores';
+		modificarProveedores($serviciosProductos);
+		break;
+	case 'insertarProveedores';
+		insertarProveedores($serviciosProductos);
+		break;
+}
 
+function insertarProveedores($serviciosProductos) {
+	$proveedor	=	$_POST['proveedor'];
+	$direccion	=	$_POST['direccion'];
+	$telefono	=	$_POST['telefono'];
+	$cuit		=	$_POST['cuit'];
+	$nombre		=	$_POST['nombre'];
+	$email		=	$_POST['email'];
+	echo	$serviciosProductos->insertarProveedores($proveedor,$direccion,$telefono,$cuit,$nombre,$email);
+}
+
+
+function eliminarProveedores($serviciosProductos) {
+	$id			=	$_POST['id'];
+
+	echo	$serviciosProductos->eliminarProveedores($id);
+}
+
+function modificarProveedores($serviciosProductos) {
+	$id			=	$_POST['id'];
+	$proveedor	=	$_POST['proveedor'];
+	$direccion	=	$_POST['direccion'];
+	$telefono	=	$_POST['telefono'];
+	$cuit		=	$_POST['cuit'];
+	$nombre		=	$_POST['nombre'];
+	$email		=	$_POST['email'];
+	echo	$serviciosProductos->modificarProveedores($id,$proveedor,$direccion,$telefono,$cuit,$nombre,$email);
+}
+
+
+
+function enviarMail($serviciosUsuarios) {
+	$email		=	$_POST['email'];
+	$pass		=	$_POST['pass'];
+	echo $serviciosUsuarios->login($email,$pass);
 }
 
 function traerCodigo($serviciosProductos) {
