@@ -197,7 +197,12 @@ $resProveedores = $serviciosProductos->traerProveedores();
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
       <script src="../../js/perfect-scrollbar.js"></script>
-      
+      <script>
+      jQuery(document).ready(function ($) {
+        "use strict";
+        $('#navigation').perfectScrollbar();
+      });
+    </script>
 </head>
 
 <body>
@@ -209,7 +214,7 @@ $resProveedores = $serviciosProductos->traerProveedores();
 	<div class="todoMenu">
         <div id="mobile-header">
             Menu
-            <p>Usuario: <span style="color: #333; font-weight:900;">AdminMarcos</span></p>
+            <p>Usuario: <span style="color: #333; font-weight:900;"><?php echo $_SESSION['nombre_se']; ?></span></p>
             <p class="ocultar" style="color: #900; font-weight:bold; cursor:pointer; font-family:'Courier New', Courier, monospace; height:20px;">(Ocultar)</p>
         </div>
     
@@ -347,8 +352,8 @@ $resProveedores = $serviciosProductos->traerProveedores();
                 </form>
                 
                 <br>
-                <div id="error">
-                
+                <div id="error" class="alert alert-info">
+                	<p><strong>Importante!:</strong> El campo proveedor es obligatorio</p>
                 </div>
         </div>
     </div>
@@ -412,6 +417,9 @@ $resProveedores = $serviciosProductos->traerProveedores();
                     <?php } ?>
                 </tbody>
             </table>
+            <div style="height:50px;">
+            
+            </div>
         </div>
     </div>
 
