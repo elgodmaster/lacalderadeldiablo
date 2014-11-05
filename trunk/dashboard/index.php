@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>BOR Sistema de Gestión Inmobiliario</title>
+<title>Gestión de Cancha: La Caldera del Diablo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 

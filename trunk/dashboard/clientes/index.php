@@ -1,8 +1,27 @@
+<?php
+
+session_start();
+
+if ((!isset($_SESSION['usua_se'])) && ($_SESSION['refrol_se'] == 1))
+{
+	header('Location: /wportalinmobiliario/vistas/');
+} else {
+
+
+require '../../includes/funcionesProductos.php';
+
+
+$serviciosProductos = new ServiciosProductos();
+
+$resProveedores = $serviciosProductos->traerProveedores();
+
+?>
+
 <!DOCTYPE HTML>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>BOR Sistema de Gestión Inmobiliario</title>
+<title>Gestión de Cancha: La Caldera del Diablo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 
@@ -11,7 +30,9 @@
 
     
     <script type="text/javascript" src="../../js/jquery-1.8.3.min.js"></script>
-        
+    
+    <script src="../../js/jquery-ui.js"></script>
+    <link rel="stylesheet" href="../../css/jquery-ui.css">
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
 	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
@@ -172,10 +193,10 @@
 
 		});
 	</script>
-   <link href="../css/perfect-scrollbar.css" rel="stylesheet">
+   	  <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
-      <script src="../js/jquery.mousewheel.js"></script>
-      <script src="../js/perfect-scrollbar.js"></script>
+      <script src="../../js/jquery.mousewheel.js"></script>
+      <script src="../../js/perfect-scrollbar.js"></script>
       <script>
       jQuery(document).ready(function ($) {
         "use strict";
@@ -193,7 +214,7 @@
 	<div class="todoMenu">
         <div id="mobile-header">
             Menu
-            <p>Usuario: <span style="color: #333; font-weight:900;">AdminMarcos</span></p>
+            <p>Usuario: <span style="color: #333; font-weight:900;"><?php echo $_SESSION['nombre_se']; ?></span></p>
             <p class="ocultar" style="color: #900; font-weight:bold; cursor:pointer; font-family:'Courier New', Courier, monospace; height:20px;">(Ocultar)</p>
         </div>
     
@@ -264,9 +285,9 @@
         	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Proveedor</p>
         </div>
     	<div class="cuerpoBox">
-        <form class="form-horizontal" role="form">
+        <form class="form-horizontal formulario" role="form">
                 	
-                <!--proveedor,direccion, telefono, cuit, nombre -->
+                <!--proveedor,direccion, telefono, cuit, nombre, email -->
                 
                 	<div class="form-group">
                     	<label for="proveedor" class="col-lg-3 control-label" style="text-align:left">Proveedor</label>
@@ -316,7 +337,7 @@
                     
                     <ul class="list-inline">
                     	<li>
-                    		<button type="button" class="btn btn-primary" id="crear" style="margin-left:0px;">Crear</button>
+                    		<button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Crear</button>
                         </li>
                         
    
@@ -324,11 +345,15 @@
                     <div id="load">
                     
                     </div>
+                    <div class="alert">
+                    
+                    </div>
+                    <input type="hidden" id="accion" name="accion" value="insertarProveedores"/>
                 </form>
                 
                 <br>
-                <div id="error">
-                
+                <div id="error" class="alert alert-info">
+                	<p><strong>Importante!:</strong> El campo proveedor es obligatorio</p>
                 </div>
         </div>
     </div>
@@ -338,11 +363,227 @@
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Proveedores Cargados</p>
         </div>
-    
+    	<div class="cuerpoBox">
+        	<table class="table table-striped">
+            	<thead>
+                	<tr>
+                    	<th>Proveedor</th>
+                        <th>Dirección</th>
+                        <th>Teléfono</th>
+                        <th>Cuit</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <!--proveedor,direccion, telefono, cuit, nombre, email -->
+                	<?php
+						if (mysql_num_rows($resProveedores)>0) {
+							while ($row = mysql_fetch_array($resProveedores)) {
+					?>
+                    	<tr>
+                        	<td><?php echo utf8_encode($row['proveedor']); ?></td>
+                            <td><?php echo utf8_encode($row['direccion']); ?></td>
+                            <td><?php echo $row['telefono']; ?></td>
+                            <td><?php echo $row['cuit']; ?></td>
+                            <td><?php echo utf8_encode($row['nombre']); ?></td>
+                            <td><?php echo utf8_encode($row['email']); ?></td>
+                            <td>
+                            		<div class="btn-group">
+										<button class="btn btn-success" type="button">Acciones</button>
+										
+										<button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+										<span class="caret"></span>
+										<span class="sr-only">Toggle Dropdown</span>
+										</button>
+										
+										<ul class="dropdown-menu" role="menu">
+											<li>
+											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idproveedor']; ?>">Modificar</a>
+											</li>
+
+											<li>
+											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idproveedor']; ?>">Borrar</a>
+											</li>
+
+										</ul>
+									</div>
+                             </td>
+                        </tr>
+                    <?php } ?>
+                    <?php } else { ?>
+                    	<h3>No hay proveedores cargados.</h3>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <div style="height:50px;">
+            
+            </div>
+        </div>
     </div>
 
 </div>
 
+<div id="dialog2" title="Eliminar Proveedor">
+    	<p>
+        	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            ¿Esta seguro que desea eliminar al Proveedor?.<span id="proveedorEli"></span>
+        </p>
+        <p><strong>Importante: </strong>También se borrara la relación con los productos asociados</p>
+        <input type="hidden" value="" id="idEliminar" name="idEliminar">
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$('.varborrar').click(function(event){
+			  usersid =  $(this).attr("id");
+			  if (!isNaN(usersid)) {
+				$("#idEliminar").val(usersid);
+				$("#dialog2").dialog("open");
+				//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
+				//$(location).attr('href',url);
+			  } else {
+				alert("Error, vuelva a realizar la acción.");	
+			  }
+	});//fin del boton eliminar
+	
+	$('.varmodificar').click(function(event){
+			  usersid =  $(this).attr("id");
+			  if (!isNaN(usersid)) {
+				url = "modificar.php?id=" + usersid;
+				$(location).attr('href',url);
+			  } else {
+				alert("Error, vuelva a realizar la acción.");	
+			  }
+	});//fin del boton modificar
+
+	$( "#dialog2" ).dialog({
+		 	
+			    autoOpen: false,
+			 	resizable: false,
+				width:600,
+				height:240,
+				modal: true,
+				buttons: {
+				    "Eliminar": function() {
+	
+						$.ajax({
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarProveedores'},
+									url:   '../../ajax/ajax.php',
+									type:  'post',
+									beforeSend: function () {
+											
+									},
+									success:  function (response) {
+											url = "index.php";
+											$(location).attr('href',url);
+											
+									}
+							});
+						$( this ).dialog( "close" );
+						$( this ).dialog( "close" );
+							$('html, body').animate({
+	           					scrollTop: '1000px'
+	       					},
+	       					1500);
+				    },
+				    Cancelar: function() {
+						$( this ).dialog( "close" );
+				    }
+				}
+		 
+		 
+	 		}); //fin del dialogo para eliminar
+
+	$("#proveedor").click(function(event) {
+		$("#proveedor").removeClass("alert-danger");
+		$("#proveedor").attr('value','');
+		$("#proveedor").attr('placeholder','Ingrese el Proveedor...');
+    });
+
+	$("#proveedor").change(function(event) {
+		$("#proveedor").removeClass("alert-danger");
+		$("#proveedor").attr('placeholder','Ingrese el Proveedor');
+	});
+	
+	function validador(){
+
+			$error = "";
+
+			
+			if ($("#proveedor").val() == "") {
+				$error = "Es obligatorio el campo proveedor.";
+				$("#proveedor").addClass("alert-danger");
+				$("#proveedor").attr('placeholder',$error);
+			}
+
+
+			return $error;
+    }
+	
+	//al enviar el formulario
+    $('#cargar').click(function(){
+		if (validador() == "")
+        {
+			//información del formulario
+			var formData = new FormData($(".formulario")[0]);
+			var message = "";
+			//hacemos la petición ajax  
+			$.ajax({
+				url: '../../ajax/ajax.php',  
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: formData,
+				//necesario para subir archivos via ajax
+				cache: false,
+				contentType: false,
+				processData: false,
+				//mientras enviamos el archivo
+				beforeSend: function(){
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+
+					if (data != '') {
+                                            $(".alert").removeClass("alert-danger");
+											$(".alert").removeClass("alert-info");
+                                            $(".alert").addClass("alert-success");
+                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Proveedor</strong>. ');
+											$(".alert").delay(3000).queue(function(){
+												/*aca lo que quiero hacer 
+												  después de los 2 segundos de retraso*/
+												$(this).dequeue(); //continúo con el siguiente ítem en la cola
+												
+											});
+											$("#load").html('');
+											url = "index.php";
+											$(location).attr('href',url);
+                                            
+											
+                                        } else {
+                                        	$(".alert").removeClass("alert-danger");
+                                            $(".alert").addClass("alert-danger");
+                                            $(".alert").html('<strong>Error!</strong> '+data);
+                                            $("#load").html('');
+                                        }
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+                    $("#load").html('');
+				}
+			});
+		}
+    });
+
+});//fin del document ready
+</script>
+
+<?php } ?>
 
 </body>
 </html>

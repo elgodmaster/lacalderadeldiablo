@@ -345,23 +345,21 @@ $resProveedores = $serviciosProductos->traerProveedores();
                     <div id="load">
                     
                     </div>
-                    <div class="alert">
-                    
-                    </div>
+                    <div id="error" class="alert alert-info">
+                		<p><strong>Importante!:</strong> El campo proveedor es obligatorio</p>
+                	</div>
                     <input type="hidden" id="accion" name="accion" value="insertarProveedores"/>
                 </form>
                 
                 <br>
-                <div id="error" class="alert alert-info">
-                	<p><strong>Importante!:</strong> El campo proveedor es obligatorio</p>
-                </div>
+                
         </div>
     </div>
 
     
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Proveedores Cargados</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 10 Proveedores Cargados</p>
         </div>
     	<div class="cuerpoBox">
         	<table class="table table-striped">
@@ -380,7 +378,12 @@ $resProveedores = $serviciosProductos->traerProveedores();
                 <!--proveedor,direccion, telefono, cuit, nombre, email -->
                 	<?php
 						if (mysql_num_rows($resProveedores)>0) {
+							$cant = 0;
 							while ($row = mysql_fetch_array($resProveedores)) {
+								$cant+=1;
+								if ($cant == 11) {
+									break;	
+								}
 					?>
                     	<tr>
                         	<td><?php echo utf8_encode($row['proveedor']); ?></td>
@@ -420,6 +423,7 @@ $resProveedores = $serviciosProductos->traerProveedores();
             <div style="height:50px;">
             
             </div>
+            <button type="button" class="btn btn-default ver" style="margin-left:0px;">Ver Todos</button>
         </div>
     </div>
 
@@ -437,26 +441,31 @@ $resProveedores = $serviciosProductos->traerProveedores();
 <script type="text/javascript">
 $(document).ready(function(){
 	
+	$('.ver').click(function(event){
+			url = "ver.php";
+			$(location).attr('href',url);
+	});//fin del boton eliminar
+	
 	$('.varborrar').click(function(event){
-			  usersid =  $(this).attr("id");
-			  if (!isNaN(usersid)) {
-				$("#idEliminar").val(usersid);
-				$("#dialog2").dialog("open");
-				//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
-				//$(location).attr('href',url);
-			  } else {
-				alert("Error, vuelva a realizar la acción.");	
-			  }
+		  usersid =  $(this).attr("id");
+		  if (!isNaN(usersid)) {
+			$("#idEliminar").val(usersid);
+			$("#dialog2").dialog("open");
+			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
+			//$(location).attr('href',url);
+		  } else {
+			alert("Error, vuelva a realizar la acción.");	
+		  }
 	});//fin del boton eliminar
 	
 	$('.varmodificar').click(function(event){
-			  usersid =  $(this).attr("id");
-			  if (!isNaN(usersid)) {
-				url = "modificar.php?id=" + usersid;
-				$(location).attr('href',url);
-			  } else {
-				alert("Error, vuelva a realizar la acción.");	
-			  }
+		  usersid =  $(this).attr("id");
+		  if (!isNaN(usersid)) {
+			url = "modificar.php?id=" + usersid;
+			$(location).attr('href',url);
+		  } else {
+			alert("Error, vuelva a realizar la acción.");	
+		  }
 	});//fin del boton modificar
 
 	$( "#dialog2" ).dialog({
