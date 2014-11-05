@@ -6,7 +6,82 @@ date_default_timezone_set('America/Buenos_Aires');
 class ServiciosProductos {
 
 
+/* logica de negocio para los tipos productos */
+
+function traerTipoProducto() {
+	$sql	=	"select idtipoproducto ,tipoproducto, activo from lcdd_tipoproducto order by tipoproducto";
+	$res	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al insertar datos';
+	} else {
+		return $res;
+	}
+}
+
+function traerTipoProductoPorId($id) {
+	$sql	=	"select idtipoproducto ,tipoproducto, activo from lcdd_tipoproducto where idtipoproducto =".$id;
+	$res	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al insertar datos';
+	} else {
+		return $res;
+	}
+}
+
+function insertarTipoProducto($tipoproducto,$activo) {
+	$sql	=	"insert into lcdd_tipoproducto(idtipoproducto,tipoproducto,activo) values
+				('',
+				'".utf8_decode(trim($tipoproducto))."',
+				".$activo.")";
+	$res	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al insertar datos';
+	} else {
+		return $res;
+	}
+}
+
+
+function modificarTipoProducto($id,$tipoproducto,$activo) {
+	$sql	=	"update lcdd_tipoproducto set
+				tipoproducto	= '".utf8_decode(trim($tipoproducto))."',
+				activo	= ".$activo."
+				where idtipoproducto =".$id;
+				
+	$res	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al modificar datos';
+	} else {
+		return $res;
+	}
+}
+
+
+function eliminarTipoProducto($id) {
+	$sql	=	"delete from lcdd_tipoproducto where idtipoproducto =".$id;
+				
+	$res	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al eliminar datos';
+	} else {
+		return $res;
+	}
+}
+
+/* fin */
+
 /* logica de negocio para los productos */
+
+function existeCodigo() {
+	$sql = "select * from lcdd_productos where codigo = '".$codigo."'";
+	$res = $this->query($sql,0);
+	if (mysql_num_rows($res) > 0) {
+    		return true;
+    	} else {
+    		return false;
+    	}
+}
+
 
 function TraerCodigo($codigo) {
 		$sql = "SELECT idproducto,
@@ -47,9 +122,21 @@ function modificarProducto($id,$nombre,$precio_unit,$precio_venta) {
 }
 
 //1, p.nombre
-function traerProductoPorId($id,$orden) {
+function traerProductoPorId($id) {
 	$sql = "select
-				p.*,tp.tipoproducto,pr.proveedor
+				p.idproducto,
+					p.nombre,
+					p.precio_unit,
+					p.precio_venta,
+					p.stock,
+					p.stock_min,
+					p.reftipoproducto,
+					p.refproveedor,
+					p.codigo,
+					p.codigobarra,
+					p.caracteristicas,
+					tp.tipoproducto,
+					pr.proveedor
 					from		lcdd_productos p
 
 					inner
@@ -60,14 +147,26 @@ function traerProductoPorId($id,$orden) {
 					join		lcdd_proveedores pr
 					on			pr.idproveedor = p.refproveedor
 
-					where		p.idproducto = ".$id." order by ".$orden;
+					where		p.idproducto = ".$id;
 	$res = $this->query($sql,0) or die ('Hubo un error');
 	return $res;
 }
 
-function traerProductoPorCodigo($codigo,$orden) {
+function traerProductos() {
 	$sql = "select
-				p.*,tp.tipoproducto,pr.proveedor
+				p.idproducto,
+					p.nombre,
+					p.precio_unit,
+					p.precio_venta,
+					p.stock,
+					p.stock_min,
+					p.reftipoproducto,
+					p.refproveedor,
+					p.codigo,
+					p.codigobarra,
+					p.caracteristicas,
+					tp.tipoproducto,
+					pr.proveedor
 					from		lcdd_productos p
 
 					inner
@@ -78,25 +177,68 @@ function traerProductoPorCodigo($codigo,$orden) {
 					join		lcdd_proveedores pr
 					on			pr.idproveedor = p.refproveedor
 
-					where		p.codigo = ".$codigo." order by ".$orden;
+					order by p.nombre";
+	$res = $this->query($sql,0) or die ('Hubo un error');
+	return $res;
+}
+
+
+function traerProductoPorCodigo($codigo) {
+	$sql = "select
+				p.idproducto,
+					p.nombre,
+					p.precio_unit,
+					p.precio_venta,
+					p.stock,
+					p.stock_min,
+					p.reftipoproducto,
+					p.refproveedor,
+					p.codigo,
+					p.codigobarra,
+					p.caracteristicas,
+					tp.tipoproducto,
+					pr.proveedor
+					from		lcdd_productos p
+
+					inner
+					join		lcdd_tipoproducto tp
+					on			p.reftipoproducto = tp.idtipoproducto and tp.activo = 1
+
+					inner
+					join		lcdd_proveedores pr
+					on			pr.idproveedor = p.refproveedor
+
+					where		p.codigo = '".$codigo."'";
 	$res = $this->query($sql,0) or die ('Hubo un error');
 	return $res;
 }
 
 function traerProductoPorCodigoBarra($codigobarra,$orden) {
 	$sql = "select
-				p.*,tp.tipoproducto,pr.proveedor
-					from		lcdd_productos p
+					p.idproducto,
+					p.nombre,
+					p.precio_unit,
+					p.precio_venta,
+					p.stock,
+					p.stock_min,
+					p.reftipoproducto,
+					p.refproveedor,
+					p.codigo,
+					p.codigobarra,
+					p.caracteristicas,
+					tp.tipoproducto,
+					pr.proveedor
+				from		lcdd_productos p
 
-					inner
-					join		lcdd_tipoproducto tp
-					on			p.reftipoproducto = tp.idtipoproducto and tp.activo = 1
+				inner
+				join		lcdd_tipoproducto tp
+				on			p.reftipoproducto = tp.idtipoproducto and tp.activo = 1
 
-					inner
-					join		lcdd_proveedores pr
-					on			pr.idproveedor = p.refproveedor
+				inner
+				join		lcdd_proveedores pr
+				on			pr.idproveedor = p.refproveedor
 
-					where		p.codigobarra = ".$codigobarra." order by ".$orden;
+				where		p.codigobarra = '".$codigobarra."'";
 	$res = $this->query($sql,0) or die ('Hubo un error');
 	return $res;
 }
