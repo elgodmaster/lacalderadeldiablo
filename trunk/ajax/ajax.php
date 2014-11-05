@@ -23,23 +23,23 @@ switch ($accion) {
 		traerCodigo($serviciosProductos);
 		break;	
 
-	case 'modificarProducto'
+	case 'modificarProducto':
 		modificarProducto($serviciosProductos);
 		break;
 
-	case 'traerProductoPorId'
+	case 'traerProductoPorId':
 		traerProductoPorId($serviciosProductos);
 		break;
 
-	case 'traerProductoPorCodigo'
+	case 'traerProductoPorCodigo':
 		traerProductoPorCodigo($serviciosProductos);
 		break;
 
-	case 'traerProductoPorCodigoBarra'
+	case 'traerProductoPorCodigoBarra':
 		traerProductoPorCodigoBarra($serviciosProductos);
 		break;
 
-	case 'eliminarProducto'
+	case 'eliminarProducto':
 		eliminarProducto($serviciosProductos);
 		break;
 		
