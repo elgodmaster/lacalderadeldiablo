@@ -115,7 +115,14 @@ function insertarProducto($nombre, $precio_unit, $precio_venta, $stock, $stock_m
 						('',
 							'".$nombre."',
 							'".$precio_unit."',
-							'".$precio_venta."')";
+							'".$precio_venta."',
+							'".$stock."',
+							'".$stock_min."',
+							'".$reftipoproducto."',
+							'".$refproveedor."',
+							'".$codigo."',
+							'".$codigobarra."',
+							'".$caracteristicas."')";
 	$res = $this->query($sql,1);
 	return $res;					
 }

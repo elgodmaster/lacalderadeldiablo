@@ -161,6 +161,32 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 			margin-right:10px;
 		}
 		
+		.icoturnos {
+			background:url(../imagenes/iconmenu/turnos.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			float:left;
+			margin-right:10px;
+		}
+		
+		.icoventas {
+			background:url(../imagenes/iconmenu/compras.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			float:left;
+			margin-right:10px;
+		}
+		
+		.icoproductos {
+			background:url(../imagenes/iconmenu/barras.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			float:left;
+			margin-right:10px;
+		}
 		
 		.icoreportes {
 			background:url(../imagenes/iconmenu/reportes.png) no-repeat;
@@ -187,6 +213,36 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 			height:25px;
 			float:left;
 			margin-right:10px;
+		}
+		
+		.icoproductos2 {
+			background:url(../imagenes/iconmenu/barras.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			margin-right:9px;
+			margin-bottom:25px;
+			cursor:pointer;
+		}
+		
+		.icoventas2 {
+			background:url(../imagenes/iconmenu/compras.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			margin-right:9px;
+			margin-bottom:25px;
+			cursor:pointer;
+		}
+		
+		.icoturnos2 {
+			background:url(../imagenes/iconmenu/turnos.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			margin-right:9px;
+			margin-bottom:25px;
+			cursor:pointer;
 		}
 		
 		.icodashboard2 {
@@ -458,6 +514,21 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc3bc', end
 						}).mouseout(function(){
 							$(this).next().fadeOut("fast");
 						});
+						
+						$("#tooltip9").mouseover(function(){
+							$("#tooltip9").mousemove(function(e){
+								 $(this).next().css({left : e.pageX , top: e.pageY});
+							  });
+							eleOffset = $(this).offset();
+							$(this).next().fadeIn("fast").css({
+								
+									left: eleOffset.left + $(this).outerWidth(),
+									top: eleOffset.top
+
+								});
+						}).mouseout(function(){
+							$(this).next().fadeOut("fast");
+						});
 
 		});
 	</script>
@@ -489,10 +560,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc3bc', end
         <nav class="nav">
             <ul>
                 <li class="arriba"><div class="icodashboard"></div><a href="index.php">Dashboard</a></li>
-                <li><div class="icoinmubles"></div><a href="inmuebles/">Inmuebles</a></li>
-                <li><div class="icoalquileres"></div><a href="alquileres/">Alquileres</a></li>
-                <li><div class="icousuarios"></div><a href="usuarios/">Usuarios</a></li>
-                <li><div class="icocontratos"></div><a href="contratos/">Contratos</a></li>
+                <li><div class="icoturnos"></div><a href="turnos/">Turnos</a></li>
+                <li><div class="icoventas"></div><a href="ventas/">Ventas</a></li>
+                <li><div class="icousuarios"></div><a href="clientes/">Clientes</a></li>
+                <li><div class="icoproductos"></div><a href="productos/">Productos</a></li>
+                <li><div class="icocontratos"></div><a href="proveedores/">Proveedores</a></li>
                 <li><div class="icoreportes"></div><a href="reportes/">Reportes</a></li>
                 <li><div class="icosalir"></div><a href="salir/">Salir</a></li>
             </ul>
@@ -512,20 +584,24 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc3bc', end
                     <div class="tooltip-dash">Dashboard</div>
                 </li>
                 <li>
-                	<div class="icoinmubles2" id="tooltip3"></div>
-                    <div class="tooltip-inmu">Inmuebles</div>
+                	<div class="icoturnos2" id="tooltip3"></div>
+                    <div class="tooltip-inmu">Turnos</div>
                 </li>
                 <li>
-                	<div class="icoalquileres2" id="tooltip4"></div>
-                    <div class="tooltip-alqui">Alquiler</div>
+                	<div class="icoventas2" id="tooltip4"></div>
+                    <div class="tooltip-alqui">Ventas</div>
                 </li>
                 <li>
                 	<div class="icousuarios2" id="tooltip5"></div>
-                    <div class="tooltip-usua">Usuarios</div>
+                    <div class="tooltip-usua">Clientes</div>
+                </li>
+                <li>
+                	<div class="icoproductos2" id="tooltip9"></div>
+                    <div class="tooltip-con">Productos</div>
                 </li>
                 <li>
                 	<div class="icocontratos2" id="tooltip6"></div>
-                    <div class="tooltip-con">Contratos</div>
+                    <div class="tooltip-con">Proveedores</div>
                 </li>
                 <li>
                 	<div class="icoreportes2" id="tooltip7"></div>
@@ -545,24 +621,24 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc3bc', end
 	<table border="0" cellpadding="0" cellspacing="0" width="600">
     	<tr>
         	<td style="border:1px dashed #666; padding:10px;" width="150" align="center">
-            	<img src="../imagenes/iconmenu/1409708869_hotel.png" width="50" height="50" style="float:left;">
+            	<img src="../imagenes/iconmenu/clock4.png" width="50" height="50" style="float:left;">
                 <p style="color:#F00; font-size:18px; height:16px;">25</p>
-                <p style="height:16px;">Inmuebles</p>
+                <p style="height:16px;">Turnos</p>
             </td>
             <td style="border:1px dashed #666; padding:10px;" width="150" align="center">
-            	<img src="../imagenes/iconmenu/1409708863_purchase_order.png" width="50" height="50" style="float:left;">
+            	<img src="../imagenes/iconmenu/shopping145.png" width="50" height="50" style="float:left;">
                 <p style="color:#0CF; font-size:18px; height:16px;">12</p>
-                <p style="height:16px;">Alquileres</p>
+                <p style="height:16px;">Ventas</p>
             </td>
             <td style="border:1px dashed #666; padding:10px;" width="150" align="center">
             	<img src="../imagenes/iconmenu/icon_19476.png" width="50" height="50" style="float:left;">
                 <p style="color: #30F; font-size:18px; height:16px;">8</p>
-                <p style="height:16px;">Usuarios</p>
+                <p style="height:16px;">Clientes</p>
             </td>
         	<td style="border:1px dashed #666; padding:10px;" width="150" align="center">
-            	<img src="../imagenes/iconmenu/1409708856_handshake.png" width="50" height="50" style="float:left;">
-                <p style="color: #090; font-size:18px; height:16px;">16</p>
-                <p style="height:16px;">Contratos</p>
+            	<img src="../imagenes/iconmenu/five.png" width="50" height="50" style="float:left;">
+                <p style="color: #090; font-size:18px; height:16px;">3</p>
+                <p style="height:16px;">Fiestas</p>
             </td>
         </tr>
     
@@ -571,29 +647,30 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc3bc', end
 
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos Inmuebles</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Proximos Turnos</p>
         </div>
     
     </div>
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos Alquileres</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Ultimas Ventas</p>
         </div>
     
     </div>
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos Usuarios</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos Productos Cargados</p>
         </div>
     
     </div>
     
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos Contratos</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Fiestas Proximas</p>
         </div>
     
     </div>
+
 </div>
 
 
