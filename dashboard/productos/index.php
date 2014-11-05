@@ -13,7 +13,11 @@ require '../../includes/funcionesProductos.php';
 
 $serviciosProductos = new ServiciosProductos();
 
+$resProductos = $serviciosProductos->traerProductos();
+
 $resProveedores = $serviciosProductos->traerProveedores();
+
+$resTipoProducto = $serviciosProductos->traerTipoProducto();
 
 ?>
 
@@ -40,13 +44,15 @@ $resProveedores = $serviciosProductos->traerProveedores();
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 
 	<style type="text/css">
-		
+		.form-group {
+			padding:10px;
+		}
 		
 	</style>
     
     <script type="text/javascript">
 		$( document ).ready(function() {
-			$('.icodashboard2, .icoalquileres2, .icousuarios2, .icoinmubles2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
+			$('.icodashboard2, .icoventas2, .icousuarios2, .icoturnos2, .icoproductos2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
 				$('.menuHober').hide();
 				$('.todoMenu').show(100, function() {
 					$('#navigation').animate({'margin-left':'0px'}, {
@@ -282,60 +288,110 @@ $resProveedores = $serviciosProductos->traerProveedores();
 
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Proveedor</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Producto</p>
         </div>
     	<div class="cuerpoBox">
-        <form class="form-horizontal formulario" role="form">
+        
+        <div class="row"> 
+        <div class="col-sm-12 col-md-12">
+        <form class="form-inline formulario" role="form">
                 	
-                <!--proveedor,direccion, telefono, cuit, nombre, email -->
-                
-                	<div class="form-group">
-                    	<label for="proveedor" class="col-lg-3 control-label" style="text-align:left">Proveedor</label>
-                        <div class="col-lg-5">
-                        	<input type="text" class="form-control" id="proveedor" name="proveedor" placeholder="Ingrese el Proveedor..." required>
+<!--idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas -->
+                	
+				              	
+                	<div class="form-group col-md-6">
+                    	<label for="codigo" class="control-label" style="text-align:left">Codigo</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" class="form-control" id="codigo" name="codigo" placeholder="Ingrese el Codigo..." required>
+                            <div id="errorCodigo" class="help-block">
+                            
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                    	<label for="direccion" class="col-lg-3 control-label" style="text-align:left">Dirección</label>
-                        <div class="col-lg-5">
-                        	<input type="text" class="form-control" id="direccion" name="direccion" placeholder="Ingrese el Dirección..." required>
+                    <div class="form-group col-md-6">
+                    	<label for="codigobarra" class="control-label" style="text-align:left">Codigo de Barra</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" class="form-control" id="codigobarra" name="codigobarra" placeholder="Ingrese el Codigo de Barra..." required>
                         </div>
                     </div>
-                    
-                    
-                    <div class="form-group">
-                    	<label for="nombre" class="col-lg-3 control-label" style="text-align:left">Nombre</label>
-                        <div class="col-lg-5">
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="nombre" class="control-label" style="text-align:left">Nombre</label>
+                        <div class="input-group col-md-12">
                         	<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el Nombre..." required>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                    	<label for="telefono" class="col-lg-3 control-label" style="text-align:left">Teléfono</label>
-                        <div class="col-lg-5">
-                        	<input type="text" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el Teléfono..." required>
+                    <div class="form-group col-md-6">
+                    	<label for="reftipoproducto" class="control-label" style="text-align:left">Tipo Producto</label>
+                        <div class="input-group col-md-12">
+                        	<select class="form-control" id="reftipoproducto" name="reftipoproducto">
+                            	<?php while ($rowTP = mysql_fetch_array($resTipoProducto)) { ?>
+                                	<option value="<?php echo $rowTP[0]; ?>"><?php echo $rowTP[1]; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="precio_unit" class="control-label" style="text-align:left">Precio Unitario</label>
+                        <div class="input-group col-md-12">
+                        	<span class="input-group-addon">$</span>
+                        	<input type="text" class="form-control" id="precio_unit" name="precio_unit" placeholder="Ingrese el Precio Unitario..." required>
+                            <span class="input-group-addon">.00</span>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                    	<label for="cuit" class="col-lg-3 control-label" style="text-align:left">Cuit</label>
-                        <div class="col-lg-5">
-                        	<input type="text" class="form-control" id="cuit" name="cuit" placeholder="Ingrese el Cuit..." required>
+                    <div class="form-group col-md-6">
+                    	<label for="precio_venta" class="control-label" style="text-align:left">Precio Venta</label>
+                        <div class="input-group col-md-12">
+                        	<span class="input-group-addon">$</span>
+                            <input type="text" class="form-control" id="precio_venta" name="precio_venta" placeholder="Ingrese el Precio Venta..." required>
+                            <span class="input-group-addon">.00</span>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="stock" class="control-label" style="text-align:left">Stock</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" class="form-control" id="stock" name="stock" placeholder="Ingrese el Stock..." required>
                         </div>
                     </div>
                     
+                    <div class="form-group col-md-6">
+                    	<label for="stock_min" class="control-label" style="text-align:left">Stock Minimo</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" class="form-control" id="stock_min" name="stock_min" placeholder="Ingrese el Stock Minimo..." required>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="caracteristicas" class="control-label" style="text-align:left">Caracteristicas</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" class="form-control" id="caracteristicas" name="caracteristicas" placeholder="Ingrese el Caracteristicas..." required>
+                        </div>
+                    </div>
                     
-                	<div class="form-group">
-                    	<label for="eamil" class="col-lg-3 control-label" style="text-align:left">E-Mail</label>
-                        <div class="col-lg-5">
-                        	<input type="email" class="form-control" id="email" name="email" placeholder="Ingrese el E-Mail..." required>
+                    <div class="form-group col-md-6">
+                    	<label for="refproveedor" class="control-label" style="text-align:left">Proveedor</label>
+                        <div class="input-group col-md-12">
+                        	<select class="form-control" id="refproveedor" name="refproveedor">
+                            	<?php while ($rowPR = mysql_fetch_array($resProveedores)) { ?>
+                                	<option value="<?php echo $rowPR[0]; ?>"><?php echo $rowPR[1]; ?></option>
+                                <?php } ?>
+                            </select>
                         </div>
                     </div>
                 
-                    
-                    
-                    <ul class="list-inline">
+                
+                    </div>
+                    </div>
+                    <ul class="list-inline" style="padding-top:15px;">
                     	<li>
                     		<button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Crear</button>
                         </li>
@@ -346,52 +402,61 @@ $resProveedores = $serviciosProductos->traerProveedores();
                     
                     </div>
                     <div id="error" class="alert alert-info">
-                		<p><strong>Importante!:</strong> El campo proveedor es obligatorio</p>
+                		<p><strong>Importante!:</strong> El campo codigo, nombre, precio unitario, stock, tipo producto son obligatorios</p>
                 	</div>
-                    <input type="hidden" id="accion" name="accion" value="insertarProveedores"/>
+                    <input type="hidden" id="accion" name="accion" value="insertarProductos"/>
                 </form>
                 
                 <br>
+                
                 
         </div>
     </div>
 
     
-    <div class="boxInfo">
+    <div class="boxInfoLargo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 10 Proveedores Cargados</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 10 Productos Cargados</p>
         </div>
     	<div class="cuerpoBox">
         	<table class="table table-striped">
             	<thead>
                 	<tr>
-                    	<th>Proveedor</th>
-                        <th>Dirección</th>
-                        <th>Teléfono</th>
-                        <th>Cuit</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
+                    	<th>Nombre</th>
+                        <th>Precio Unit</th>
+                        <th>Precio Vent</th>
+                        <th>Stock</th>
+                        <th>Stock min</th>
+                        <th>Tipo Prod.</th>
+                        <th>Proveedor</th>
+                        <th>Codigo</th>
+                        <th>CodigoBarra</th>
+                        <th>Caract.</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                <!--proveedor,direccion, telefono, cuit, nombre, email -->
+<!--idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas -->
                 	<?php
-						if (mysql_num_rows($resProveedores)>0) {
+						if (mysql_num_rows($resProductos)>0) {
 							$cant = 0;
-							while ($row = mysql_fetch_array($resProveedores)) {
+							while ($row = mysql_fetch_array($resProductos)) {
 								$cant+=1;
 								if ($cant == 11) {
 									break;	
 								}
 					?>
                     	<tr>
-                        	<td><?php echo utf8_encode($row['proveedor']); ?></td>
-                            <td><?php echo utf8_encode($row['direccion']); ?></td>
-                            <td><?php echo $row['telefono']; ?></td>
-                            <td><?php echo $row['cuit']; ?></td>
-                            <td><?php echo utf8_encode($row['nombre']); ?></td>
-                            <td><?php echo utf8_encode($row['email']); ?></td>
+                        	<td><?php echo utf8_encode($row['nombre']); ?></td>
+                            <td><?php echo $row['precio_unit']; ?></td>
+                            <td><?php echo $row['precio_venta']; ?></td>
+                            <td><?php echo $row['stock']; ?></td>
+                            <td><?php echo $row['stock_min']; ?></td>
+                            <td><?php echo utf8_encode($row['tipoproducto']); ?></td>
+                            <td><?php echo utf8_encode($row['proveedor']); ?></td>
+							<td><?php echo utf8_encode($row['codigo']); ?></td>
+                            <td><?php echo $row['codigobarra']; ?></td>
+                            <td><?php echo utf8_encode($row['caracteristicas']); ?></td>
                             <td>
                             		<div class="btn-group">
 										<button class="btn btn-success" type="button">Acciones</button>
@@ -403,11 +468,11 @@ $resProveedores = $serviciosProductos->traerProveedores();
 										
 										<ul class="dropdown-menu" role="menu">
 											<li>
-											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idproveedor']; ?>">Modificar</a>
+											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idproducto']; ?>">Modificar</a>
 											</li>
 
 											<li>
-											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idproveedor']; ?>">Borrar</a>
+											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idproducto']; ?>">Borrar</a>
 											</li>
 
 										</ul>
@@ -416,7 +481,7 @@ $resProveedores = $serviciosProductos->traerProveedores();
                         </tr>
                     <?php } ?>
                     <?php } else { ?>
-                    	<h3>No hay proveedores cargados.</h3>
+                    	<h3>No hay productos cargados.</h3>
                     <?php } ?>
                 </tbody>
             </table>
@@ -429,10 +494,10 @@ $resProveedores = $serviciosProductos->traerProveedores();
 
 </div>
 
-<div id="dialog2" title="Eliminar Proveedor">
+<div id="dialog2" title="Eliminar Producto">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar al Proveedor?.<span id="proveedorEli"></span>
+            ¿Esta seguro que desea eliminar al Producto?.<span id="proveedorEli"></span>
         </p>
         <p><strong>Importante: </strong>También se borrara la relación con los productos asociados</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
