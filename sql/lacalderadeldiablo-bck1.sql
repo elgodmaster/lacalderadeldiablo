@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.1
+-- version 4.1.14
 -- http://www.phpmyadmin.net
 --
--- Servidor: localhost
--- Tiempo de generación: 05-11-2014 a las 07:31:55
--- Versión del servidor: 5.5.24-log
--- Versión de PHP: 5.4.3
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 04-11-2014 a las 01:29:05
+-- Versión del servidor: 5.6.17
+-- Versión de PHP: 5.5.12
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -62,21 +62,16 @@ CREATE TABLE IF NOT EXISTS `lcdd_proveedores` (
   `telefono` varchar(20) COLLATE utf8_spanish_ci DEFAULT NULL,
   `cuit` varchar(11) COLLATE utf8_spanish_ci DEFAULT NULL,
   `nombre` varchar(45) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `email` varchar(45) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`idproveedor`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=3 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_proveedores`
 --
 
-INSERT INTO `lcdd_proveedores` (`idproveedor`, `proveedor`, `direccion`, `telefono`, `cuit`, `nombre`, `email`) VALUES
-(1, 'Favio', NULL, '4602536', NULL, 'German', NULL),
-(2, 'Coca-Cola', NULL, '4895623', '20152634851', 'Lucas', NULL),
-(3, 'Heineken', '70 e/23 y 24 N°1428', '4600169', '', 'Marcos', ''),
-(4, 'Lucas', '', '', '', '', 'lucas@hotmail.com'),
-(6, 'koko', '', '', '', '', ''),
-(7, 'pepe', '', '', '', '', '');
+INSERT INTO `lcdd_proveedores` (`idproveedor`, `proveedor`, `direccion`, `telefono`, `cuit`, `nombre`) VALUES
+(1, 'Favio', NULL, '4602536', NULL, 'German'),
+(2, 'Coca-Cola', NULL, '4895623', '20152634851', 'Lucas');
 
 -- --------------------------------------------------------
 
