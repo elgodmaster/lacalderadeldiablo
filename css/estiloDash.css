@@ -127,7 +127,6 @@ padding-bottom: 10px;
 
 
 
-
 #navigation {
 			height:100%;
 			background-color: #F30;
@@ -270,6 +269,32 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 			margin-right:10px;
 		}
 		
+		.icoturnos {
+			background:url(../imagenes/iconmenu/turnos.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			float:left;
+			margin-right:10px;
+		}
+		
+		.icoventas {
+			background:url(../imagenes/iconmenu/compras.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			float:left;
+			margin-right:10px;
+		}
+		
+		.icoproductos {
+			background:url(../imagenes/iconmenu/barras.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			float:left;
+			margin-right:10px;
+		}
 		
 		.icoreportes {
 			background:url(../imagenes/iconmenu/reportes.png) no-repeat;
@@ -289,15 +314,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 			margin-right:10px;
 		}
 		
-		.icoPersonal {
-			background:url(../imagenes/iconmenu/personal.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:31px;
-			float:left;
-			margin-right:10px;
-		}
-		
 		.icosalir {
 			background:url(../imagenes/iconmenu/salir.png) no-repeat;
 			background-position: center center;
@@ -305,6 +321,36 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 			height:25px;
 			float:left;
 			margin-right:10px;
+		}
+		
+		.icoproductos2 {
+			background:url(../imagenes/iconmenu/barras.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			margin-right:9px;
+			margin-bottom:25px;
+			cursor:pointer;
+		}
+		
+		.icoventas2 {
+			background:url(../imagenes/iconmenu/compras.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			margin-right:9px;
+			margin-bottom:25px;
+			cursor:pointer;
+		}
+		
+		.icoturnos2 {
+			background:url(../imagenes/iconmenu/turnos.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			margin-right:9px;
+			margin-bottom:25px;
+			cursor:pointer;
 		}
 		
 		.icodashboard2 {
@@ -368,16 +414,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 			cursor:pointer;
 		}
 		
-		.icoPersonal2 {
-			background:url(../imagenes/iconmenu/personal.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:31px;
-			margin-right:10px;
-			margin-bottom:25px;
-			cursor:pointer;
-		}
-		
 		.icosalir2 {
 			background:url(../imagenes/iconmenu/salir.png) no-repeat;
 			background-position: center center;
@@ -400,7 +436,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 			right:0;
 		}
 		
-		.tooltip-dash, .tooltip-inmu, .tooltip-alqui, .tooltip-usua, .tooltip-con, .tooltip-rep, .tooltip-sal, .tooltip-per {
+		.tooltip-dash, .tooltip-inmu, .tooltip-alqui, .tooltip-usua, .tooltip-con, .tooltip-rep, .tooltip-sal{
 		   position: fixed;
 		   background: #c0df71;
 		   color: #fff;
@@ -417,8 +453,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 		
 		
   .boxInfo{ 
-				width: 70%; 
-				height: 160px; 
+				width: 84%; 
+				height: auto; 
 				margin:10px;
 				float:left; 
 				background:#fff; 
@@ -438,6 +474,11 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 
 
 			}
+			
+	.boxInfo .cuerpoBox {
+		padding:10px;
+		padding-bottom:50px;
+	}
 
   			#headBoxInfo {
 				background: rgb(255,195,188); /* Old browsers */
@@ -451,8 +492,6 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc3bc', end
 
  padding:6px; height:36px; border-bottom:1px solid #C40000;
 			}
-
-
-
+  
 
 
