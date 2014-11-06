@@ -72,16 +72,31 @@ function eliminarTipoProducto($id) {
 
 /* logica de negocio para los productos */
 
-function existeCodigo() {
+function existeCodigo($codigo) {
 	$sql = "select * from lcdd_productos where codigo = '".$codigo."'";
 	$res = $this->query($sql,0);
 	if (mysql_num_rows($res) > 0) {
-    		return true;
+    		return '';
     	} else {
-    		return false;
+    		return '0';
     	}
 }
 
+function existeCodigoMod($id,$codigo) {
+	
+	
+	$sql = "select * from lcdd_productos where codigo = '".$codigo."'";
+	$res = $this->query($sql,0);
+	if (mysql_num_rows($res) > 0) {
+			if (mysql_result($res,0,0) != $id) {
+    			return '';
+			} else {
+				return '0';
+			}
+    	} else {
+    		return '0';
+    	}
+}
 
 function TraerCodigo($codigo) {
 		$sql = "SELECT idproducto,
@@ -102,19 +117,19 @@ function TraerCodigo($codigo) {
 }
 
 
-function modificarProducto($id,$nombre,$precio_unit,$precio_venta) {
+function modificarProducto($id,$nombre, $precio_unit, $precio_venta, $stock, $stock_min, $reftipoproducto, $refproveedor, $codigo, $codigobarra, $caracteristicas) {
 	$sql = "update lcdd_productos 			
 			SET
-			nombre = '".$nombre."',
+			nombre = '".utf8_decode($nombre)."',
 			precio_unit = ".$precio_unit.",
 			precio_venta = ".$precio_venta.",
 			stock = ".$stock.",
 			stock_min = ".$stock_min.",
 			reftipoproducto = ".$reftipoproducto.",
 			refproveedor = ".$refproveedor.",
-			codigo = ".$codigo.",
-			codigobarra = ".$codigobarra.",
-			caracteristicas = ".$caracteristicas.",
+			codigo = '".utf8_decode($codigo)."',
+			codigobarra = '".$codigobarra."',
+			caracteristicas = '".utf8_decode($caracteristicas)."'
 			WHERE idproducto = ".$id;
 	$res = $this->query($sql,0) or die ('Hubo un error');
 	return $res;

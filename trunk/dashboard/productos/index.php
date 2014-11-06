@@ -230,8 +230,8 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                 <li><div class="icoturnos"></div><a href="../turnos/">Turnos</a></li>
                 <li><div class="icoventas"></div><a href="../ventas/">Ventas</a></li>
                 <li><div class="icousuarios"></div><a href="../clientes/">Clientes</a></li>
-                <li><div class="icoproductos"></div><a href="../productos/">Productos</a></li>
-                <li><div class="icocontratos"></div><a href="index.php">Proveedores</a></li>
+                <li><div class="icoproductos"></div><a href="index.php">Productos</a></li>
+                <li><div class="icocontratos"></div><a href="../proveedores/">Proveedores</a></li>
                 <li><div class="icoreportes"></div><a href="../reportes/">Reportes</a></li>
                 <li><div class="icosalir"></div><a href="../salir/">Salir</a></li>
             </ul>
@@ -299,14 +299,15 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
 <!--idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas -->
                 	
 				              	
-                	<div class="form-group col-md-6">
+                	<div class="form-group col-md-3">
                     	<label for="codigo" class="control-label" style="text-align:left">Codigo</label>
                         <div class="input-group col-md-12">
                         	<input type="text" class="form-control" id="codigo" name="codigo" placeholder="Ingrese el Codigo..." required>
-                            <div id="errorCodigo" class="help-block">
-                            
-                            </div>
                         </div>
+                    </div>
+                    
+                    <div id="errorCodigo" class="col-md-3" style="margin-top:40px;">
+                            
                     </div>
                     
                     <div class="form-group col-md-6">
@@ -402,9 +403,9 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                     
                     </div>
                     <div id="error" class="alert alert-info">
-                		<p><strong>Importante!:</strong> El campo codigo, nombre, precio unitario, stock, tipo producto son obligatorios</p>
+                		<p><strong>Importante!:</strong> El campo codigo, nombre, precio unitario, stock, stock min son obligatorios</p>
                 	</div>
-                    <input type="hidden" id="accion" name="accion" value="insertarProductos"/>
+                    <input type="hidden" id="accion" name="accion" value="insertarProducto"/>
                 </form>
                 
                 <br>
@@ -544,7 +545,7 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarProveedores'},
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarProducto'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
@@ -571,26 +572,114 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 
-	$("#proveedor").click(function(event) {
-		$("#proveedor").removeClass("alert-danger");
-		$("#proveedor").attr('value','');
-		$("#proveedor").attr('placeholder','Ingrese el Proveedor...');
+	$("#nombre").click(function(event) {
+		if ($("#nombre").val() == "") {
+			$("#nombre").removeClass("alert-danger");
+			$("#nombre").attr('value','');
+			$("#nombre").attr('placeholder','Ingrese el Nombre...');
+		}
     });
 
-	$("#proveedor").change(function(event) {
-		$("#proveedor").removeClass("alert-danger");
-		$("#proveedor").attr('placeholder','Ingrese el Proveedor');
+	$("#nombre").change(function(event) {
+		if ($("#nombre").val() == "") {
+			$("#nombre").removeClass("alert-danger");
+			$("#nombre").attr('placeholder','Ingrese el Nombre');
+		}
+	});
+	
+	$("#codigo").click(function(event) {
+		if ($("#codigo").val() == "") {
+			$("#codigo").removeClass("alert-danger");
+			$("#codigo").attr('value','');
+			$("#codigo").attr('placeholder','Ingrese el Codigo...');
+		}
+    });
+
+	$("#codigo").change(function(event) {
+		if ($("#codigo").val() == "") {
+			$("#codigo").removeClass("alert-danger");
+			$("#codigo").attr('placeholder','Ingrese el Codigo');
+		}
+	});
+	
+	$("#precio_unit").click(function(event) {
+		if ($("#precio_unit").val() == "") {
+			$("#precio_unit").removeClass("alert-danger");
+			$("#precio_unit").attr('value','');
+			$("#precio_unit").attr('placeholder','Ingrese el Precio Unit...');
+		}
+    });
+
+	$("#precio_unit").change(function(event) {
+		if ($("#precio_unit").val() == "") {
+			$("#precio_unit").removeClass("alert-danger");
+			$("#precio_unit").attr('placeholder','Ingrese el Precio Unit');
+		}
+	});
+	
+	$("#stock").click(function(event) {
+		if ($("#stock").val() == "") {
+			$("#stock").removeClass("alert-danger");
+			$("#stock").attr('value','');
+			$("#stock").attr('placeholder','Ingrese el Stock...');
+		}
+    });
+
+	$("#stock").change(function(event) {
+		if ($("#stock").val() == "") {
+			$("#stock").removeClass("alert-danger");
+			$("#stock").attr('placeholder','Ingrese el Stock');
+		}
+	});
+	
+	$("#stock_min").click(function(event) {
+		if ($("#stock_min").val() == "") {
+			$("#stock_min").removeClass("alert-danger");
+			$("#stock_min").attr('value','');
+			$("#stock_min").attr('placeholder','Ingrese el Stock Minimo...');
+		}
+    });
+
+	$("#stock_min").change(function(event) {
+		if ($("#stock_min").val() == "") {
+			$("#stock_min").removeClass("alert-danger");
+			$("#stock_min").attr('placeholder','Ingrese el Stock Minimo');
+		}
 	});
 	
 	function validador(){
 
 			$error = "";
-
+//idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas
 			
-			if ($("#proveedor").val() == "") {
-				$error = "Es obligatorio el campo proveedor.";
-				$("#proveedor").addClass("alert-danger");
-				$("#proveedor").attr('placeholder',$error);
+			if ($("#nombre").val() == "") {
+				$error = "Es obligatorio el campo nombre.";
+				$("#nombre").addClass("alert-danger");
+				$("#nombre").attr('placeholder',$error);
+			}
+			
+			if ($("#codigo").val() == "") {
+				$error = "Es obligatorio el campo codigo.";
+				$("#codigo").addClass("alert-danger");
+				$("#codigo").attr('placeholder',$error);
+			}
+			
+			if ($("#precio_unit").val() == "") {
+				$error = "Es obligatorio el campo Precio Unit.";
+				$("#precio_unit").addClass("alert-danger");
+				$("#precio_unit").attr('placeholder',$error);
+			}
+			
+			if ($("#stock").val() == "") {
+				$error = "Es obligatorio el campo stock.";
+				$("#stock").addClass("alert-danger");
+				$("#stock").attr('placeholder',$error);
+			}
+			
+			if ($("#stock_min").val() == "") {
+				$error = "Es obligatorio el campo stock min.";
+				$("#stock_min").addClass("alert-danger");
+				$("#stock_min").attr('placeholder',$error);
 			}
 
 
@@ -599,6 +688,7 @@ $(document).ready(function(){
 	
 	//al enviar el formulario
     $('#cargar').click(function(){
+		existeCodigo($( this ).val());
 		if (validador() == "")
         {
 			//información del formulario
@@ -626,7 +716,7 @@ $(document).ready(function(){
                                             $(".alert").removeClass("alert-danger");
 											$(".alert").removeClass("alert-info");
                                             $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Proveedor</strong>. ');
+                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Producto</strong>. ');
 											$(".alert").delay(3000).queue(function(){
 												/*aca lo que quiero hacer 
 												  después de los 2 segundos de retraso*/
@@ -652,6 +742,42 @@ $(document).ready(function(){
 				}
 			});
 		}
+    });
+	
+	function existeCodigo(codigo) {
+		$.ajax({
+			data:  {codigo:	$("#codigo").val(),
+					accion:	'existeCodigo'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');
+			},
+			success:  function (response) {
+					
+					if (response == '') {
+						
+						$("#load").html('');
+						$("#codigo").val('');
+						$error = "Ya existe ese codigo.";
+						$("#codigo").addClass("alert-danger");
+						$("#codigo").attr('placeholder',$error);
+						$("#errorCodigo").html('');
+						$("#errorCodigo").html('<strong>Error!</strong> El codigo ya existe');
+
+					} else {
+						$("#load").html('');
+						$("#errorCodigo").html('');
+						$("#errorCodigo").html('<strong>Ok!</strong> El codigo se puede utilizar');
+						
+					}
+					
+			}
+		});
+	}
+	
+	$('#codigo').focusout(function(e) {
+        existeCodigo($( this ).val());
     });
 
 });//fin del document ready

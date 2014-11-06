@@ -13,7 +13,7 @@ require '../../includes/funcionesProductos.php';
 
 $serviciosProductos = new ServiciosProductos();
 
-$resProveedores = $serviciosProductos->traerProveedores();
+$resProductos = $serviciosProductos->traerProductos();
 
 ?>
 
@@ -282,35 +282,43 @@ $resProveedores = $serviciosProductos->traerProveedores();
 	
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Proveedores Cargados</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Productos Cargados</p>
         </div>
     	<div class="cuerpoBox">
-        <button type="button" class="btn btn-primary nuevo" style="margin-left:0px;">Nuevo Proveedor</button>
+        <button type="button" class="btn btn-primary nuevo" style="margin-left:0px;">Nuevo Producto</button>
         	<table class="table table-striped">
             	<thead>
                 	<tr>
-                    	<th>Proveedor</th>
-                        <th>Dirección</th>
-                        <th>Teléfono</th>
-                        <th>Cuit</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
+                    	<th>Nombre</th>
+                        <th>Precio Unit</th>
+                        <th>Precio Vent</th>
+                        <th>Stock</th>
+                        <th>Stock min</th>
+                        <th>Tipo Prod.</th>
+                        <th>Proveedor</th>
+                        <th>Codigo</th>
+                        <th>CodigoBarra</th>
+                        <th>Caract.</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                <!--proveedor,direccion, telefono, cuit, nombre, email -->
+<!--idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas -->
                 	<?php
-						if (mysql_num_rows($resProveedores)>0) {
-							while ($row = mysql_fetch_array($resProveedores)) {
+						if (mysql_num_rows($resProductos)>0) {
+							while ($row = mysql_fetch_array($resProductos)) {
 					?>
                     	<tr>
-                        	<td><?php echo utf8_encode($row['proveedor']); ?></td>
-                            <td><?php echo utf8_encode($row['direccion']); ?></td>
-                            <td><?php echo $row['telefono']; ?></td>
-                            <td><?php echo $row['cuit']; ?></td>
-                            <td><?php echo utf8_encode($row['nombre']); ?></td>
-                            <td><?php echo utf8_encode($row['email']); ?></td>
+                        	<td><?php echo utf8_encode($row['nombre']); ?></td>
+                            <td><?php echo $row['precio_unit']; ?></td>
+                            <td><?php echo $row['precio_venta']; ?></td>
+                            <td><?php echo $row['stock']; ?></td>
+                            <td><?php echo $row['stock_min']; ?></td>
+                            <td><?php echo utf8_encode($row['tipoproducto']); ?></td>
+                            <td><?php echo utf8_encode($row['proveedor']); ?></td>
+							<td><?php echo utf8_encode($row['codigo']); ?></td>
+                            <td><?php echo $row['codigobarra']; ?></td>
+                            <td><?php echo utf8_encode($row['caracteristicas']); ?></td>
                             <td>
                             		<div class="btn-group">
 										<button class="btn btn-success" type="button">Acciones</button>
@@ -322,11 +330,11 @@ $resProveedores = $serviciosProductos->traerProveedores();
 										
 										<ul class="dropdown-menu" role="menu">
 											<li>
-											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idproveedor']; ?>">Modificar</a>
+											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idproducto']; ?>">Modificar</a>
 											</li>
 
 											<li>
-											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idproveedor']; ?>">Borrar</a>
+											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idproducto']; ?>">Borrar</a>
 											</li>
 
 										</ul>
@@ -348,10 +356,10 @@ $resProveedores = $serviciosProductos->traerProveedores();
 
 </div>
 
-<div id="dialog2" title="Eliminar Proveedor">
+<div id="dialog2" title="Eliminar Producto">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar al Proveedor?.<span id="proveedorEli"></span>
+            ¿Esta seguro que desea eliminar al Producto?.<span id="proveedorEli"></span>
         </p>
         <p><strong>Importante: </strong>También se borrara la relación con los productos asociados</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
@@ -398,7 +406,7 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarProveedores'},
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarProducto'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {

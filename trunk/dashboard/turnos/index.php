@@ -9,11 +9,13 @@ if ((!isset($_SESSION['usua_se'])) && ($_SESSION['refrol_se'] == 1))
 
 
 require '../../includes/funcionesProductos.php';
-
+require '../../includes/funcionesTurnos.php';
 
 $serviciosProductos = new ServiciosProductos();
+$serviciosTurnos	= new ServiciosTurnos();
 
-$resProveedores = $serviciosProductos->traerProveedores();
+$resCanchas = $serviciosTurnos->traerCanchas();
+$resClientes= $serviciosTurnos->traerClientes();
 
 ?>
 
@@ -201,8 +203,35 @@ $resProveedores = $serviciosProductos->traerProveedores();
       jQuery(document).ready(function ($) {
         "use strict";
         $('#navigation').perfectScrollbar();
+		
+		$("#fechautilizacion").datepicker({
+		      showOn: 'both',
+			  dateFormat: 'yy-mm-dd',
+		      buttonImage: 'calendar.png',
+		      buttonImageOnly: true,
+		      changeYear: true,
+		      numberOfMonths: 2,
+		      onSelect: function(textoFecha, objDatepicker){
+		         $("#mensaje").html("<p>Has seleccionado: " + textoFecha + "</p>");
+		      }
+		 });
       });
+	  
+	
     </script>
+    <style>
+			
+			$("#fechautilizacion").datepicker({
+		   showOn: 'both',
+		   buttonImage: 'calendar.png',
+		   buttonImageOnly: true,
+		   changeYear: true,
+		   numberOfMonths: 2,
+		   onSelect: function(textoFecha, objDatepicker){
+		      $("#mensaje").html("<p>Has seleccionado: " + textoFecha + "</p>");
+		   }
+		}); 
+		</style>
 </head>
 
 <body>
@@ -285,57 +314,55 @@ $resProveedores = $serviciosProductos->traerProveedores();
         	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Proveedor</p>
         </div>
     	<div class="cuerpoBox">
+        
         <form class="form-horizontal formulario" role="form">
                 	
-                <!--proveedor,direccion, telefono, cuit, nombre, email -->
+                <!--refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea -->
                 
                 	<div class="form-group">
-                    	<label for="proveedor" class="col-lg-3 control-label" style="text-align:left">Proveedor</label>
-                        <div class="col-lg-5">
-                        	<input type="text" class="form-control" id="proveedor" name="proveedor" placeholder="Ingrese el Proveedor..." required>
+                    	<label for="fechautilizacion" class="control-label col-lg-3" style="text-align:left">Fecha Utilización</label>
+                        <div class="col-lg-2">
+                        	<input type="text" class="form-control" id="fechautilizacion" name="fechautilizacion" >
                         </div>
                     </div>
                     
                     <div class="form-group">
-                    	<label for="direccion" class="col-lg-3 control-label" style="text-align:left">Dirección</label>
+                    	<label for="refcancha" class="control-label col-lg-3" style="text-align:left">Cancha</label>
                         <div class="col-lg-5">
-                        	<input type="text" class="form-control" id="direccion" name="direccion" placeholder="Ingrese el Dirección..." required>
+                        	<select class="form-control" id="refcancha" name="refcancha">
+                            	<?php while ($rowTP = mysql_fetch_array($resCanchas)) { ?>
+                                	<option value="<?php echo $rowTP[0]; ?>"><?php echo $rowTP[1]; ?></option>
+                                <?php } ?>
+                            </select>
                         </div>
                     </div>
                     
                     
                     <div class="form-group">
-                    	<label for="nombre" class="col-lg-3 control-label" style="text-align:left">Nombre</label>
-                        <div class="col-lg-5">
-                        	<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el Nombre..." required>
+                    	<label for="horautilizacion" class="control-label col-lg-3" style="text-align:left">Hora Utilización</label>
+                        <div class="col-lg-2">
+                        	<select class="form-control" id="horautilizacion" name="horautilizacion">
+                            	<?php for($i=0;$i<24;$i++) { ?>
+                                	<option value="<?php echo $i; ?>"><?php echo $i.':00'; ?></option>
+                                <?php } ?>
+                            </select>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                    	<label for="telefono" class="col-lg-3 control-label" style="text-align:left">Teléfono</label>
+                    	<label for="refcliente" class="control-label col-lg-3" style="text-align:left">Cliente</label>
                         <div class="col-lg-5">
-                        	<input type="text" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el Teléfono..." required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                    	<label for="cuit" class="col-lg-3 control-label" style="text-align:left">Cuit</label>
-                        <div class="col-lg-5">
-                        	<input type="text" class="form-control" id="cuit" name="cuit" placeholder="Ingrese el Cuit..." required>
-                        </div>
-                    </div>
-                    
-                    
-                	<div class="form-group">
-                    	<label for="eamil" class="col-lg-3 control-label" style="text-align:left">E-Mail</label>
-                        <div class="col-lg-5">
-                        	<input type="email" class="form-control" id="email" name="email" placeholder="Ingrese el E-Mail..." required>
+                        	<select class="form-control" id="refcliente" name="refcliente">
+                            	<?php while ($rowC = mysql_fetch_array($resClientes)) { ?>
+                                	<option value="<?php echo $rowC[0]; ?>"><?php echo $rowC[1]; ?></option>
+                                <?php } ?>
+                            </select>
                         </div>
                     </div>
                 
                     
                     
-                    <ul class="list-inline">
+                    <ul class="list-inline" style="padding-top:15px;">
                     	<li>
                     		<button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Crear</button>
                         </li>
@@ -348,7 +375,7 @@ $resProveedores = $serviciosProductos->traerProveedores();
                     <div id="error" class="alert alert-info">
                 		<p><strong>Importante!:</strong> El campo proveedor es obligatorio</p>
                 	</div>
-                    <input type="hidden" id="accion" name="accion" value="insertarProveedores"/>
+                    <input type="hidden" id="accion" name="accion" value="insertarTurno"/>
                 </form>
                 
                 <br>
@@ -440,6 +467,9 @@ $resProveedores = $serviciosProductos->traerProveedores();
 
 <script type="text/javascript">
 $(document).ready(function(){
+	
+	
+	
 	
 	$('.ver').click(function(event){
 			url = "ver.php";

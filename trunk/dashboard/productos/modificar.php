@@ -15,7 +15,11 @@ $serviciosProductos = new ServiciosProductos();
 
 $id = $_GET['id'];
 
-$resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
+$resProductos = $serviciosProductos->traerProductoPorId($id);
+
+$resProveedores = $serviciosProductos->traerProveedores();
+
+$resTipoProducto = $serviciosProductos->traerTipoProducto();
 
 ?>
 
@@ -43,7 +47,9 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 
 	<style type="text/css">
-		
+		.form-group {
+			padding:10px;
+		}
 		
 	</style>
     
@@ -227,8 +233,8 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
                 <li><div class="icoturnos"></div><a href="../turnos/">Turnos</a></li>
                 <li><div class="icoventas"></div><a href="../ventas/">Ventas</a></li>
                 <li><div class="icousuarios"></div><a href="../clientes/">Clientes</a></li>
-                <li><div class="icoproductos"></div><a href="../productos/">Productos</a></li>
-                <li><div class="icocontratos"></div><a href="index.php">Proveedores</a></li>
+                <li><div class="icoproductos"></div><a href="index.php">Productos</a></li>
+                <li><div class="icocontratos"></div><a href="../proveedores/">Proveedores</a></li>
                 <li><div class="icoreportes"></div><a href="../reportes/">Reportes</a></li>
                 <li><div class="icosalir"></div><a href="../salir/">Salir</a></li>
             </ul>
@@ -288,57 +294,117 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
         	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Proveedor</p>
         </div>
     	<div class="cuerpoBox">
-        <form class="form-horizontal" role="form">
+        <div class="row"> 
+        <div class="col-sm-12 col-md-12">
+        <form class="form-inline formulario" role="form">
                 	
-                <!--proveedor,direccion, telefono, cuit, nombre -->
+<!--idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas -->
+                	
+				              	
+                	<div class="form-group col-md-3">
+                    	<label for="codigo" class="control-label" style="text-align:left">Codigo</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" value="<?php echo mysql_result($resProductos,0,'codigo'); ?>" class="form-control" id="codigo" name="codigo" placeholder="Ingrese el Codigo..." required>
+                           
+                        </div>
+                    </div>
+                    
+                    <div id="errorCodigo" class="col-md-3" style="margin-top:40px;">
+                            
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                    	<label for="codigobarra" class="control-label" style="text-align:left">Codigo de Barra</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" value="<?php echo mysql_result($resProductos,0,'codigobarra'); ?>" class="form-control" id="codigobarra" name="codigobarra" placeholder="Ingrese el Codigo de Barra..." required>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="nombre" class="control-label" style="text-align:left">Nombre</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" value="<?php echo mysql_result($resProductos,0,'nombre'); ?>" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el Nombre..." required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                    	<label for="reftipoproducto" class="control-label" style="text-align:left">Tipo Producto</label>
+                        <div class="input-group col-md-12">
+                        	<select class="form-control" id="reftipoproducto" name="reftipoproducto">
+                            	<?php while ($rowTP = mysql_fetch_array($resTipoProducto)) { ?>
+                                	<?php if (mysql_result($resProductos,0,'reftipoproducto') == $rowTP[0]) { ?>
+                                	<option value="<?php echo $rowTP[0]; ?>" selected><?php echo $rowTP[1]; ?></option>
+                                    <?php } else { ?>
+                                    <option value="<?php echo $rowTP[0]; ?>"><?php echo $rowTP[1]; ?></option>
+                                	<?php } ?>    
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="precio_unit" class="control-label" style="text-align:left">Precio Unitario</label>
+                        <div class="input-group col-md-12">
+                        	<span class="input-group-addon">$</span>
+                        	<input type="text" value="<?php echo mysql_result($resProductos,0,'precio_unit'); ?>" class="form-control" id="precio_unit" name="precio_unit" placeholder="Ingrese el Precio Unitario..." required>
+                            <span class="input-group-addon">.00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                    	<label for="precio_venta" class="control-label" style="text-align:left">Precio Venta</label>
+                        <div class="input-group col-md-12">
+                        	<span class="input-group-addon">$</span>
+                            <input type="text" value="<?php echo mysql_result($resProductos,0,'precio_venta'); ?>" class="form-control" id="precio_venta" name="precio_venta" placeholder="Ingrese el Precio Venta..." required>
+                            <span class="input-group-addon">.00</span>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="stock" class="control-label" style="text-align:left">Stock</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" value="<?php echo mysql_result($resProductos,0,'stock'); ?>" class="form-control" id="stock" name="stock" placeholder="Ingrese el Stock..." required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                    	<label for="stock_min" class="control-label" style="text-align:left">Stock Minimo</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" value="<?php echo mysql_result($resProductos,0,'stock_min'); ?>" class="form-control" id="stock_min" name="stock_min" placeholder="Ingrese el Stock Minimo..." required>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="caracteristicas" class="control-label" style="text-align:left">Caracteristicas</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" value="<?php echo utf8_encode(mysql_result($resProductos,0,'caracteristicas')); ?>" class="form-control" id="caracteristicas" name="caracteristicas" placeholder="Ingrese el Caracteristicas..." required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                    	<label for="refproveedor" class="control-label" style="text-align:left">Proveedor</label>
+                        <div class="input-group col-md-12">
+                        	<select class="form-control" id="refproveedor" name="refproveedor">
+                            	<?php while ($rowPR = mysql_fetch_array($resProveedores)) { ?>
+                                	<?php if (mysql_result($resProductos,0,'refproveedor') == $rowPR[0]) { ?>
+                                	<option value="<?php echo $rowPR[0]; ?>" selected><?php echo $rowPR[1]; ?></option>
+                                    <?php } else { ?>
+                                    <option value="<?php echo $rowPR[0]; ?>"><?php echo $rowPR[1]; ?></option>
+                                	<?php } ?>   
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
                 
-                	<div class="form-group">
-                    	<label for="proveedor" class="col-lg-3 control-label" style="text-align:left">Proveedor</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'proveedor'); ?>" class="form-control" id="proveedor" name="proveedor" placeholder="Ingrese el Proveedor..." required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                    	<label for="direccion" class="col-lg-3 control-label" style="text-align:left">Dirección</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'direccion'); ?>" class="form-control" id="direccion" name="direccion" placeholder="Ingrese el Dirección..." required>
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="form-group">
-                    	<label for="nombre" class="col-lg-3 control-label" style="text-align:left">Nombre</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'nombre'); ?>" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el Nombre..." required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                    	<label for="telefono" class="col-lg-3 control-label" style="text-align:left">Teléfono</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'telefono'); ?>" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el Teléfono..." required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                    	<label for="cuit" class="col-lg-3 control-label" style="text-align:left">Cuit</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'cuit'); ?>" class="form-control" id="cuit" name="cuit" placeholder="Ingrese el Cuit..." required>
-                        </div>
-                    </div>
-                    
-                    
-                	<div class="form-group">
-                    	<label for="eamil" class="col-lg-3 control-label" style="text-align:left">E-Mail</label>
-                        <div class="col-lg-5">
-                        	<input type="email" value="<?php echo mysql_result($resProveedores,0,'email'); ?>" class="form-control" id="email" name="email" placeholder="Ingrese el E-Mail..." required>
-                        </div>
-                    </div>
                 
+                    </div>
+                    </div>
                     
-                    
-                    <ul class="list-inline">
+                    <ul class="list-inline" style="padding-top:15px;">
                     	<li>
                     		<button type="button" class="btn btn-warning" id="modificar" style="margin-left:0px;">Modificar</button>
                         </li>
@@ -356,7 +422,7 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
                     <div class="alert">
                     
                     </div>
-                    <input type="hidden" id="accion" name="accion" value="modificarProveedores"/>
+                    <input type="hidden" id="accion" name="accion" value="modificarProducto"/>
                     <input type="hidden" id="id" name="id" value="<?php echo $id; ?>"/>
                 </form>
                 
@@ -372,10 +438,10 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
 
 </div>
 
-<div id="dialog2" title="Eliminar Proveedor">
+<div id="dialog2" title="Eliminar Producto">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar al Proveedor?.<span id="proveedorEli"></span>
+            ¿Esta seguro que desea eliminar al Producto?.<span id="proveedorEli"></span>
         </p>
         <p><strong>Importante: </strong>También se borrara la relación con los productos asociados</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
@@ -396,7 +462,7 @@ $(document).ready(function(){
 	});//fin del boton eliminar
 	
 	$('.volver').click(function(event){
-				url = "../proveedores/index.php";
+				url = "index.php";
 				$(location).attr('href',url);
 	});//fin del boton eliminar
 
@@ -411,7 +477,7 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarProveedores'},
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarProducto'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
@@ -438,26 +504,114 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 
-	$("#proveedor").click(function(event) {
-		$("#proveedor").removeClass("alert-danger");
-		$("#proveedor").attr('value','');
-		$("#proveedor").attr('placeholder','Ingrese el Proveedor...');
+	$("#nombre").click(function(event) {
+		if ($("#nombre").val() == "") {
+			$("#nombre").removeClass("alert-danger");
+			$("#nombre").attr('value','');
+			$("#nombre").attr('placeholder','Ingrese el Nombre...');
+		}
     });
 
-	$("#proveedor").change(function(event) {
-		$("#proveedor").removeClass("alert-danger");
-		$("#proveedor").attr('placeholder','Ingrese el Proveedor');
+	$("#nombre").change(function(event) {
+		if ($("#nombre").val() == "") {
+			$("#nombre").removeClass("alert-danger");
+			$("#nombre").attr('placeholder','Ingrese el Nombre');
+		}
+	});
+	
+	$("#codigo").click(function(event) {
+		if ($("#codigo").val() == "") {
+			$("#codigo").removeClass("alert-danger");
+			$("#codigo").attr('value','');
+			$("#codigo").attr('placeholder','Ingrese el Codigo...');
+		}
+    });
+
+	$("#codigo").change(function(event) {
+		if ($("#codigo").val() == "") {
+			$("#codigo").removeClass("alert-danger");
+			$("#codigo").attr('placeholder','Ingrese el Codigo');
+		}
+	});
+	
+	$("#precio_unit").click(function(event) {
+		if ($("#precio_unit").val() == "") {
+			$("#precio_unit").removeClass("alert-danger");
+			$("#precio_unit").attr('value','');
+			$("#precio_unit").attr('placeholder','Ingrese el Precio Unit...');
+		}
+    });
+
+	$("#precio_unit").change(function(event) {
+		if ($("#precio_unit").val() == "") {
+			$("#precio_unit").removeClass("alert-danger");
+			$("#precio_unit").attr('placeholder','Ingrese el Precio Unit');
+		}
+	});
+	
+	$("#stock").click(function(event) {
+		if ($("#stock").val() == "") {
+			$("#stock").removeClass("alert-danger");
+			$("#stock").attr('value','');
+			$("#stock").attr('placeholder','Ingrese el Stock...');
+		}
+    });
+
+	$("#stock").change(function(event) {
+		if ($("#stock").val() == "") {
+			$("#stock").removeClass("alert-danger");
+			$("#stock").attr('placeholder','Ingrese el Stock');
+		}
+	});
+	
+	$("#stock_min").click(function(event) {
+		if ($("#stock_min").val() == "") {
+			$("#stock_min").removeClass("alert-danger");
+			$("#stock_min").attr('value','');
+			$("#stock_min").attr('placeholder','Ingrese el Stock Minimo...');
+		}
+    });
+
+	$("#stock_min").change(function(event) {
+		if ($("#stock_min").val() == "") {
+			$("#stock_min").removeClass("alert-danger");
+			$("#stock_min").attr('placeholder','Ingrese el Stock Minimo');
+		}
 	});
 	
 	function validador(){
 
 			$error = "";
-
+//idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas
 			
-			if ($("#proveedor").val() == "") {
-				$error = "Es obligatorio el campo proveedor.";
-				$("#proveedor").addClass("alert-danger");
-				$("#proveedor").attr('placeholder',$error);
+			if ($("#nombre").val() == "") {
+				$error = "Es obligatorio el campo nombre.";
+				$("#nombre").addClass("alert-danger");
+				$("#nombre").attr('placeholder',$error);
+			}
+			
+			if ($("#codigo").val() == "") {
+				$error = "Es obligatorio el campo codigo.";
+				$("#codigo").addClass("alert-danger");
+				$("#codigo").attr('placeholder',$error);
+			}
+			
+			if ($("#precio_unit").val() == "") {
+				$error = "Es obligatorio el campo Precio Unit.";
+				$("#precio_unit").addClass("alert-danger");
+				$("#precio_unit").attr('placeholder',$error);
+			}
+			
+			if ($("#stock").val() == "") {
+				$error = "Es obligatorio el campo stock.";
+				$("#stock").addClass("alert-danger");
+				$("#stock").attr('placeholder',$error);
+			}
+			
+			if ($("#stock_min").val() == "") {
+				$error = "Es obligatorio el campo stock min.";
+				$("#stock_min").addClass("alert-danger");
+				$("#stock_min").attr('placeholder',$error);
 			}
 
 
@@ -465,7 +619,7 @@ $(document).ready(function(){
     }
 	
 	//al enviar el formulario
-    $('#cargar').click(function(){
+    $('#modificar').click(function(){
 		if (validador() == "")
         {
 			//información del formulario
@@ -493,7 +647,7 @@ $(document).ready(function(){
                                             $(".alert").removeClass("alert-danger");
 											$(".alert").removeClass("alert-info");
                                             $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Proveedor</strong>. ');
+                                            $(".alert").html('<strong>Ok!</strong> Se modifico exitosamente el <strong>Producto</strong>. ');
 											$(".alert").delay(3000).queue(function(){
 												/*aca lo que quiero hacer 
 												  después de los 2 segundos de retraso*/
@@ -501,7 +655,7 @@ $(document).ready(function(){
 												
 											});
 											$("#load").html('');
-											url = "index.php";
+											url = "modificar.php?id="+$('#id').val();
 											$(location).attr('href',url);
                                             
 											
@@ -520,7 +674,43 @@ $(document).ready(function(){
 			});
 		}
     });
+	
+	function existeCodigo(codigo) {
+		$.ajax({
+			data:  {codigo:	$("#codigo").val(),
+					id:	<?php echo $id; ?>,
+					accion:	'existeCodigoMod'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');
+			},
+			success:  function (response) {
+					
+					if (response == '') {
+						
+						$("#load").html('');
+						$("#codigo").val('');
+						$error = "Ya existe ese codigo.";
+						$("#codigo").addClass("alert-danger");
+						$("#codigo").attr('placeholder',$error);
+						$("#errorCodigo").html('');
+						$("#errorCodigo").html('<strong>Error!</strong> El codigo ya existe');
 
+					} else {
+						$("#load").html('');
+						$("#errorCodigo").html('');
+						$("#errorCodigo").html('<strong>Ok!</strong> El codigo se puede utilizar');
+						
+					}
+					
+			}
+		});
+	}
+	
+	$('#codigo').focusout(function(e) {
+        existeCodigo($( this ).val());
+    });
 });//fin del document ready
 </script>
 <?php } ?>
