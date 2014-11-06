@@ -2,7 +2,7 @@
 
 session_start();
 
-if ((!isset($_SESSION['usua_se'])) && ($_SESSION['refrol_se'] == 1))
+if (!isset($_SESSION['usua_se']))
 {
 	header('Location: /wportalinmobiliario/vistas/');
 } else {

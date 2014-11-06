@@ -55,7 +55,26 @@ switch ($accion) {
 	case 'insertarProveedores';
 		insertarProveedores($serviciosProductos);
 		break;
+	case 'existeCodigo':
+		existeCodigo($serviciosProductos);
+		break;
+	case 'existeCodigoMod':
+		existeCodigoMod($serviciosProductos);
+		break;
+		
 }
+
+function existeCodigoMod($serviciosProductos) {
+	$id		=	$_POST['id'];
+	$codigo =	$_POST['codigo'];
+	echo	$serviciosProductos->existeCodigoMod($id,$codigo);
+}
+
+function existeCodigo($serviciosProductos) {
+	$codigo =	$_POST['codigo'];
+	echo	$serviciosProductos->existeCodigo($codigo);
+}
+
 
 function insertarProveedores($serviciosProductos) {
 	$proveedor	=	$_POST['proveedor'];
@@ -103,9 +122,8 @@ function traerCodigo($serviciosProductos) {
 
 function traerProductoPorId($serviciosProductos) {
 	$id 	=	$_POST['id'];
-	$orden	=	$_POST['orden'];
 	
-	$res 	= $serviciosProductos->traerProductoPorId($id,$orden);
+	$res 	= $serviciosProductos->traerProductoPorId($id);
 	echo $res;
 }
 
@@ -114,6 +132,13 @@ function modificarProducto($serviciosProductos) {
 	$nombre			=	$_POST['nombre'];
 	$precio_unit	=	$_POST['precio_unit'];
 	$precio_venta	=	$_POST['precio_venta'];
+	$stock			=	$_POST['stock']; 
+	$stock_min		=	$_POST['stock_min'];
+	$reftipoproducto=	$_POST['reftipoproducto'];
+	$refproveedor	=	$_POST['refproveedor'];
+	$codigo			=	$_POST['codigo'];
+	$codigobarra	=	$_POST['codigobarra'];
+	$caracteristicas=	$_POST['caracteristicas'];
 
 	$res 			= $serviciosProductos->modificarProducto($id,$nombre, $precio_unit, $precio_venta, $stock, $stock_min, $reftipoproducto, $refproveedor, $codigo, $codigobarra, $caracteristicas);
 	echo $res;
@@ -121,25 +146,30 @@ function modificarProducto($serviciosProductos) {
 
 function traerProductoPorCodigo($serviciosProductos) {
 	$codigo		=	$_POST['codigo'];
-	$orden		=	$_POST['orden'];
 	
-	$res 		= $serviciosProductos->traerProductoPorCodigo($codigo,$orden);
+	$res 		= $serviciosProductos->traerProductoPorCodigo($codigo);
 	echo $res;
 }
 
 function traerProductoPorCodigoBarra($serviciosProductos) {
 	$codigobarra 	=	$_POST['$codigobarra'];
-	$orden			=	$_POST['orden'];
 	
-	$res			= $serviciosProductos->traerProductoPorCodigoBarra($codigobarra,$orden);
+	$res			= $serviciosProductos->traerProductoPorCodigoBarra($codigobarra);
 	echo $res;
 }
 
 function insertarProducto($serviciosProductos) {
-	$id 			=	$_POST['id'];
+	
 	$nombre			=	$_POST['nombre'];
 	$precio_unit	=	$_POST['precio_unit'];
 	$precio_venta	=	$_POST['precio_venta'];
+	$stock			=	$_POST['stock']; 
+	$stock_min		=	$_POST['stock_min'];
+	$reftipoproducto=	$_POST['reftipoproducto'];
+	$refproveedor	=	$_POST['refproveedor'];
+	$codigo			=	$_POST['codigo'];
+	$codigobarra	=	$_POST['codigobarra'];
+	$caracteristicas=	$_POST['caracteristicas'];
 	
 	$res 			= $serviciosProductos->insertarProducto($nombre, $precio_unit, $precio_venta, $stock, $stock_min, $reftipoproducto, $refproveedor, $codigo, $codigobarra, $caracteristicas);
 	echo $res;
