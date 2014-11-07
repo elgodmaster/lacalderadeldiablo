@@ -4,10 +4,10 @@ session_start();
 
 if ((!isset($_SESSION['usua_se'])) && ($_SESSION['refrol_se'] == 1))
 {
-	header('Location: /wportalinmobiliario/vistas/');
+	header('Location: /lacalderadeldiablo/vistas/');
 } else {
 
-
+date_default_timezone_set('America/Buenos_Aires');
 require '../../includes/funcionesProductos.php';
 require '../../includes/funcionesTurnos.php';
 
@@ -17,6 +17,10 @@ $serviciosTurnos	= new ServiciosTurnos();
 $resCanchas = $serviciosTurnos->traerCanchas();
 $resClientes= $serviciosTurnos->traerClientes();
 $resTurnos = $serviciosTurnos->traerTurnos();
+
+$fecha = date('Y-m-d');
+
+$resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
 
 ?>
 
@@ -402,33 +406,41 @@ $resTurnos = $serviciosTurnos->traerTurnos();
         	<table class="table table-striped">
             	<thead>
                 	<tr>
-                    	<th>Proveedor</th>
-                        <th>Dirección</th>
-                        <th>Teléfono</th>
-                        <th>Cuit</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
+                    	<th>Horario</th>
+                        <th>Cancha 1</th>
+                        <th>Cancha 2</th>
+                        <th>Cancha 3</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                <!--proveedor,direccion, telefono, cuit, nombre, email -->
-                	<?php
-						if (mysql_num_rows($resTurnos)>0) {
-							$cant = 0;
-							while ($row = mysql_fetch_array($resTurnos)) {
-								$cant+=1;
-								if ($cant == 11) {
-									break;	
-								}
-					?>
+						<?php for($i=mysql_result($resPrimerUltimoTurno,0,0);$i<=mysql_result($resPrimerUltimoTurno,0,1);$i++) { ?>
                     	<tr>
-                        	<td><?php echo utf8_encode($row['proveedor']); ?></td>
-                            <td><?php echo utf8_encode($row['direccion']); ?></td>
-                            <td><?php echo $row['telefono']; ?></td>
-                            <td><?php echo $row['cuit']; ?></td>
-                            <td><?php echo utf8_encode($row['nombre']); ?></td>
-                            <td><?php echo utf8_encode($row['email']); ?></td>
+                        	<td><?php echo $i; ?>:00</td>
+                            <td>
+								<?php 
+									$cancha1 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,1);
+									if (mysql_num_rows($cancha1)>0) {
+										echo mysql_result($cancha1,0,0);	
+									}
+								?>
+                            </td>
+                            <td>
+								<?php 
+									$cancha2 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,2);
+									if (mysql_num_rows($cancha2)>0) {
+										echo mysql_result($cancha2,0,0);	
+									}
+								?>
+                            </td>
+							<td>
+								<?php 
+									$cancha3 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,3);
+									if (mysql_num_rows($cancha3)>0) {
+										echo mysql_result($cancha3,0,0);	
+									}
+								?>
+                            </td>
                             <td>
                             		<div class="btn-group">
 										<button class="btn btn-success" type="button">Acciones</button>
@@ -440,11 +452,11 @@ $resTurnos = $serviciosTurnos->traerTurnos();
 										
 										<ul class="dropdown-menu" role="menu">
 											<li>
-											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idproveedor']; ?>">Modificar</a>
+											<a href="javascript:void(0)" class="varmodificar" id="">Modificar</a>
 											</li>
 
 											<li>
-											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idproveedor']; ?>">Borrar</a>
+											<a href="javascript:void(0)" class="varborrar" id="">Borrar</a>
 											</li>
 
 										</ul>
@@ -452,9 +464,7 @@ $resTurnos = $serviciosTurnos->traerTurnos();
                              </td>
                         </tr>
                     <?php } ?>
-                    <?php } else { ?>
-                    	<h3>No hay proveedores cargados.</h3>
-                    <?php } ?>
+
                 </tbody>
             </table>
             <div style="height:50px;">
@@ -557,15 +567,45 @@ $(document).ready(function(){
 		$("#proveedor").attr('placeholder','Ingrese el Proveedor');
 	});
 	
+	function validaDisponibilidadCancha(cancha,fecha,hora,e) {
+
+		$.ajax({
+			data:  {fecha: fecha , 
+					horario: hora ,
+					refcancha: cancha ,
+					accion: 'hayTurnos'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+					
+			},
+			success:  function (response) {
+				
+
+                if (response!='') {
+					$('#fechautilizacion').val('');
+					e.stopPropagation();
+				}
+					
+			}
+		});
+
+	}
 	function validador(){
 
 			$error = "";
-
 			
-			if ($("#proveedor").val() == "") {
-				$error = "Es obligatorio el campo proveedor.";
-				$("#proveedor").addClass("alert-danger");
-				$("#proveedor").attr('placeholder',$error);
+			
+			if ($("#refcliente").chosen().val() == "") {
+				$error = "Es obligatorio el campo cliente.";
+
+				alert($error);
+			}
+			
+			if ($("#fechautilizacion").val() == "") {
+				$error = "Es obligatorio el campo fecha utilización.";
+
+				alert($error);
 			}
 
 
@@ -573,27 +613,52 @@ $(document).ready(function(){
     }
 	
 	//al enviar el formulario
-    $('#cargar').click(function(){
-		if (validador() == "")
+    $('#cargar').click(function(e){
+		e.preventDefault();
+		
+		
+		if (validador() == "") 
         {
-			$.ajax({
-									data:  {nombre: $('#nombre').val(),
-											refcliente: $("#refcliente").chosen().val(),
-											refcancha: $('#refcancha').val(),
-											horautilizacion: $('#horautilizacion').val(),
-											fechautilizacion: $('#fechautilizacion').val(),
-											accion: 'insertarTurno'},
-									url:   '../../ajax/ajax.php',
-									type:  'post',
-									beforeSend: function () {
-											
-									},
-									success:  function (response) {
-											url = "index.php";
-											$(location).attr('href',url);
-											
-									}
+
+				$.ajax({
+					data:  {nombre: $('#nombre').val(),
+							refcliente: $("#refcliente").chosen().val(),
+							refcancha: $('#refcancha').val(),
+							horautilizacion: $('#horautilizacion').val(),
+							fechautilizacion: $('#fechautilizacion').val(),
+							usuacrea:	<?php echo "'".$_SESSION['nombre_se']."'"; ?>,
+							accion: 'insertarTurno'},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />'); 
+					},
+					success:  function (response) {
+						
+						if (response == '') {
+							$(".alert").removeClass("alert-danger");
+							$(".alert").removeClass("alert-info");
+							$(".alert").addClass("alert-success");
+							$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Turno</strong>. ');
+							$(".alert").delay(3000).queue(function(){
+								/*aca lo que quiero hacer 
+								  después de los 2 segundos de retraso*/
+								$(this).dequeue(); //continúo con el siguiente ítem en la cola
+								
 							});
+							$("#load").html('');
+							url = "index.php";
+							//$(location).attr('href',url);
+						} else {
+							$(".alert").removeClass("alert-danger");
+							$(".alert").removeClass("alert-info");
+							$(".alert").removeClass("alert-success");
+							$(".alert").addClass("alert-danger");
+							$(".alert").html('<strong>Error!</strong>'+response);
+							$("#load").html('');
+						}
+					}
+				});
 		}
     });
 
