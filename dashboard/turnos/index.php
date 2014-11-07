@@ -47,7 +47,13 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 
 	<style type="text/css">
-		
+		td {
+			border-left:1px solid #333;
+			border-right:1px solid #333;
+		}
+		#refcliente {
+			z-index:999;
+		}
 		
 	</style>
     
@@ -217,7 +223,21 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
 		      changeYear: true,
 		      numberOfMonths: 2,
 		      onSelect: function(textoFecha, objDatepicker){
-		         $("#mensaje").html("<p>Has seleccionado: " + textoFecha + "</p>");
+				 $('#fechaCambio').html(textoFecha);
+		         $.ajax({
+					data:  {fecha: textoFecha,
+							accion: 'crearTablaTurnos'},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />'); 
+					},
+					success:  function (response) {
+						
+						$('#datos').html(response);
+						$("#load").html('');
+					}
+				});
 		      }
 		 });
       });
@@ -318,7 +338,7 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
 
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Proveedor</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Turno</p>
         </div>
     	<div class="cuerpoBox">
         
@@ -358,8 +378,8 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
                     
                     <div class="form-group">
                     	<label for="refcliente" class="control-label col-lg-3" style="text-align:left">Cliente</label>
-                        <div class="col-lg-5">
-                        	<select data-placeholder="selecione el cliente..." id="refcliente" name="refcliente" class="chosen-select" style="width:350px;" tabindex="2">
+                        <div class="col-lg-6">
+                        	<select data-placeholder="selecione el cliente..." id="refcliente" name="refcliente" class="chosen-select" style="width:450px;" tabindex="2">
             					<option value=""></option>
                                 <?php while ($rowC = mysql_fetch_array($resClientes)) { ?>
                                 	<option value="<?php echo $rowC[0]; ?>"><?php echo $rowC[1]; ?></option>
@@ -368,7 +388,7 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
                             </select>
 							
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-3">
                         	<button type="button" class="btn btn-success" id="crearcliente" style="margin-left:0px;">Nuevo Cliente</button>
                         </div>
                     </div>
@@ -400,9 +420,9 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
     
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 10 Turnos Cargados</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Turnos del día de la fecha: <span id="fechaCambio"><?php echo date('Y-m-d'); ?></span></p>
         </div>
-    	<div class="cuerpoBox">
+    	<div class="cuerpoBox" id="datos">
         	<table class="table table-striped">
             	<thead>
                 	<tr>
@@ -410,18 +430,24 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
                         <th>Cancha 1</th>
                         <th>Cancha 2</th>
                         <th>Cancha 3</th>
-                        <th>Acciones</th>
+                        <th style="padding-left:9%;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-						<?php for($i=mysql_result($resPrimerUltimoTurno,0,0);$i<=mysql_result($resPrimerUltimoTurno,0,1);$i++) { ?>
+						<?php 
+							for($i=mysql_result($resPrimerUltimoTurno,0,0);$i<=mysql_result($resPrimerUltimoTurno,0,1);$i++) { 
+								$idTurno1 = "#";
+								$idTurno2 = "#";
+								$idTurno3 = "#";
+						?>
                     	<tr>
                         	<td><?php echo $i; ?>:00</td>
                             <td>
 								<?php 
 									$cancha1 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,1);
 									if (mysql_num_rows($cancha1)>0) {
-										echo mysql_result($cancha1,0,0);	
+										echo '<a href="../clientes/modificar.php?id='.mysql_result($cancha1,0,2).'">'.mysql_result($cancha1,0,0).'</a>';
+										$idTurno1 =	mysql_result($cancha1,0,1);
 									}
 								?>
                             </td>
@@ -429,7 +455,8 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
 								<?php 
 									$cancha2 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,2);
 									if (mysql_num_rows($cancha2)>0) {
-										echo mysql_result($cancha2,0,0);	
+										echo '<a href="../clientes/modificar.php?id='.mysql_result($cancha2,0,2).'">'.mysql_result($cancha2,0,0).'</a>';
+										$idTurno2 =	mysql_result($cancha2,0,1);	
 									}
 								?>
                             </td>
@@ -437,11 +464,12 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
 								<?php 
 									$cancha3 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,3);
 									if (mysql_num_rows($cancha3)>0) {
-										echo mysql_result($cancha3,0,0);	
+										echo '<a href="../clientes/modificar.php?id='.mysql_result($cancha3,0,2).'">'.mysql_result($cancha3,0,0).'</a>';
+										$idTurno3 =	mysql_result($cancha3,0,1);	
 									}
 								?>
                             </td>
-                            <td>
+                            <td align="center">
                             		<div class="btn-group">
 										<button class="btn btn-success" type="button">Acciones</button>
 										
@@ -452,11 +480,22 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
 										
 										<ul class="dropdown-menu" role="menu">
 											<li>
-											<a href="javascript:void(0)" class="varmodificar" id="">Modificar</a>
+											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $idTurno1; ?>">Modificar Cancha 1</a>
 											</li>
-
 											<li>
-											<a href="javascript:void(0)" class="varborrar" id="">Borrar</a>
+											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $idTurno2; ?>">Modificar Cancha 2</a>
+											</li>
+                                            <li>
+											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $idTurno3; ?>">Modificar Cancha 3</a>
+											</li>
+											<li>
+											<a href="javascript:void(0)" class="varborrar" id="<?php echo $idTurno1; ?>">Borrar Turno 1</a>
+											</li>
+                                            <li>
+											<a href="javascript:void(0)" class="varborrar" id="<?php echo $idTurno2; ?>">Borrar Turno 2</a>
+											</li>
+                                            <li>
+											<a href="javascript:void(0)" class="varborrar" id="<?php echo $idTurno3; ?>">Borrar Turno 3</a>
 											</li>
 
 										</ul>
@@ -517,7 +556,10 @@ $(document).ready(function(){
 			alert("Error, vuelva a realizar la acción.");	
 		  }
 	});//fin del boton modificar
-
+	
+	
+	
+	
 	$( "#dialog2" ).dialog({
 		 	
 			    autoOpen: false,
@@ -612,6 +654,22 @@ $(document).ready(function(){
 			return $error;
     }
 	
+	$('#fechautilizacion').change(function() {
+		$.ajax({
+					data:  {fecha: $('#fechautilizacion').val(),
+							accion: 'crearTablaTurnos'},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />'); 
+					},
+					success:  function (response) {
+						
+						$('.cuerpoBox').html(response);
+					}
+				});
+	});
+	
 	//al enviar el formulario
     $('#cargar').click(function(e){
 		e.preventDefault();
@@ -648,7 +706,7 @@ $(document).ready(function(){
 							});
 							$("#load").html('');
 							url = "index.php";
-							//$(location).attr('href',url);
+							$(location).attr('href',url);
 						} else {
 							$(".alert").removeClass("alert-danger");
 							$(".alert").removeClass("alert-info");

@@ -70,6 +70,107 @@ switch ($accion) {
 	case 'traerPrimerUltimoTurno':
 		traerPrimerUltimoTurno($serviciosTurnos);
 		break;
+	case 'crearTablaTurnos':
+		crearTablaTurnos($serviciosTurnos);
+		break;
+}
+
+
+function crearTablaTurnos($serviciosTurnos) {
+	$fecha					=	$_POST['fecha'];
+	$resPrimerUltimoTurno	=	$serviciosTurnos->traerPrimerUltimoTurno($fecha);
+	
+	$sql		=	'<table class="table table-striped">
+            	<thead>
+                	<tr>
+                    	<th>Horario</th>
+                        <th>Cancha 1</th>
+                        <th>Cancha 2</th>
+                        <th>Cancha 3</th>
+                        <th style="padding-left:9%;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>';
+	for($i=mysql_result($resPrimerUltimoTurno,0,0);$i<=mysql_result($resPrimerUltimoTurno,0,1);$i++) { 
+								$idTurno1 = "#";
+								$idTurno2 = "#";
+								$idTurno3 = "#";
+
+        $sql=$sql.'<tr>
+                    <td>'.$i.':00</td>
+                    <td>';
+  
+                            $cancha1 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,1);
+                            if (mysql_num_rows($cancha1)>0) {
+								
+                                $sql=$sql.'<a href="../clientes/modificar.php?id='.mysql_result($cancha1,0,2).'">'.mysql_result($cancha1,0,0).'</a>';
+                                
+								$idTurno1 =	mysql_result($cancha1,0,1);
+                            }
+
+                    $sql=$sql.'</td><td>';
+					
+                    
+                            $cancha2 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,2);
+                            if (mysql_num_rows($cancha2)>0) {
+                                
+								$sql=$sql.'<a href="../clientes/modificar.php?id='.mysql_result($cancha2,0,2).'">'.mysql_result($cancha2,0,0).'</a>';
+                                
+								$idTurno2 =	mysql_result($cancha2,0,1);	
+                            }
+
+                    $sql=$sql.'</td><td>';
+      
+                            $cancha3 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,3);
+                            if (mysql_num_rows($cancha3)>0) {
+                                
+								$sql=$sql.'<a href="../clientes/modificar.php?id='.mysql_result($cancha3,0,2).'">'.mysql_result($cancha3,0,0).'</a>';
+                                
+								$idTurno3 =	mysql_result($cancha3,0,1);	
+                            }
+  
+                    $sql=$sql.'</td>
+                    <td align="center">
+                            <div class="btn-group">
+                                <button class="btn btn-success" type="button">Acciones</button>
+                                
+                                <button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                    <a href="javascript:void(0)" class="varmodificar" id="'.$idTurno1.'">Modificar Cancha 1</a>
+                                    </li>
+                                    <li>
+                                    <a href="javascript:void(0)" class="varmodificar" id="'.$idTurno2.'">Modificar Cancha 2</a>
+                                    </li>
+                                    <li>
+                                    <a href="javascript:void(0)" class="varmodificar" id="'.$idTurno3.'">Modificar Cancha 3</a>
+                                    </li>
+                                    <li>
+                                    <a href="javascript:void(0)" class="varborrar" id="'.$idTurno1.'">Borrar Turno 1</a>
+                                    </li>
+                                    <li>
+                                    <a href="javascript:void(0)" class="varborrar" id="'.$idTurno2.'">Borrar Turno 2</a>
+                                    </li>
+                                    <li>
+                                    <a href="javascript:void(0)" class="varborrar" id="'.$idTurno3.'">Borrar Turno 3</a>
+                                    </li>
+
+                                </ul>
+                            </div>
+                     </td>
+                </tr>';
+		}
+
+                $sql=$sql.'</tbody></table><div style="height:50px;">
+            
+            </div>
+            <button type="button" class="btn btn-default ver" style="margin-left:0px;">Ver Todos</button>';	
+				
+		echo $sql;
 }
 
 function traerPrimerUltimoTurno($serviciosTurnos) {
