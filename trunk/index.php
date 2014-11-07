@@ -179,13 +179,14 @@ $serviciosUsuarios = new ServiciosUsuarios();
 
 <body>
 
-<!--<div id="header">
-	<img src="imagenes/LogoSEO1.png" width="396" height="89"> 
-    
-</div>
-<div style="height:1px; background-color:#575a5f;"></div>-->
+
+
+
 <div class="logueo" align="center">
-	<section style="width:600px; padding-top:10px; margin-top:60px; background-color:#333; border:1px solid #101010; padding:25px;box-shadow: 4px 4px 5px #464646;-webkit-box-shadow: 4px 4px 5px #464646;
+<br>
+<br>
+<br>
+	<section style="width:700px; padding-top:10px; padding-top:60px; background-color:#333; border:1px solid #101010; padding:25px;box-shadow: 4px 4px 5px #464646;-webkit-box-shadow: 4px 4px 5px #464646;
   -moz-box-shadow: 4px 4px 5px #464646;">
 
 			<div id="error" style="text-align:left;">
