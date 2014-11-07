@@ -16,6 +16,7 @@ $serviciosTurnos	= new ServiciosTurnos();
 
 $resCanchas = $serviciosTurnos->traerCanchas();
 $resClientes= $serviciosTurnos->traerClientes();
+$resTurnos = $serviciosTurnos->traerTurnos();
 
 ?>
 
@@ -232,6 +233,8 @@ $resClientes= $serviciosTurnos->traerClientes();
 		   }
 		}); 
 		</style>
+        
+        <link rel="stylesheet" href="../../css/chosen.css">
 </head>
 
 <body>
@@ -352,11 +355,17 @@ $resClientes= $serviciosTurnos->traerClientes();
                     <div class="form-group">
                     	<label for="refcliente" class="control-label col-lg-3" style="text-align:left">Cliente</label>
                         <div class="col-lg-5">
-                        	<select class="form-control" id="refcliente" name="refcliente">
-                            	<?php while ($rowC = mysql_fetch_array($resClientes)) { ?>
+                        	<select data-placeholder="selecione el cliente..." id="refcliente" name="refcliente" class="chosen-select" style="width:350px;" tabindex="2">
+            					<option value=""></option>
+                                <?php while ($rowC = mysql_fetch_array($resClientes)) { ?>
                                 	<option value="<?php echo $rowC[0]; ?>"><?php echo $rowC[1]; ?></option>
                                 <?php } ?>
+                                
                             </select>
+							
+                        </div>
+                        <div class="col-lg-4">
+                        	<button type="button" class="btn btn-success" id="crearcliente" style="margin-left:0px;">Nuevo Cliente</button>
                         </div>
                     </div>
                 
@@ -365,6 +374,7 @@ $resClientes= $serviciosTurnos->traerClientes();
                     <ul class="list-inline" style="padding-top:15px;">
                     	<li>
                     		<button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Crear</button>
+                            
                         </li>
                         
    
@@ -375,7 +385,7 @@ $resClientes= $serviciosTurnos->traerClientes();
                     <div id="error" class="alert alert-info">
                 		<p><strong>Importante!:</strong> El campo proveedor es obligatorio</p>
                 	</div>
-                    <input type="hidden" id="accion" name="accion" value="insertarTurno"/>
+                    
                 </form>
                 
                 <br>
@@ -386,7 +396,7 @@ $resClientes= $serviciosTurnos->traerClientes();
     
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 10 Proveedores Cargados</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 10 Turnos Cargados</p>
         </div>
     	<div class="cuerpoBox">
         	<table class="table table-striped">
@@ -404,9 +414,9 @@ $resClientes= $serviciosTurnos->traerClientes();
                 <tbody>
                 <!--proveedor,direccion, telefono, cuit, nombre, email -->
                 	<?php
-						if (mysql_num_rows($resProveedores)>0) {
+						if (mysql_num_rows($resTurnos)>0) {
 							$cant = 0;
-							while ($row = mysql_fetch_array($resProveedores)) {
+							while ($row = mysql_fetch_array($resTurnos)) {
 								$cant+=1;
 								if ($cant == 11) {
 									break;	
@@ -456,12 +466,12 @@ $resClientes= $serviciosTurnos->traerClientes();
 
 </div>
 
-<div id="dialog2" title="Eliminar Proveedor">
+<div id="dialog2" title="Eliminar Turno">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar al Proveedor?.<span id="proveedorEli"></span>
+            ¿Esta seguro que desea eliminar al Turno?.<span id="proveedorEli"></span>
         </p>
-        <p><strong>Importante: </strong>También se borrara la relación con los productos asociados</p>
+        <p><strong>Importante: </strong>El turno se eliminara definitivamente.</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
 
@@ -509,7 +519,7 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarProveedores'},
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarTurno'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
@@ -566,62 +576,47 @@ $(document).ready(function(){
     $('#cargar').click(function(){
 		if (validador() == "")
         {
-			//información del formulario
-			var formData = new FormData($(".formulario")[0]);
-			var message = "";
-			//hacemos la petición ajax  
 			$.ajax({
-				url: '../../ajax/ajax.php',  
-				type: 'POST',
-				// Form data
-				//datos del formulario
-				data: formData,
-				//necesario para subir archivos via ajax
-				cache: false,
-				contentType: false,
-				processData: false,
-				//mientras enviamos el archivo
-				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
-				},
-				//una vez finalizado correctamente
-				success: function(data){
-
-					if (data != '') {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Proveedor</strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
-											});
-											$("#load").html('');
+									data:  {nombre: $('#nombre').val(),
+											refcliente: $("#refcliente").chosen().val(),
+											refcancha: $('#refcancha').val(),
+											horautilizacion: $('#horautilizacion').val(),
+											fechautilizacion: $('#fechautilizacion').val(),
+											accion: 'insertarTurno'},
+									url:   '../../ajax/ajax.php',
+									type:  'post',
+									beforeSend: function () {
+											
+									},
+									success:  function (response) {
 											url = "index.php";
 											$(location).attr('href',url);
-                                            
 											
-                                        } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
-                                            $("#load").html('');
-                                        }
-				},
-				//si ha ocurrido un error
-				error: function(){
-					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
-                    $("#load").html('');
-				}
-			});
+									}
+							});
 		}
     });
 
+	$('#prueba').click(function(event) {
+			alert($("#refcliente").chosen().val());
+	});
+
 });//fin del document ready
 </script>
-
+<script src="../../js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : {allow_single_deselect:true},
+      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+      '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+  </script>
+  
 <?php } ?>
 
 </body>

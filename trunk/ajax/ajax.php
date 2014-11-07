@@ -4,10 +4,10 @@ include ('../includes/funcionesHTML.php');
 
 include ('../includes/funcionesUsuarios.php');
 include ('../includes/funcionesProductos.php');
-
+include ('../includes/funcionesTurnos.php');
 
 $ServiciosFunciones = new ServiciosHTML();
-
+$serviciosTurnos	= new ServiciosTurnos();
 $serviciosUsuarios  = new ServiciosUsuarios();
 $serviciosProductos  = new ServiciosProductos();
 
