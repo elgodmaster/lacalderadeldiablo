@@ -2,9 +2,9 @@
 
 session_start();
 
-if ((!isset($_SESSION['usua_se'])) && ($_SESSION['refrol_se'] == 1))
+if (!isset($_SESSION['usua_se']))
 {
-	header('Location: /wportalinmobiliario/vistas/');
+	header('Location: /lacalderadeldiablo/vistas/');
 } else {
 
 
@@ -13,11 +13,7 @@ require '../../includes/funcionesProductos.php';
 
 $serviciosProductos = new ServiciosProductos();
 
-$resProductos = $serviciosProductos->traerProductos();
-
 $resProveedores = $serviciosProductos->traerProveedores();
-
-$resTipoProducto = $serviciosProductos->traerTipoProducto();
 
 ?>
 
@@ -44,15 +40,13 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 
 	<style type="text/css">
-		.form-group {
-			padding:10px;
-		}
+		
 		
 	</style>
     
     <script type="text/javascript">
 		$( document ).ready(function() {
-			$('.icodashboard2, .icoventas2, .icousuarios2, .icoturnos2, .icoproductos2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
+			$('.icodashboard2, .icoalquileres2, .icousuarios2, .icoinmubles2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
 				$('.menuHober').hide();
 				$('.todoMenu').show(100, function() {
 					$('#navigation').animate({'margin-left':'0px'}, {
@@ -230,8 +224,8 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                 <li><div class="icoturnos"></div><a href="../turnos/">Turnos</a></li>
                 <li><div class="icoventas"></div><a href="../ventas/">Ventas</a></li>
                 <li><div class="icousuarios"></div><a href="../clientes/">Clientes</a></li>
-                <li><div class="icoproductos"></div><a href="index.php">Productos</a></li>
-                <li><div class="icocontratos"></div><a href="../proveedores/">Proveedores</a></li>
+                <li><div class="icoproductos"></div><a href="../productos/">Productos</a></li>
+                <li><div class="icocontratos"></div><a href="index.php">Proveedores</a></li>
                 <li><div class="icoreportes"></div><a href="../reportes/">Reportes</a></li>
                 <li><div class="icosalir"></div><a href="../salir/">Salir</a></li>
             </ul>
@@ -288,111 +282,60 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
 
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Producto</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Proveedor</p>
         </div>
     	<div class="cuerpoBox">
-        
-        <div class="row"> 
-        <div class="col-sm-12 col-md-12">
-        <form class="form-inline formulario" role="form">
+        <form class="form-horizontal formulario" role="form">
                 	
-<!--idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas -->
-                	
-				              	
-                	<div class="form-group col-md-3">
-                    	<label for="codigo" class="control-label" style="text-align:left">Codigo</label>
-                        <div class="input-group col-md-12">
-                        	<input type="text" class="form-control" id="codigo" name="codigo" placeholder="Ingrese el Codigo..." required>
+                <!--proveedor,direccion, telefono, cuit, nombre, email -->
+                
+                	<div class="form-group">
+                    	<label for="proveedor" class="col-lg-3 control-label" style="text-align:left">Proveedor</label>
+                        <div class="col-lg-5">
+                        	<input type="text" class="form-control" id="proveedor" name="proveedor" placeholder="Ingrese el Proveedor..." required>
                         </div>
                     </div>
                     
-                    <div id="errorCodigo" class="col-md-3" style="margin-top:40px;">
-                            
-                    </div>
-                    
-                    <div class="form-group col-md-6">
-                    	<label for="codigobarra" class="control-label" style="text-align:left">Codigo de Barra</label>
-                        <div class="input-group col-md-12">
-                        	<input type="text" class="form-control" id="codigobarra" name="codigobarra" placeholder="Ingrese el Codigo de Barra..." required>
+                    <div class="form-group">
+                    	<label for="direccion" class="col-lg-3 control-label" style="text-align:left">Dirección</label>
+                        <div class="col-lg-5">
+                        	<input type="text" class="form-control" id="direccion" name="direccion" placeholder="Ingrese el Dirección..." required>
                         </div>
                     </div>
-
-
-                    <div class="form-group col-md-6">
-                    	<label for="nombre" class="control-label" style="text-align:left">Nombre</label>
-                        <div class="input-group col-md-12">
+                    
+                    
+                    <div class="form-group">
+                    	<label for="nombre" class="col-lg-3 control-label" style="text-align:left">Nombre</label>
+                        <div class="col-lg-5">
                         	<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el Nombre..." required>
                         </div>
                     </div>
                     
-                    <div class="form-group col-md-6">
-                    	<label for="reftipoproducto" class="control-label" style="text-align:left">Tipo Producto</label>
-                        <div class="input-group col-md-12">
-                        	<select class="form-control" id="reftipoproducto" name="reftipoproducto">
-                            	<?php while ($rowTP = mysql_fetch_array($resTipoProducto)) { ?>
-                                	<option value="<?php echo $rowTP[0]; ?>"><?php echo $rowTP[1]; ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </div>
-
-
-                    <div class="form-group col-md-6">
-                    	<label for="precio_unit" class="control-label" style="text-align:left">Precio Unitario</label>
-                        <div class="input-group col-md-12">
-                        	<span class="input-group-addon">$</span>
-                        	<input type="text" class="form-control" id="precio_unit" name="precio_unit" placeholder="Ingrese el Precio Unitario..." required>
-                            <span class="input-group-addon">.00</span>
+                    <div class="form-group">
+                    	<label for="telefono" class="col-lg-3 control-label" style="text-align:left">Teléfono</label>
+                        <div class="col-lg-5">
+                        	<input type="text" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el Teléfono..." required>
                         </div>
                     </div>
                     
-                    <div class="form-group col-md-6">
-                    	<label for="precio_venta" class="control-label" style="text-align:left">Precio Venta</label>
-                        <div class="input-group col-md-12">
-                        	<span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="precio_venta" name="precio_venta" placeholder="Ingrese el Precio Venta..." required>
-                            <span class="input-group-addon">.00</span>
-                        </div>
-                    </div>
-
-
-                    <div class="form-group col-md-6">
-                    	<label for="stock" class="control-label" style="text-align:left">Stock</label>
-                        <div class="input-group col-md-12">
-                        	<input type="text" class="form-control" id="stock" name="stock" placeholder="Ingrese el Stock..." required>
+                    <div class="form-group">
+                    	<label for="cuit" class="col-lg-3 control-label" style="text-align:left">Cuit</label>
+                        <div class="col-lg-5">
+                        	<input type="text" class="form-control" id="cuit" name="cuit" placeholder="Ingrese el Cuit..." required>
                         </div>
                     </div>
                     
-                    <div class="form-group col-md-6">
-                    	<label for="stock_min" class="control-label" style="text-align:left">Stock Minimo</label>
-                        <div class="input-group col-md-12">
-                        	<input type="text" class="form-control" id="stock_min" name="stock_min" placeholder="Ingrese el Stock Minimo..." required>
-                        </div>
-                    </div>
-
-
-                    <div class="form-group col-md-6">
-                    	<label for="caracteristicas" class="control-label" style="text-align:left">Caracteristicas</label>
-                        <div class="input-group col-md-12">
-                        	<input type="text" class="form-control" id="caracteristicas" name="caracteristicas" placeholder="Ingrese el Caracteristicas..." required>
-                        </div>
-                    </div>
                     
-                    <div class="form-group col-md-6">
-                    	<label for="refproveedor" class="control-label" style="text-align:left">Proveedor</label>
-                        <div class="input-group col-md-12">
-                        	<select class="form-control" id="refproveedor" name="refproveedor">
-                            	<?php while ($rowPR = mysql_fetch_array($resProveedores)) { ?>
-                                	<option value="<?php echo $rowPR[0]; ?>"><?php echo $rowPR[1]; ?></option>
-                                <?php } ?>
-                            </select>
+                	<div class="form-group">
+                    	<label for="eamil" class="col-lg-3 control-label" style="text-align:left">E-Mail</label>
+                        <div class="col-lg-5">
+                        	<input type="email" class="form-control" id="email" name="email" placeholder="Ingrese el E-Mail..." required>
                         </div>
                     </div>
                 
-                
-                    </div>
-                    </div>
-                    <ul class="list-inline" style="padding-top:15px;">
+                    
+                    
+                    <ul class="list-inline">
                     	<li>
                     		<button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Crear</button>
                         </li>
@@ -403,61 +346,52 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                     
                     </div>
                     <div id="error" class="alert alert-info">
-                		<p><strong>Importante!:</strong> El campo codigo, nombre, precio unitario, stock, stock min son obligatorios</p>
+                		<p><strong>Importante!:</strong> El campo proveedor es obligatorio</p>
                 	</div>
-                    <input type="hidden" id="accion" name="accion" value="insertarProducto"/>
+                    <input type="hidden" id="accion" name="accion" value="insertarProveedores"/>
                 </form>
                 
                 <br>
-                
                 
         </div>
     </div>
 
     
-    <div class="boxInfoLargo">
+    <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 10 Productos Cargados</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 10 Proveedores Cargados</p>
         </div>
     	<div class="cuerpoBox">
         	<table class="table table-striped">
             	<thead>
                 	<tr>
-                    	<th>Nombre</th>
-                        <th>Precio Unit</th>
-                        <th>Precio Vent</th>
-                        <th>Stock</th>
-                        <th>Stock min</th>
-                        <th>Tipo Prod.</th>
-                        <th>Proveedor</th>
-                        <th>Codigo</th>
-                        <th>CodigoBarra</th>
-                        <th>Caract.</th>
+                    	<th>Proveedor</th>
+                        <th>Dirección</th>
+                        <th>Teléfono</th>
+                        <th>Cuit</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-<!--idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas -->
+                <!--proveedor,direccion, telefono, cuit, nombre, email -->
                 	<?php
-						if (mysql_num_rows($resProductos)>0) {
+						if (mysql_num_rows($resProveedores)>0) {
 							$cant = 0;
-							while ($row = mysql_fetch_array($resProductos)) {
+							while ($row = mysql_fetch_array($resProveedores)) {
 								$cant+=1;
 								if ($cant == 11) {
 									break;	
 								}
 					?>
                     	<tr>
-                        	<td><?php echo utf8_encode($row['nombre']); ?></td>
-                            <td><?php echo $row['precio_unit']; ?></td>
-                            <td><?php echo $row['precio_venta']; ?></td>
-                            <td><?php echo $row['stock']; ?></td>
-                            <td><?php echo $row['stock_min']; ?></td>
-                            <td><?php echo utf8_encode($row['tipoproducto']); ?></td>
-                            <td><?php echo utf8_encode($row['proveedor']); ?></td>
-							<td><?php echo utf8_encode($row['codigo']); ?></td>
-                            <td><?php echo $row['codigobarra']; ?></td>
-                            <td><?php echo utf8_encode($row['caracteristicas']); ?></td>
+                        	<td><?php echo utf8_encode($row['proveedor']); ?></td>
+                            <td><?php echo utf8_encode($row['direccion']); ?></td>
+                            <td><?php echo $row['telefono']; ?></td>
+                            <td><?php echo $row['cuit']; ?></td>
+                            <td><?php echo utf8_encode($row['nombre']); ?></td>
+                            <td><?php echo utf8_encode($row['email']); ?></td>
                             <td>
                             		<div class="btn-group">
 										<button class="btn btn-success" type="button">Acciones</button>
@@ -469,11 +403,11 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
 										
 										<ul class="dropdown-menu" role="menu">
 											<li>
-											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idproducto']; ?>">Modificar</a>
+											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idproveedor']; ?>">Modificar</a>
 											</li>
 
 											<li>
-											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idproducto']; ?>">Borrar</a>
+											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idproveedor']; ?>">Borrar</a>
 											</li>
 
 										</ul>
@@ -482,7 +416,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                         </tr>
                     <?php } ?>
                     <?php } else { ?>
-                    	<h3>No hay productos cargados.</h3>
+                    	<h3>No hay proveedores cargados.</h3>
                     <?php } ?>
                 </tbody>
             </table>
@@ -495,10 +429,10 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
 
 </div>
 
-<div id="dialog2" title="Eliminar Producto">
+<div id="dialog2" title="Eliminar Proveedor">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar al Producto?.<span id="proveedorEli"></span>
+            ¿Esta seguro que desea eliminar al Proveedor?.<span id="proveedorEli"></span>
         </p>
         <p><strong>Importante: </strong>También se borrara la relación con los productos asociados</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
@@ -545,7 +479,7 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarProducto'},
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarProveedores'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
@@ -572,114 +506,26 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 
-	$("#nombre").click(function(event) {
-		if ($("#nombre").val() == "") {
-			$("#nombre").removeClass("alert-danger");
-			$("#nombre").attr('value','');
-			$("#nombre").attr('placeholder','Ingrese el Nombre...');
-		}
+	$("#proveedor").click(function(event) {
+		$("#proveedor").removeClass("alert-danger");
+		$("#proveedor").attr('value','');
+		$("#proveedor").attr('placeholder','Ingrese el Proveedor...');
     });
 
-	$("#nombre").change(function(event) {
-		if ($("#nombre").val() == "") {
-			$("#nombre").removeClass("alert-danger");
-			$("#nombre").attr('placeholder','Ingrese el Nombre');
-		}
-	});
-	
-	$("#codigo").click(function(event) {
-		if ($("#codigo").val() == "") {
-			$("#codigo").removeClass("alert-danger");
-			$("#codigo").attr('value','');
-			$("#codigo").attr('placeholder','Ingrese el Codigo...');
-		}
-    });
-
-	$("#codigo").change(function(event) {
-		if ($("#codigo").val() == "") {
-			$("#codigo").removeClass("alert-danger");
-			$("#codigo").attr('placeholder','Ingrese el Codigo');
-		}
-	});
-	
-	$("#precio_unit").click(function(event) {
-		if ($("#precio_unit").val() == "") {
-			$("#precio_unit").removeClass("alert-danger");
-			$("#precio_unit").attr('value','');
-			$("#precio_unit").attr('placeholder','Ingrese el Precio Unit...');
-		}
-    });
-
-	$("#precio_unit").change(function(event) {
-		if ($("#precio_unit").val() == "") {
-			$("#precio_unit").removeClass("alert-danger");
-			$("#precio_unit").attr('placeholder','Ingrese el Precio Unit');
-		}
-	});
-	
-	$("#stock").click(function(event) {
-		if ($("#stock").val() == "") {
-			$("#stock").removeClass("alert-danger");
-			$("#stock").attr('value','');
-			$("#stock").attr('placeholder','Ingrese el Stock...');
-		}
-    });
-
-	$("#stock").change(function(event) {
-		if ($("#stock").val() == "") {
-			$("#stock").removeClass("alert-danger");
-			$("#stock").attr('placeholder','Ingrese el Stock');
-		}
-	});
-	
-	$("#stock_min").click(function(event) {
-		if ($("#stock_min").val() == "") {
-			$("#stock_min").removeClass("alert-danger");
-			$("#stock_min").attr('value','');
-			$("#stock_min").attr('placeholder','Ingrese el Stock Minimo...');
-		}
-    });
-
-	$("#stock_min").change(function(event) {
-		if ($("#stock_min").val() == "") {
-			$("#stock_min").removeClass("alert-danger");
-			$("#stock_min").attr('placeholder','Ingrese el Stock Minimo');
-		}
+	$("#proveedor").change(function(event) {
+		$("#proveedor").removeClass("alert-danger");
+		$("#proveedor").attr('placeholder','Ingrese el Proveedor');
 	});
 	
 	function validador(){
 
 			$error = "";
-//idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas
+
 			
-			if ($("#nombre").val() == "") {
-				$error = "Es obligatorio el campo nombre.";
-				$("#nombre").addClass("alert-danger");
-				$("#nombre").attr('placeholder',$error);
-			}
-			
-			if ($("#codigo").val() == "") {
-				$error = "Es obligatorio el campo codigo.";
-				$("#codigo").addClass("alert-danger");
-				$("#codigo").attr('placeholder',$error);
-			}
-			
-			if ($("#precio_unit").val() == "") {
-				$error = "Es obligatorio el campo Precio Unit.";
-				$("#precio_unit").addClass("alert-danger");
-				$("#precio_unit").attr('placeholder',$error);
-			}
-			
-			if ($("#stock").val() == "") {
-				$error = "Es obligatorio el campo stock.";
-				$("#stock").addClass("alert-danger");
-				$("#stock").attr('placeholder',$error);
-			}
-			
-			if ($("#stock_min").val() == "") {
-				$error = "Es obligatorio el campo stock min.";
-				$("#stock_min").addClass("alert-danger");
-				$("#stock_min").attr('placeholder',$error);
+			if ($("#proveedor").val() == "") {
+				$error = "Es obligatorio el campo proveedor.";
+				$("#proveedor").addClass("alert-danger");
+				$("#proveedor").attr('placeholder',$error);
 			}
 
 
@@ -688,7 +534,6 @@ $(document).ready(function(){
 	
 	//al enviar el formulario
     $('#cargar').click(function(){
-		existeCodigo($( this ).val());
 		if (validador() == "")
         {
 			//información del formulario
@@ -716,7 +561,7 @@ $(document).ready(function(){
                                             $(".alert").removeClass("alert-danger");
 											$(".alert").removeClass("alert-info");
                                             $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Producto</strong>. ');
+                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Proveedor</strong>. ');
 											$(".alert").delay(3000).queue(function(){
 												/*aca lo que quiero hacer 
 												  después de los 2 segundos de retraso*/
@@ -742,42 +587,6 @@ $(document).ready(function(){
 				}
 			});
 		}
-    });
-	
-	function existeCodigo(codigo) {
-		$.ajax({
-			data:  {codigo:	$("#codigo").val(),
-					accion:	'existeCodigo'},
-			url:   '../../ajax/ajax.php',
-			type:  'post',
-			beforeSend: function () {
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');
-			},
-			success:  function (response) {
-					
-					if (response == '') {
-						
-						$("#load").html('');
-						$("#codigo").val('');
-						$error = "Ya existe ese codigo.";
-						$("#codigo").addClass("alert-danger");
-						$("#codigo").attr('placeholder',$error);
-						$("#errorCodigo").html('');
-						$("#errorCodigo").html('<strong>Error!</strong> El codigo ya existe');
-
-					} else {
-						$("#load").html('');
-						$("#errorCodigo").html('');
-						$("#errorCodigo").html('<strong>Ok!</strong> El codigo se puede utilizar');
-						
-					}
-					
-			}
-		});
-	}
-	
-	$('#codigo').focusout(function(e) {
-        existeCodigo($( this ).val());
     });
 
 });//fin del document ready

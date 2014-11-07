@@ -4,7 +4,7 @@ session_start();
 
 if (!isset($_SESSION['usua_se']))
 {
-	header('Location: /wportalinmobiliario/vistas/');
+	header('Location: /lacalderadeldiablo/vistas/');
 } else {
 
 

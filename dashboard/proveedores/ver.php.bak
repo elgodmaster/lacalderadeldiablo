@@ -13,7 +13,7 @@ require '../../includes/funcionesProductos.php';
 
 $serviciosProductos = new ServiciosProductos();
 
-$resProductos = $serviciosProductos->traerProductos();
+$resProveedores = $serviciosProductos->traerProveedores();
 
 ?>
 
@@ -47,7 +47,7 @@ $resProductos = $serviciosProductos->traerProductos();
     
     <script type="text/javascript">
 		$( document ).ready(function() {
-			$('.icodashboard2, .icoventas2, .icousuarios2, .icoturnos2, .icoproductos2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
+			$('.icodashboard2, .icoalquileres2, .icousuarios2, .icoinmubles2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
 				$('.menuHober').hide();
 				$('.todoMenu').show(100, function() {
 					$('#navigation').animate({'margin-left':'0px'}, {
@@ -282,43 +282,35 @@ $resProductos = $serviciosProductos->traerProductos();
 	
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Productos Cargados</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Proveedores Cargados</p>
         </div>
     	<div class="cuerpoBox">
-        <button type="button" class="btn btn-primary nuevo" style="margin-left:0px;">Nuevo Producto</button>
+        <button type="button" class="btn btn-primary nuevo" style="margin-left:0px;">Nuevo Proveedor</button>
         	<table class="table table-striped">
             	<thead>
                 	<tr>
-                    	<th>Nombre</th>
-                        <th>Precio Unit</th>
-                        <th>Precio Vent</th>
-                        <th>Stock</th>
-                        <th>Stock min</th>
-                        <th>Tipo Prod.</th>
-                        <th>Proveedor</th>
-                        <th>Codigo</th>
-                        <th>CodigoBarra</th>
-                        <th>Caract.</th>
+                    	<th>Proveedor</th>
+                        <th>Dirección</th>
+                        <th>Teléfono</th>
+                        <th>Cuit</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-<!--idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas -->
+                <!--proveedor,direccion, telefono, cuit, nombre, email -->
                 	<?php
-						if (mysql_num_rows($resProductos)>0) {
-							while ($row = mysql_fetch_array($resProductos)) {
+						if (mysql_num_rows($resProveedores)>0) {
+							while ($row = mysql_fetch_array($resProveedores)) {
 					?>
                     	<tr>
-                        	<td><?php echo utf8_encode($row['nombre']); ?></td>
-                            <td><?php echo $row['precio_unit']; ?></td>
-                            <td><?php echo $row['precio_venta']; ?></td>
-                            <td><?php echo $row['stock']; ?></td>
-                            <td><?php echo $row['stock_min']; ?></td>
-                            <td><?php echo utf8_encode($row['tipoproducto']); ?></td>
-                            <td><?php echo utf8_encode($row['proveedor']); ?></td>
-							<td><?php echo utf8_encode($row['codigo']); ?></td>
-                            <td><?php echo $row['codigobarra']; ?></td>
-                            <td><?php echo utf8_encode($row['caracteristicas']); ?></td>
+                        	<td><?php echo utf8_encode($row['proveedor']); ?></td>
+                            <td><?php echo utf8_encode($row['direccion']); ?></td>
+                            <td><?php echo $row['telefono']; ?></td>
+                            <td><?php echo $row['cuit']; ?></td>
+                            <td><?php echo utf8_encode($row['nombre']); ?></td>
+                            <td><?php echo utf8_encode($row['email']); ?></td>
                             <td>
                             		<div class="btn-group">
 										<button class="btn btn-success" type="button">Acciones</button>
@@ -330,11 +322,11 @@ $resProductos = $serviciosProductos->traerProductos();
 										
 										<ul class="dropdown-menu" role="menu">
 											<li>
-											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idproducto']; ?>">Modificar</a>
+											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idproveedor']; ?>">Modificar</a>
 											</li>
 
 											<li>
-											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idproducto']; ?>">Borrar</a>
+											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idproveedor']; ?>">Borrar</a>
 											</li>
 
 										</ul>
@@ -356,10 +348,10 @@ $resProductos = $serviciosProductos->traerProductos();
 
 </div>
 
-<div id="dialog2" title="Eliminar Producto">
+<div id="dialog2" title="Eliminar Proveedor">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar al Producto?.<span id="proveedorEli"></span>
+            ¿Esta seguro que desea eliminar al Proveedor?.<span id="proveedorEli"></span>
         </p>
         <p><strong>Importante: </strong>También se borrara la relación con los productos asociados</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
@@ -406,7 +398,7 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarProducto'},
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarProveedores'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
