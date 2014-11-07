@@ -61,8 +61,42 @@ switch ($accion) {
 	case 'existeCodigoMod':
 		existeCodigoMod($serviciosProductos);
 		break;
-		
+	case 'insertarTurno':
+		insertarTurno($serviciosTurnos);
+		break;
+	case 'hayTurnos':
+		hayTurnos($serviciosTurnos);
+		break;
+	case 'traerPrimerUltimoTurno':
+		traerPrimerUltimoTurno($serviciosTurnos);
+		break;
 }
+
+function traerPrimerUltimoTurno($serviciosTurnos) {
+	$fecha		=	$_POST['fecha'];
+	echo $serviciosTurnos->traerPrimerUltimoTurno($fecha);
+}
+
+
+function hayTurnos($serviciosTurnos) {
+	$fecha		=	$_POST['fecha'];
+	$horario	=	$_POST['horario'];
+	$refcancha	=	$_POST['refcancha'];
+	
+	echo $serviciosTurnos->hayTurnos($fecha,$horario,$refcancha);
+}
+
+
+function insertarTurno($serviciosTurnos) {
+	$refcancha			=	$_POST['refcancha'];
+	$fechautilizacion	=	$_POST['fechautilizacion'];
+	$horautilizacion	=	$_POST['horautilizacion'];
+	$refcliente			=	$_POST['refcliente'];
+	$fechacreacion		=	'';
+	$usuacrea			=	$_POST['usuacrea'];
+	echo $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea);	
+}
+
 
 function existeCodigoMod($serviciosProductos) {
 	$id		=	$_POST['id'];

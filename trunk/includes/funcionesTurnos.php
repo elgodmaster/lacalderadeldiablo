@@ -46,30 +46,49 @@ function traerTurnosPorDia($fecha) {
 	return $res;
 }
 
-function hayTurnos($fecha,$horario) {
-	$sql = "select idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea
-			from lcdd_turnos where fechautilizacion = '".$fecha."' and horautilizacion = '".$horario."' and refcancha =".$refcancha;
+function traerTurnosPorDiaCanchaFecha($fecha,$horario,$refcancha) {
+	$sql = "select c.nombre,t.idturno,c.idcliente
+			from lcdd_turnos t 
+			inner join lcdd_clientes c on t.refcliente = c.idcliente
+			where t.fechautilizacion = '".$fecha."' and hour(t.horautilizacion) = '".$horario."' and t.refcancha =".$refcancha;
 	$res = $this->query($sql,0);
+
+	return $res;
+}
+
+function hayTurnos($fecha,$horario,$refcancha) {
+	$sql = "select idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea
+			from lcdd_turnos where fechautilizacion = '".$fecha."' and hour(horautilizacion) = '".$horario."' and refcancha =".$refcancha;
+	$res = $this->query($sql,0);
+
 	if (mysql_num_rows($res) > 0) {
-    		return '';
+    		return 'Ya esta ocupado ese turno';
     	} else {
-    		return '0';
+    		return '';
     }
 }
 
 function existeTurno($fecha,$horario,$refcancha,$id) {
 	$sql = "select idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea
-			from lcdd_turnos where fechautilizacion = '".$fecha."' and horautilizacion = '".$horario."' and refcancha =".$refcancha;
+			from lcdd_turnos where fechautilizacion = '".$fecha."' and hour(horautilizacion) = '".$horario."' and refcancha =".$refcancha;
 	$res = $this->query($sql,0);
 	if (mysql_num_rows($res) > 0) {
 			if (mysql_result($res,0,0) != $id) {
-    			return '';
+    			return 'Ya esta ocupado ese turno';
 			} else {
-				return '0';
+				return '';
 			}
     	} else {
-    		return '0';
+    		return '';
     }
+}
+
+function traerPrimerUltimoTurno($fecha) {
+	$sql = "select IFNULL(min(hour(horautilizacion)),12) as primer,IFNULL(max(hour(horautilizacion)),24) as ultimo
+			from		lcdd_turnos t
+			where		t.fechautilizacion = '".$fecha."'";	
+	$res = $this->query($sql,0);
+	return $res;
 }
 
 function insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea) {
@@ -78,19 +97,23 @@ function insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente
 						('',
 						".$refcancha.",
 						'".$fechautilizacion."',
-						'".$horautilizacion."',
+						'".$horautilizacion.":00:00',
 						".$refcliente.",
 						null,
-						'".$$usuacrea."')";
-	$res		=	$this->query($sql,1);
-	return $res;
+						'".utf8_decode($usuacrea)."')";
+	if ($this->hayTurnos($fechautilizacion,$horautilizacion,$refcancha) == '') {
+		$res		=	$this->query($sql,1);
+	} else {
+		return 'Ya existe un turno';	
+	}
+	return '';
 }
 
 function modificarTurno($id,$refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea) {
 	$sql		=	"update lcdd_turnos set
 						refcancha = ".$refcancha.",
 						fechautilizacion = '".$fechautilizacion."',
-						horautilizacion = '".$horautilizacion."',
+						horautilizacion = '".$horautilizacion.":00:00',
 						refcliente = ".$refcliente.",
 						usuacrea = '".$$usuacrea."'
 						where idturno = ".$id;
