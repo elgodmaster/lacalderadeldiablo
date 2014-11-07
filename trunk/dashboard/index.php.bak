@@ -8,7 +8,7 @@ if (!isset($_SESSION['usua_se']))
 } else {
 
 
-require '../../includes/funcionesProductos.php';
+require '../includes/funcionesProductos.php';
 
 
 $serviciosProductos = new ServiciosProductos();
