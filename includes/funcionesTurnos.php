@@ -12,7 +12,7 @@ class ServiciosTurnos {
 /* logica de negocios para los turnos */
 
 function traerClientes() {
-	$sql = "select idcliente,concat(nrocliente,' - ',nombre)as nombre from lcdd_clientes order by nombre";
+	$sql = "select idcliente,concat('Nro Cliente: ',nrocliente,' - Nombre: ',nombre,' - NroDoc: ',IFNULL(nrodocumento,''))as nombre from lcdd_clientes order by nombre";
 	$res = $this->query($sql,0);
 	return $res;	
 }
