@@ -43,6 +43,18 @@ function insertarCliente($nombre,$nrocliente,$email,$nrodocumento) {
 	}
 }
 
+	//falta verficar si estos campos estan bien
+
+	function eliminarCliente($id) {
+		$sqlD = "delete from lcdd_clientes idcliente =".$id;
+		$this->query($sqlD,0);
+	
+		$sql = "delete from lcdd_productos where idcliente =".$id;
+		$this->query($sql,0);
+		return true;
+}
+
+
 /* fin */
 
 function query($sql,$accion) {
