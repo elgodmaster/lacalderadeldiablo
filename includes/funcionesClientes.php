@@ -43,16 +43,64 @@ function insertarCliente($nombre,$nrocliente,$email,$nrodocumento) {
 	}
 }
 
-	//falta verficar si estos campos estan bien
+	
 
 	function eliminarCliente($id) {
 		$sqlD = "delete from lcdd_clientes idcliente =".$id;
 		$this->query($sqlD,0);
 	
-		$sql = "delete from lcdd_productos where idcliente =".$id;
+		$sql = "delete from lcdd_clientes where idcliente =".$id;
 		$this->query($sql,0);
 		return true;
 }
+
+
+function modificarCliente($id,$nombre,$nrocliente,$email,$nrodocumento) {
+	$sql = "update lcdd_clientes 			
+			SET
+			nombre = '".$nombre."',
+			nrocliente = ".$nrocliente.",
+			email = ".$email.",
+			nrodocumento = ".$nrodocumento.",
+			WHERE idcliente = ".$id;
+	$res = $this->query($sql,0) or die ('Hubo un error');
+	return $res;
+
+}
+
+
+function traerClientePorId($id) {
+	$sql	=	"select idcliente from lcdd_clientes where idcliente =".$id;
+	$res	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al insertar datos';
+	} else {
+		return $res;
+	}
+}
+
+
+function traerClientePorNroCliente($nrocliente) {
+	$sql	=	"select nrocliente from lcdd_cliente where nrocliente =".$nrocliente;
+	$res	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al insertar datos';
+	} else {
+		return $res;
+	}
+}
+
+
+function traerClientePorNroDocumento($nrodocumento) {
+	$sql	=	"select nrodocumento from lcdd_cliente where nrodocumento =".$nrodocumento;
+	$res	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al insertar datos';
+	} else {
+		return $res;
+	}
+}
+
 
 
 /* fin */
