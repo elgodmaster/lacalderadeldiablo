@@ -42,8 +42,50 @@ function traerTurnosPorId($id) {
 }
 
 function traerTurnosPorDia($fecha) {
-	$sql = "select idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea
-			from lcdd_turnos where fechautilizacion = '".$fecha."'";
+	$sql = "select t.idturno,t.refcancha,t.fechautilizacion,t.horautilizacion,t.refcliente,t.fechacreacion,t.usuacrea,c.nombre
+			from lcdd_turnos t
+			inner join lcdd_clientes c on t.refcliente = c.idcliente 
+			where t.fechautilizacion = '".$fecha."' order by t.horautilizacion";
+	$res = $this->query($sql,0);
+	return $res;
+}
+
+function traerTurnosPorDiaAgrupado($fecha) {
+	$sql = "select 
+			    max(case
+			        when t.refcancha = 1 then c.nombre
+			        else ''
+			    end) as Cancha1,
+			    max(case
+			        when t.refcancha = 2 then c.nombre
+			        else ''
+			    end) as Cancha2,
+			    max(case
+			        when t.refcancha = 3 then c.nombre
+			        else ''
+			    end) as Cancha3,
+				max(case
+			        when t.refcancha = 1 then t.idturno
+			        else ''
+			    end) as turno1,
+			    max(case
+			        when t.refcancha = 2 then t.idturno
+			        else ''
+			    end) as turno2,
+			    max(case
+			        when t.refcancha = 3 then t.idturno
+			        else ''
+			    end) as turno3,
+			    t.fechautilizacion,
+			    t.horautilizacion
+			from
+			    lcdd_turnos t
+			        inner join
+			    lcdd_clientes c ON t.refcliente = c.idcliente
+			where
+			    t.fechautilizacion = '".$fecha."'
+			group by t.fechautilizacion , t.horautilizacion
+			order by t.horautilizacion";
 	$res = $this->query($sql,0);
 	return $res;
 }

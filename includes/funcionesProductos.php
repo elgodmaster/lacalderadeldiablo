@@ -167,6 +167,38 @@ function traerProductoPorId($id) {
 	return $res;
 }
 
+
+function traerProductosLimite($limite) {
+	$sql = "select
+				p.idproducto,
+					p.nombre,
+					p.precio_unit,
+					p.precio_venta,
+					p.stock,
+					p.stock_min,
+					p.reftipoproducto,
+					p.refproveedor,
+					p.codigo,
+					p.codigobarra,
+					p.caracteristicas,
+					tp.tipoproducto,
+					pr.proveedor
+					from		lcdd_productos p
+
+					inner
+					join		lcdd_tipoproducto tp
+					on			p.reftipoproducto = tp.idtipoproducto and tp.activo = 1
+
+					inner
+					join		lcdd_proveedores pr
+					on			pr.idproveedor = p.refproveedor
+
+					order by p.idproducto desc limit ".$limite;
+	$res = $this->query($sql,0) or die ('Hubo un error');
+	return $res;
+}
+
+
 function traerProductos() {
 	$sql = "select
 				p.idproducto,

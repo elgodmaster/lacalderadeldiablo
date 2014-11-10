@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 10-11-2014 a las 06:52:56
+-- Tiempo de generación: 06-11-2014 a las 06:37:31
 -- Versión del servidor: 5.5.24-log
 -- Versión de PHP: 5.4.3
 
@@ -50,25 +50,21 @@ INSERT INTO `lcdd_canchas` (`idcancha`, `cancha`) VALUES
 CREATE TABLE IF NOT EXISTS `lcdd_clientes` (
   `idcliente` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
-  `nrocliente` varchar(6) COLLATE utf8_spanish_ci NOT NULL,
-  `email` varchar(60) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `nrodocumento` int(11) DEFAULT NULL,
-  `telefono` varchar(25) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `nombre2` varchar(45) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `nombre3` varchar(45) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `nombre4` varchar(45) COLLATE utf8_spanish_ci DEFAULT NULL,
+  `nrocliente` varchar(5) COLLATE utf8_spanish_ci NOT NULL,
   PRIMARY KEY (`idcliente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=4 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_clientes`
 --
 
-INSERT INTO `lcdd_clientes` (`idcliente`, `nombre`, `nrocliente`, `email`, `nrodocumento`, `telefono`) VALUES
-(1, 'marcos', 'ma0001', NULL, NULL, NULL),
-(2, 'enzo franchescoli', 'en0002', 'elenzo@hotmail.com', NULL, ''),
-(3, 'nora', 'no0003', NULL, NULL, NULL),
-(7, 'cabrera juan', 'ca0007', '', 16448995, '15849846'),
-(9, 'Pedro', 'Pe0008', 'pedro@msn.com', 12300300, '156234878'),
-(10, 'pantro', 'pa0010', 'asjdhask', 12315, '645498'),
-(11, 'Gaston Milanovich', 'Ga0011', 'milanga@yahoo.com.ar', 32568456, '152364578');
+INSERT INTO `lcdd_clientes` (`idcliente`, `nombre`, `nombre2`, `nombre3`, `nombre4`, `nrocliente`) VALUES
+(1, 'marcos', NULL, NULL, NULL, 'ma000'),
+(2, 'enzo', NULL, NULL, NULL, 'en000'),
+(3, 'nora', NULL, NULL, NULL, 'no000');
 
 -- --------------------------------------------------------
 
@@ -166,18 +162,7 @@ CREATE TABLE IF NOT EXISTS `lcdd_turnos` (
   `fechacreacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `usuacrea` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`idturno`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=7 ;
-
---
--- Volcado de datos para la tabla `lcdd_turnos`
---
-
-INSERT INTO `lcdd_turnos` (`idturno`, `refcancha`, `fechautilizacion`, `horautilizacion`, `refcliente`, `fechacreacion`, `usuacrea`) VALUES
-(1, 2, '2014-11-09', '17:00:00', 10, '2014-11-09 20:43:51', 'Saupurein '),
-(2, 2, '2014-11-09', '12:00:00', 3, '2014-11-09 20:44:59', 'Saupurein '),
-(4, 1, '2014-11-10', '14:00:00', 9, '2014-11-10 06:09:40', 'Saupurein '),
-(5, 1, '2014-11-10', '23:00:00', 2, '2014-11-10 06:24:08', 'Saupurein '),
-(6, 2, '2014-11-10', '14:00:00', 7, '2014-11-10 06:32:47', 'Saupurein ');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 

@@ -77,6 +77,16 @@ function modificarCliente($id,$nombre,$nrocliente,$email,$nrodocumento,$telefono
 
 }
 
+function traerCantidadClientes() {
+	$sql = "select count(idcliente) from lcdd_clientes";
+	$res	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		return $res;
+	}
+}
+
 function traerClientes() {
 	$sql	=	"select idcliente,nombre,nrocliente,email,nrodocumento,telefono from lcdd_clientes ";
 	$res	=	$this->query($sql,0);
@@ -100,7 +110,7 @@ function traerClientePorId($id) {
 
 
 function traerClientePorNroCliente($nrocliente) {
-	$sql	=	"select idcliente,nombre,nrocliente,email,nrodocumento,telefono from lcdd_cliente where nrocliente ='".$nrocliente."'";
+	$sql	=	"select idcliente,nombre,nrocliente,email,nrodocumento,telefono from lcdd_clientes where nrocliente ='".$nrocliente."'";
 	$res	=	$this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';
@@ -111,7 +121,7 @@ function traerClientePorNroCliente($nrocliente) {
 
 
 function traerClientePorNroDocumento($nrodocumento) {
-	$sql	=	"select idcliente,nombre,nrocliente,email,nrodocumento,telefono from lcdd_cliente where nrodocumento =".$nrodocumento;
+	$sql	=	"select idcliente,nombre,nrocliente,email,nrodocumento,telefono from lcdd_clientes where nrodocumento =".$nrodocumento;
 	$res	=	$this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';

@@ -2,18 +2,18 @@
 
 session_start();
 
-if ((!isset($_SESSION['usua_se'])) && ($_SESSION['refrol_se'] == 1))
+if (!isset($_SESSION['usua_se']))
 {
-	header('Location: /wportalinmobiliario/vistas/');
+	header('Location: /lacalderadeldiablo/vistas/');
 } else {
 
 
-require '../../includes/funcionesProductos.php';
+require '../../includes/funcionesTurnos.php';
 
+$fecha = date('Y-m-d');
+$serviciosTurnos = new serviciosTurnos();
 
-$serviciosProductos = new ServiciosProductos();
-
-$resProveedores = $serviciosProductos->traerProveedores();
+$resTurnosAgrup = $serviciosTurnos->traerTurnosPorDiaAgrupado($fecha);
 
 ?>
 
@@ -215,18 +215,18 @@ $resProveedores = $serviciosProductos->traerProveedores();
 	<div class="todoMenu">
         <div id="mobile-header">
             Menu
-            <p>Usuario: <span style="color: #333; font-weight:900;">AdminMarcos</span></p>
+            <p>Usuario: <span style="color: #333; font-weight:900;"><?php echo $_SESSION['nombre_se']; ?></span></p>
             <p class="ocultar" style="color: #900; font-weight:bold; cursor:pointer; font-family:'Courier New', Courier, monospace; height:20px;">(Ocultar)</p>
         </div>
     
         <nav class="nav">
             <ul>
                 <li class="arriba"><div class="icodashboard"></div><a href="../index.php">Dashboard</a></li>
-                <li><div class="icoturnos"></div><a href="../turnos/">Turnos</a></li>
+                <li><div class="icoturnos"></div><a href="index.php">Turnos</a></li>
                 <li><div class="icoventas"></div><a href="../ventas/">Ventas</a></li>
                 <li><div class="icousuarios"></div><a href="../clientes/">Clientes</a></li>
                 <li><div class="icoproductos"></div><a href="../productos/">Productos</a></li>
-                <li><div class="icocontratos"></div><a href="index.php">Proveedores</a></li>
+                <li><div class="icocontratos"></div><a href="../proveedores/">Proveedores</a></li>
                 <li><div class="icoreportes"></div><a href="../reportes/">Reportes</a></li>
                 <li><div class="icosalir"></div><a href="../salir/">Salir</a></li>
             </ul>
@@ -282,61 +282,41 @@ $resProveedores = $serviciosProductos->traerProveedores();
 	
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Proveedores Cargados</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Turnos Cargados de la fecha: <?php echo $fecha; ?></p>
         </div>
     	<div class="cuerpoBox">
-        <button type="button" class="btn btn-primary nuevo" style="margin-left:0px;">Nuevo Proveedor</button>
+        <button type="button" class="btn btn-primary nuevo" style="margin-left:0px;">Nuevo Turno</button>
         	<table class="table table-striped">
             	<thead>
                 	<tr>
-                    	<th>Proveedor</th>
-                        <th>Dirección</th>
-                        <th>Teléfono</th>
-                        <th>Cuit</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Acciones</th>
+                    	<th>Horario</th>
+                        <th>Cancha 1</th>
+                        <th>Cancha 2</th>
+                        <th>Cancha 3</th>
                     </tr>
                 </thead>
                 <tbody>
-                <!--proveedor,direccion, telefono, cuit, nombre, email -->
-                	<?php
-						if (mysql_num_rows($resProveedores)>0) {
-							while ($row = mysql_fetch_array($resProveedores)) {
+						<?php
+						if (mysql_num_rows($resTurnosAgrup)>0) {
+							$cant = 0;
+							while ($row = mysql_fetch_array($resTurnosAgrup)) {
+								$cant+=1;
+								if ($cant == 6) {
+									break;	
+								}
 					?>
                     	<tr>
-                        	<td><?php echo utf8_encode($row['proveedor']); ?></td>
-                            <td><?php echo utf8_encode($row['direccion']); ?></td>
-                            <td><?php echo $row['telefono']; ?></td>
-                            <td><?php echo $row['cuit']; ?></td>
-                            <td><?php echo utf8_encode($row['nombre']); ?></td>
-                            <td><?php echo utf8_encode($row['email']); ?></td>
-                            <td>
-                            		<div class="btn-group">
-										<button class="btn btn-success" type="button">Acciones</button>
-										
-										<button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
-										<span class="caret"></span>
-										<span class="sr-only">Toggle Dropdown</span>
-										</button>
-										
-										<ul class="dropdown-menu" role="menu">
-											<li>
-											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idproveedor']; ?>">Modificar</a>
-											</li>
+                        	<td><?php echo $row['horautilizacion']; ?></td>
+                            <td><a href="modificar.php?id=<?php echo $row['turno1']; ?>"><?php echo $row['Cancha1']; ?></a></td>
+                            <td><a href="modificar.php?id=<?php echo $row['turno2']; ?>"><?php echo $row['Cancha2']; ?></a></td>
+                            <td><a href="modificar.php?id=<?php echo $row['turno3']; ?>"><?php echo $row['Cancha3']; ?></a></td>
 
-											<li>
-											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idproveedor']; ?>">Borrar</a>
-											</li>
-
-										</ul>
-									</div>
-                             </td>
                         </tr>
                     <?php } ?>
                     <?php } else { ?>
-                    	<h3>No hay proveedores cargados.</h3>
+                    	<h3>No hay turnos cargados.</h3>
                     <?php } ?>
+
                 </tbody>
             </table>
             <div style="height:50px;">
