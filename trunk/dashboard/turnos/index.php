@@ -407,7 +407,7 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
                     
                     </div>
                     <div id="error" class="alert alert-info">
-                		<p><strong>Importante!:</strong> El campo fecha de utilización y cliente son obligatorios</p>
+                		<p><strong>Importante!:</strong> El campo fecha de utilizaciÃ³n y cliente son obligatorios</p>
                 	</div>
                     
                 </form>

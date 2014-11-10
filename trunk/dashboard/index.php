@@ -9,15 +9,33 @@ if (!isset($_SESSION['usua_se']))
 
 
 require '../includes/funcionesProductos.php';
-
+require '../includes/funcionesClientes.php';
+require '../includes/funcionesTurnos.php';
 
 $serviciosProductos = new ServiciosProductos();
+$serviciosClientes = new ServiciosClientes();
+$serviciosTurnos = new ServiciosTurnos();
 
-$resProductos = $serviciosProductos->traerProductos();
+$resProductos = $serviciosProductos->traerProductosLimite(5);
 
 $resProveedores = $serviciosProductos->traerProveedores();
 
 $resTipoProducto = $serviciosProductos->traerTipoProducto();
+
+$resClientes = $serviciosClientes->traerClientes();
+
+$cantClientes = mysql_num_rows($resClientes);
+
+$fecha = date('Y-m-d');
+
+$resTurnos = $serviciosTurnos->traerTurnosPorDia($fecha);
+
+$cantTurnos = mysql_num_rows($resTurnos);
+
+$resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
+
+$resTurnosAgrup = $serviciosTurnos->traerTurnosPorDiaAgrupado($fecha);
+
 
 ?>
 
@@ -42,366 +60,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
     <script src="../bootstrap/js/bootstrap.min.js"></script>
 
 	<style type="text/css">
-		#navigation {
-			height:100%;
-			background-color: #F30;
-			padding-top:15px;
-			overflow-y: auto;
-			position: fixed;
-			top: 0;
-			width: 235px;
-			z-index: 9999;
-			border-left:1px solid #C40000;
-			border-right:1px solid #C40000;
-			margin-left:-185px;
-			overflow: hidden;
-			
-		}
 		
-		#navigation #mobile-header {
-			text-align:center;
-			color: #7A0000;
-			font-size:2.0em;
-			font-family:Bebas;	
-		}
-		
-		#navigation #mobile-header p {
-			color: #fff;
-			font-size:16px;
-			font-family:  "Courier New", Courier, monospace;
-		}
-		
-		.todoMenu {
-			display:none;
-		}
-		
-		.nav {
-			margin-top:10px;
-			border-top:1px solid #C40000;
-			/*border-bottom:1px solid #FFD2D2;*/
-		}
-		.nav ul {
-			list-style:none;
-		}
-		.nav ul li {
-			padding-top:15px;
-			border-bottom:1px solid #C40000;
-			border-top:1px solid #FFD2D2;
-			padding:8px;
-			width:100%;
-		}
-		
-		.nav ul li a {
-			color:#FFF;
-			font-family:Bebas;
-			font-size:18px;
-			text-decoration:none;
-			width:100%;
-		}
-		
-		.nav ul li:hover {
-			border-top:1px solid #C40000;
-		background: #e03800; /* Old browsers */
-background: -moz-linear-gradient(top, #e03800 0%, #f23800 29%, #f23c00 82%, #e03800 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e03800), color-stop(29%,#f23800), color-stop(82%,#f23c00), color-stop(100%,#e03800)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, #e03800 0%,#f23800 29%,#f23c00 82%,#e03800 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #e03800 0%,#f23800 29%,#f23c00 82%,#e03800 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, #e03800 0%,#f23800 29%,#f23c00 82%,#e03800 100%); /* IE10+ */
-background: linear-gradient(to bottom, #e03800 0%,#f23800 29%,#f23c00 82%,#e03800 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e03800', endColorstr='#e03800',GradientType=0 ); /* IE6-9 */
-		}
-		.nav .arriba {
-			border-top:1px solid #FFD2D2;
-		}
-		.abajo {
-			border-top:1px solid #FFD2D2;
-			padding-top:-8px;
-		}
-		
-		#infoMenu {
-			margin-top:15px;
-			padding:8px 2px 1px 10px;
-			/*background-color:#7A0000;*/
-			background: #d60000; /* Old browsers */
-background: -moz-linear-gradient(top, #d60000 0%, #b20000 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#d60000), color-stop(100%,#b20000)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, #d60000 0%,#b20000 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #d60000 0%,#b20000 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, #d60000 0%,#b20000 100%); /* IE10+ */
-background: linear-gradient(to bottom, #d60000 0%,#b20000 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', endColorstr='#b20000',GradientType=0 ); /* IE6-9 */
-		border-bottom:1px solid #d60000;
-		border-top:1px solid #b20000;
-		}
-		
-		#infoMenu p {	
-			color: #000;
-			font-family: "Coolvetica Rg";
-			font-size:16px;
-		}
-		
-		#infoDescrMenu {
-			padding:8px;
-		}
-		
-		#infoDescrMenu p {
-			color:#FFF;
-		}
-		
-		.icodashboard {
-			background:url(../imagenes/iconmenu/dashboard.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			float:left;
-			margin-right:9px;
-		}
-		
-		.icousuarios {
-			background:url(../imagenes/iconmenu/usuarios.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			float:left;
-			margin-right:10px;
-		}
-		
-		.icoalquileres {
-			background:url(../imagenes/iconmenu/alquiler.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			float:left;
-			margin-right:10px;
-		}
-		
-		.icoinmubles {
-			background:url(../imagenes/iconmenu/inmueble.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			float:left;
-			margin-right:10px;
-		}
-		
-		.icoturnos {
-			background:url(../imagenes/iconmenu/turnos.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			float:left;
-			margin-right:10px;
-		}
-		
-		.icoventas {
-			background:url(../imagenes/iconmenu/compras.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			float:left;
-			margin-right:10px;
-		}
-		
-		.icoproductos {
-			background:url(../imagenes/iconmenu/barras.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			float:left;
-			margin-right:10px;
-		}
-		
-		.icoreportes {
-			background:url(../imagenes/iconmenu/reportes.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			float:left;
-			margin-right:10px;
-		}
-		
-		.icocontratos {
-			background:url(../imagenes/iconmenu/contratos.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			float:left;
-			margin-right:10px;
-		}
-		
-		.icosalir {
-			background:url(../imagenes/iconmenu/salir.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			float:left;
-			margin-right:10px;
-		}
-		
-		.icoproductos2 {
-			background:url(../imagenes/iconmenu/barras.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			margin-right:9px;
-			margin-bottom:25px;
-			cursor:pointer;
-		}
-		
-		.icoventas2 {
-			background:url(../imagenes/iconmenu/compras.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			margin-right:9px;
-			margin-bottom:25px;
-			cursor:pointer;
-		}
-		
-		.icoturnos2 {
-			background:url(../imagenes/iconmenu/turnos.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			margin-right:9px;
-			margin-bottom:25px;
-			cursor:pointer;
-		}
-		
-		.icodashboard2 {
-			background:url(../imagenes/iconmenu/dashboard.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			margin-right:9px;
-			margin-bottom:25px;
-			cursor:pointer;
-		}
-		
-		.icousuarios2 {
-			background:url(../imagenes/iconmenu/usuarios.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			margin-right:10px;
-			margin-bottom:25px;
-			cursor:pointer;
-		}
-		
-		.icoalquileres2 {
-			background:url(../imagenes/iconmenu/alquiler.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			margin-right:10px;
-			margin-bottom:25px;
-			cursor:pointer;
-		}
-		
-		.icoinmubles2 {
-			background:url(../imagenes/iconmenu/inmueble.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			margin-right:10px;
-			margin-bottom:25px;
-			cursor:pointer;
-		}
-		
-		
-		.icoreportes2 {
-			background:url(../imagenes/iconmenu/reportes.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			margin-right:10px;
-			margin-bottom:25px;
-			cursor:pointer;
-		}
-		
-		.icocontratos2 {
-			background:url(../imagenes/iconmenu/contratos.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			margin-right:10px;
-			margin-bottom:25px;
-			cursor:pointer;
-		}
-		
-		.icosalir2 {
-			background:url(../imagenes/iconmenu/salir.png) no-repeat;
-			background-position: center center;
-			width:40px;
-			height:25px;
-			margin-right:10px;
-			margin-bottom:25px;
-			cursor:pointer;
-		}
-		
-		
-		.ulHober {
-			list-style:none;
-			width:40px;
-			right:6px;
-			position:absolute;
-		}
-		
-		.ulHober li {
-			right:0;
-		}
-		
-		.tooltip-dash, .tooltip-inmu, .tooltip-alqui, .tooltip-usua, .tooltip-con, .tooltip-rep, .tooltip-sal{
-		   position: fixed;
-		   background: #c0df71;
-		   color: #fff;
-		   border-radius:10px;
-		   font-family: "Lucida Grande", Lucida, Verdana, sans-serif;
-		   padding: 10px;
-		   margin-top: -10px;
-		   margin-left: 20px;
-		   z-index: 9999999999;
-		   display: none;
-		   background-color: #333;
-		}
-		
-		
-		
-  .boxInfo{ 
-				width: 84%; 
-				height: 160px; 
-				margin:10px;
-				float:left; 
-				background:#fff; 
-
-				overflow: hidden; 
-				position: relative; 
-				opacity: 0.8;
-  				filter:  alpha(opacity=80);
-				box-shadow: 2px 2px 5px #999;
-				-webkit-box-shadow: 2px 2px 5px #999;
-  				-moz-box-shadow: 2px 2px 5px #999;
-  				filter: shadow(color=#999999, direction=135, strength=2);
-				/*border-top-left-radius: 16px;
- 				border-top-right-radius: 16px;
-				-moz-border-radius-topright: 16px;
-				-moz-border-radius-topleft: 16px;*/
-
-
-			}
-
-  			#headBoxInfo {
-				background: rgb(255,195,188); /* Old browsers */
-background: -moz-linear-gradient(top,  rgba(255,195,188,1) 0%, rgba(255,119,104,1) 18%, rgba(255,44,25,1) 43%, rgba(255,26,0,1) 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,195,188,1)), color-stop(18%,rgba(255,119,104,1)), color-stop(43%,rgba(255,44,25,1)), color-stop(100%,rgba(255,26,0,1))); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top,  rgba(255,195,188,1) 0%,rgba(255,119,104,1) 18%,rgba(255,44,25,1) 43%,rgba(255,26,0,1) 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top,  rgba(255,195,188,1) 0%,rgba(255,119,104,1) 18%,rgba(255,44,25,1) 43%,rgba(255,26,0,1) 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top,  rgba(255,195,188,1) 0%,rgba(255,119,104,1) 18%,rgba(255,44,25,1) 43%,rgba(255,26,0,1) 100%); /* IE10+ */
-background: linear-gradient(to bottom,  rgba(255,195,188,1) 0%,rgba(255,119,104,1) 18%,rgba(255,44,25,1) 43%,rgba(255,26,0,1) 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc3bc', endColorstr='#ff1a00',GradientType=0 ); /* IE6-9 */
-
- padding:6px; height:36px; border-bottom:1px solid #C40000;
-			}
   
 		
 	</style>
@@ -645,7 +304,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc3bc', end
     	<tr>
         	<td style="border:1px dashed #666; padding:10px;" width="150" align="center">
             	<img src="../imagenes/iconmenu/clock4.png" width="50" height="50" style="float:left;">
-                <p style="color:#F00; font-size:18px; height:16px;">25</p>
+                <p style="color:#F00; font-size:18px; height:16px;"><?php echo $cantTurnos; ?></p>
                 <p style="height:16px;">Turnos</p>
             </td>
             <td style="border:1px dashed #666; padding:10px;" width="150" align="center">
@@ -655,7 +314,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc3bc', end
             </td>
             <td style="border:1px dashed #666; padding:10px;" width="150" align="center">
             	<img src="../imagenes/iconmenu/icon_19476.png" width="50" height="50" style="float:left;">
-                <p style="color: #30F; font-size:18px; height:16px;">8</p>
+                <p style="color: #30F; font-size:18px; height:16px;"><?php echo $cantClientes; ?></p>
                 <p style="height:16px;">Clientes</p>
             </td>
         	<td style="border:1px dashed #666; padding:10px;" width="150" align="center">
@@ -670,32 +329,127 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc3bc', end
 
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Proximos Turnos</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Proximos 5 Turnos <a href="turnos/" style="color:#0f0;">Nuevo</a></p>
         </div>
-    
+    	<div class="cuerpoBox">
+    		<table class="table table-striped">
+            	<thead>
+                	<tr>
+                    	<th>Horario</th>
+                        <th>Cancha 1</th>
+                        <th>Cancha 2</th>
+                        <th>Cancha 3</th>
+                    </tr>
+                </thead>
+                <tbody>
+						<?php
+						if (mysql_num_rows($resTurnosAgrup)>0) {
+							$cant = 0;
+							while ($row = mysql_fetch_array($resTurnosAgrup)) {
+								$cant+=1;
+								if ($cant == 6) {
+									break;	
+								}
+					?>
+                    	<tr>
+                        	<td><?php echo $row['horautilizacion']; ?></td>
+                            <td><a href="turnos/modificar.php?id=<?php echo $row['turno1']; ?>"><?php echo $row['Cancha1']; ?></a></td>
+                            <td><a href="turnos/modificar.php?id=<?php echo $row['turno2']; ?>"><?php echo $row['Cancha2']; ?></a></td>
+                            <td><a href="turnos/modificar.php?id=<?php echo $row['turno3']; ?>"><?php echo $row['Cancha3']; ?></a></td>
+
+
+                        </tr>
+                    <?php } ?>
+                    <?php } else { ?>
+                    	<h3>No hay turnos cargados.</h3>
+                    <?php } ?>
+
+                </tbody>
+            </table>
+    	</div>
     </div>
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimas Ventas</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Ultimas 5 Ventas  <a href="ventas/" style="color:#0f0;">Nuevo</a></p>
         </div>
-    
+    	<div class="cuerpoBox">
+
+    	</div>
     </div>
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos Productos Cargados</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 5 Productos Cargados  <a href="productos/" style="color:#0f0;">Nuevo</a></p>
         </div>
-    
+    	<div class="cuerpoBox">
+    		<table class="table table-striped">
+            	<thead>
+                	<tr>
+                    	<th>Nombre</th>
+                        <th>Precio Unit</th>
+                        <th>Precio Vent</th>
+                        <th>Stock</th>
+                        <th>Stock min</th>
+                        <th>Tipo Prod.</th>
+                        <th>Proveedor</th>
+                        <th>Codigo</th>
+                        <th>CodigoBarra</th>
+                        <th>Caract.</th>
+                    </tr>
+                </thead>
+                <tbody>
+<!--idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas -->
+                	<?php
+						if (mysql_num_rows($resProductos)>0) {
+							$cant = 0;
+							while ($row = mysql_fetch_array($resProductos)) {
+								$cant+=1;
+								if ($cant == 6) {
+									break;	
+								}
+					?>
+                    	<tr>
+                        	<td><?php echo utf8_encode($row['nombre']); ?></td>
+                            <td><?php echo $row['precio_unit']; ?></td>
+                            <td><?php echo $row['precio_venta']; ?></td>
+                            <td><?php echo $row['stock']; ?></td>
+                            <td><?php echo $row['stock_min']; ?></td>
+                            <td><?php echo utf8_encode($row['tipoproducto']); ?></td>
+                            <td><?php echo utf8_encode($row['proveedor']); ?></td>
+							<td><?php echo utf8_encode($row['codigo']); ?></td>
+                            <td><?php echo $row['codigobarra']; ?></td>
+                            <td><?php echo utf8_encode($row['caracteristicas']); ?></td>
+
+                        </tr>
+                    <?php } ?>
+                    <?php } else { ?>
+                    	<h3>No hay productos cargados.</h3>
+                    <?php } ?>
+                </tbody>
+            </table>
+    	</div>
     </div>
     
     <div class="boxInfo">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Fiestas Proximas</p>
         </div>
-    
+    	<div class="cuerpoBox">
+
+    	</div>
     </div>
 
 </div>
 
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$('.nuevoTurno').click(function(event){
+			url = "turnos/";
+			$(location).attr('href',url);
+	});//fin del boton nuevo
+
+});
+</script>
 <?php } ?>
 </body>
 </html>
