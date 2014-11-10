@@ -2,18 +2,17 @@
 
 session_start();
 
-if ((!isset($_SESSION['usua_se'])) && ($_SESSION['refrol_se'] == 1))
+if (!isset($_SESSION['usua_se']))
 {
-	header('Location: /wportalinmobiliario/vistas/');
+	header('Location: /lacalderadeldiablo/vistas/');
 } else {
 
+require '../../includes/funcionesClientes.php';
 
-require '../../includes/funcionesProductos.php';
 
+$serviciosClientes = new ServiciosClientes();
 
-$serviciosProductos = new ServiciosProductos();
-
-$resProveedores = $serviciosProductos->traerProveedores();
+$resClientes = $serviciosClientes->traerClientes();
 
 ?>
 
@@ -47,7 +46,7 @@ $resProveedores = $serviciosProductos->traerProveedores();
     
     <script type="text/javascript">
 		$( document ).ready(function() {
-			$('.icodashboard2, .icoalquileres2, .icousuarios2, .icoinmubles2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
+			$('.icodashboard2, .icoventas2, .icousuarios2, .icoturnos2, .icoproductos2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
 				$('.menuHober').hide();
 				$('.todoMenu').show(100, function() {
 					$('#navigation').animate({'margin-left':'0px'}, {
@@ -215,7 +214,7 @@ $resProveedores = $serviciosProductos->traerProveedores();
 	<div class="todoMenu">
         <div id="mobile-header">
             Menu
-            <p>Usuario: <span style="color: #333; font-weight:900;">AdminMarcos</span></p>
+            <p>Usuario: <span style="color: #333; font-weight:900;"><?php echo $_SESSION['nombre_se']; ?></span></p>
             <p class="ocultar" style="color: #900; font-weight:bold; cursor:pointer; font-family:'Courier New', Courier, monospace; height:20px;">(Ocultar)</p>
         </div>
     
@@ -224,9 +223,9 @@ $resProveedores = $serviciosProductos->traerProveedores();
                 <li class="arriba"><div class="icodashboard"></div><a href="../index.php">Dashboard</a></li>
                 <li><div class="icoturnos"></div><a href="../turnos/">Turnos</a></li>
                 <li><div class="icoventas"></div><a href="../ventas/">Ventas</a></li>
-                <li><div class="icousuarios"></div><a href="../clientes/">Clientes</a></li>
+                <li><div class="icousuarios"></div><a href="index.php">Clientes</a></li>
                 <li><div class="icoproductos"></div><a href="../productos/">Productos</a></li>
-                <li><div class="icocontratos"></div><a href="index.php">Proveedores</a></li>
+                <li><div class="icocontratos"></div><a href="../proveedores/">Proveedores</a></li>
                 <li><div class="icoreportes"></div><a href="../reportes/">Reportes</a></li>
                 <li><div class="icosalir"></div><a href="../salir/">Salir</a></li>
             </ul>
@@ -282,35 +281,33 @@ $resProveedores = $serviciosProductos->traerProveedores();
 	
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Proveedores Cargados</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Clientes Cargados</p>
         </div>
     	<div class="cuerpoBox">
-        <button type="button" class="btn btn-primary nuevo" style="margin-left:0px;">Nuevo Proveedor</button>
+        <button type="button" class="btn btn-primary nuevo" style="margin-left:0px;">Nuevo Cliente</button>
         	<table class="table table-striped">
             	<thead>
                 	<tr>
-                    	<th>Proveedor</th>
-                        <th>Dirección</th>
-                        <th>Teléfono</th>
-                        <th>Cuit</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
+                    	<th>Nombre</th>
+                        <th>NroCliente</th>
+                        <th>E-Mail</th>
+                        <th>NroDocumento</th>
+                        <th>Telefono</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                <!--proveedor,direccion, telefono, cuit, nombre, email -->
+<!--idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas -->
                 	<?php
-						if (mysql_num_rows($resProveedores)>0) {
-							while ($row = mysql_fetch_array($resProveedores)) {
+						if (mysql_num_rows($resClientes)>0) {
+							while ($row = mysql_fetch_array($resClientes)) {
 					?>
                     	<tr>
-                        	<td><?php echo utf8_encode($row['proveedor']); ?></td>
-                            <td><?php echo utf8_encode($row['direccion']); ?></td>
+                        	<td><?php echo utf8_encode($row['nombre']); ?></td>
+                            <td><?php echo $row['nrocliente']; ?></td>
+                            <td><?php echo $row['email']; ?></td>
+                            <td><?php echo $row['nrodocumento']; ?></td>
                             <td><?php echo $row['telefono']; ?></td>
-                            <td><?php echo $row['cuit']; ?></td>
-                            <td><?php echo utf8_encode($row['nombre']); ?></td>
-                            <td><?php echo utf8_encode($row['email']); ?></td>
                             <td>
                             		<div class="btn-group">
 										<button class="btn btn-success" type="button">Acciones</button>
@@ -322,11 +319,11 @@ $resProveedores = $serviciosProductos->traerProveedores();
 										
 										<ul class="dropdown-menu" role="menu">
 											<li>
-											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idproveedor']; ?>">Modificar</a>
+											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idcliente']; ?>">Modificar</a>
 											</li>
 
 											<li>
-											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idproveedor']; ?>">Borrar</a>
+											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idcliente']; ?>">Borrar</a>
 											</li>
 
 										</ul>
@@ -348,12 +345,12 @@ $resProveedores = $serviciosProductos->traerProveedores();
 
 </div>
 
-<div id="dialog2" title="Eliminar Proveedor">
+<div id="dialog2" title="Eliminar Cliente">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar al Proveedor?.<span id="proveedorEli"></span>
+            ¿Esta seguro que desea eliminar al Cliente?.<span id="proveedorEli"></span>
         </p>
-        <p><strong>Importante: </strong>También se borrara la relación con los productos asociados</p>
+        <p><strong>Importante: </strong>También se borrara la relación con los turnos y cuentas asociadas</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
 
@@ -398,8 +395,8 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarProveedores'},
-									url:   '../../ajax/ajax.php',
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarCliente'},
+									url:   '../../ajax/ajax_clientes.php',
 									type:  'post',
 									beforeSend: function () {
 											

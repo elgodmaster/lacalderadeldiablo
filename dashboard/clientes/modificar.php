@@ -2,20 +2,20 @@
 
 session_start();
 
-if ((!isset($_SESSION['usua_se'])) && ($_SESSION['refrol_se'] == 1))
+if (!isset($_SESSION['usua_se']))
 {
-	header('Location: /wportalinmobiliario/vistas/');
+	header('Location: /lacalderadeldiablo/vistas/');
 } else {
 
 
-require '../../includes/funcionesProductos.php';
-
-
-$serviciosProductos = new ServiciosProductos();
-
 $id = $_GET['id'];
 
-$resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
+require '../../includes/funcionesClientes.php';
+
+
+$serviciosClientes = new ServiciosClientes();
+
+$resCliente = $serviciosClientes->traerClientePorId($id);
 
 ?>
 
@@ -43,13 +43,15 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 
 	<style type="text/css">
-		
+		.form-group {
+			padding:10px;
+		}
 		
 	</style>
     
     <script type="text/javascript">
 		$( document ).ready(function() {
-			$('.icodashboard2, .icoalquileres2, .icousuarios2, .icoinmubles2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
+			$('.icodashboard2, .icoventas2, .icousuarios2, .icoturnos2, .icoproductos2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
 				$('.menuHober').hide();
 				$('.todoMenu').show(100, function() {
 					$('#navigation').animate({'margin-left':'0px'}, {
@@ -217,7 +219,7 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
 	<div class="todoMenu">
         <div id="mobile-header">
             Menu
-            <p>Usuario: <span style="color: #333; font-weight:900;">AdminMarcos</span></p>
+            <p>Usuario: <span style="color: #333; font-weight:900;"><?php echo $_SESSION['nombre_se']; ?></span></p>
             <p class="ocultar" style="color: #900; font-weight:bold; cursor:pointer; font-family:'Courier New', Courier, monospace; height:20px;">(Ocultar)</p>
         </div>
     
@@ -226,9 +228,9 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
                 <li class="arriba"><div class="icodashboard"></div><a href="../index.php">Dashboard</a></li>
                 <li><div class="icoturnos"></div><a href="../turnos/">Turnos</a></li>
                 <li><div class="icoventas"></div><a href="../ventas/">Ventas</a></li>
-                <li><div class="icousuarios"></div><a href="../clientes/">Clientes</a></li>
+                <li><div class="icousuarios"></div><a href="index.php">Clientes</a></li>
                 <li><div class="icoproductos"></div><a href="../productos/">Productos</a></li>
-                <li><div class="icocontratos"></div><a href="index.php">Proveedores</a></li>
+                <li><div class="icocontratos"></div><a href="../proveedores/">Proveedores</a></li>
                 <li><div class="icoreportes"></div><a href="../reportes/">Reportes</a></li>
                 <li><div class="icosalir"></div><a href="../salir/">Salir</a></li>
             </ul>
@@ -285,60 +287,60 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
 
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Proveedor</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Modificar Cliente</p>
         </div>
     	<div class="cuerpoBox">
-        <form class="form-horizontal" role="form">
+        <div class="row"> 
+        <div class="col-sm-12 col-md-12">
+        <form class="form-inline formulario" role="form">
                 	
-                <!--proveedor,direccion, telefono, cuit, nombre -->
-                
-                	<div class="form-group">
-                    	<label for="proveedor" class="col-lg-3 control-label" style="text-align:left">Proveedor</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'proveedor'); ?>" class="form-control" id="proveedor" name="proveedor" placeholder="Ingrese el Proveedor..." required>
+<!--idcliente,nombre,nrocliente,email,telefono,nrodocumento-->
+                	
+				              	
+                    <div class="form-group col-md-6">
+                    	<label for="nombre" class="control-label" style="text-align:left">Nombre</label>
+                        <div class="input-group col-md-12">
+                            <input type="text" value="<?php echo mysql_result($resCliente,0,'nombre'); ?>" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el Nombre..." required>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                    	<label for="direccion" class="col-lg-3 control-label" style="text-align:left">Dirección</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'direccion'); ?>" class="form-control" id="direccion" name="direccion" placeholder="Ingrese el Dirección..." required>
+
+                    
+                    <div class="form-group col-md-6">
+                    	<label for="nrocliente" class="control-label" style="text-align:left">NroCliente</label>
+                        <div class="input-group col-md-12">
+                            <p class="form-control"><?php echo mysql_result($resCliente,0,'nrocliente'); ?></p>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="email" class="control-label" style="text-align:left">E-Mail</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" value="<?php echo mysql_result($resCliente,0,'email'); ?>" class="form-control" id="email" name="email" placeholder="Ingrese el E-Mail..." required>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="telefono" class="control-label" style="text-align:left">Telefono</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" value="<?php echo mysql_result($resCliente,0,'telefono'); ?>" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el Precio Telefono..." required>
                         </div>
                     </div>
                     
-                    
-                    <div class="form-group">
-                    	<label for="nombre" class="col-lg-3 control-label" style="text-align:left">Nombre</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'nombre'); ?>" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el Nombre..." required>
+                    <div class="form-group col-md-6">
+                    	<label for="nrodocumento" class="control-label" style="text-align:left">NroDocumento</label>
+                        <div class="input-group col-md-12">
+                            <input type="text" value="<?php echo mysql_result($resCliente,0,'nrodocumento'); ?>" class="form-control" id="nrodocumento" name="nrodocumento" placeholder="Ingrese el NroDocumento..." required>
                         </div>
                     </div>
-                    
-                    <div class="form-group">
-                    	<label for="telefono" class="col-lg-3 control-label" style="text-align:left">Teléfono</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'telefono'); ?>" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el Teléfono..." required>
-                        </div>
+
+
+                    </div>
                     </div>
                     
-                    <div class="form-group">
-                    	<label for="cuit" class="col-lg-3 control-label" style="text-align:left">Cuit</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'cuit'); ?>" class="form-control" id="cuit" name="cuit" placeholder="Ingrese el Cuit..." required>
-                        </div>
-                    </div>
-                    
-                    
-                	<div class="form-group">
-                    	<label for="eamil" class="col-lg-3 control-label" style="text-align:left">E-Mail</label>
-                        <div class="col-lg-5">
-                        	<input type="email" value="<?php echo mysql_result($resProveedores,0,'email'); ?>" class="form-control" id="email" name="email" placeholder="Ingrese el E-Mail..." required>
-                        </div>
-                    </div>
-                
-                    
-                    
-                    <ul class="list-inline">
+                    <ul class="list-inline" style="padding-top:15px;">
                     	<li>
                     		<button type="button" class="btn btn-warning" id="modificar" style="margin-left:0px;">Modificar</button>
                         </li>
@@ -356,7 +358,7 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
                     <div class="alert">
                     
                     </div>
-                    <input type="hidden" id="accion" name="accion" value="modificarProveedores"/>
+                    <input type="hidden" id="accion" name="accion" value="modificarCliente"/>
                     <input type="hidden" id="id" name="id" value="<?php echo $id; ?>"/>
                 </form>
                 
@@ -372,18 +374,23 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
 
 </div>
 
-<div id="dialog2" title="Eliminar Proveedor">
+<div id="dialog2" title="Eliminar Cliente">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar al Proveedor?.<span id="proveedorEli"></span>
+            ¿Esta seguro que desea eliminar al Cliente?.<span id="proveedorEli"></span>
         </p>
-        <p><strong>Importante: </strong>También se borrara la relación con los productos asociados</p>
+        <p><strong>Importante: </strong>También se borrara la relación con las canchas y cuentas asociadas</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
 
+    
+
+    
 <script type="text/javascript">
 $(document).ready(function(){
 	
+        
+        
 	$('.varborrar').click(function(event){
 			  usersid =  $(this).attr("id");
 			  if (!isNaN(usersid)) {
@@ -396,10 +403,13 @@ $(document).ready(function(){
 	});//fin del boton eliminar
 	
 	$('.volver').click(function(event){
-				url = "../proveedores/index.php";
+				url = "index.php";
 				$(location).attr('href',url);
 	});//fin del boton eliminar
-
+        
+        
+        
+        
 	$( "#dialog2" ).dialog({
 		 	
 			    autoOpen: false,
@@ -411,8 +421,8 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarProveedores'},
-									url:   '../../ajax/ajax.php',
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarCliente'},
+									url:   '../../ajax/ajax_clientes.php',
 									type:  'post',
 									beforeSend: function () {
 											
@@ -438,26 +448,114 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 
-	$("#proveedor").click(function(event) {
-		$("#proveedor").removeClass("alert-danger");
-		$("#proveedor").attr('value','');
-		$("#proveedor").attr('placeholder','Ingrese el Proveedor...');
+	$("#nombre").click(function(event) {
+		if ($("#nombre").val() == "") {
+			$("#nombre").removeClass("alert-danger");
+			$("#nombre").attr('value','');
+			$("#nombre").attr('placeholder','Ingrese el Nombre...');
+		}
     });
 
-	$("#proveedor").change(function(event) {
-		$("#proveedor").removeClass("alert-danger");
-		$("#proveedor").attr('placeholder','Ingrese el Proveedor');
+	$("#nombre").change(function(event) {
+		if ($("#nombre").val() == "") {
+			$("#nombre").removeClass("alert-danger");
+			$("#nombre").attr('placeholder','Ingrese el Nombre');
+		}
+	});
+	
+	$("#codigo").click(function(event) {
+		if ($("#codigo").val() == "") {
+			$("#codigo").removeClass("alert-danger");
+			$("#codigo").attr('value','');
+			$("#codigo").attr('placeholder','Ingrese el Codigo...');
+		}
+    });
+
+	$("#codigo").change(function(event) {
+		if ($("#codigo").val() == "") {
+			$("#codigo").removeClass("alert-danger");
+			$("#codigo").attr('placeholder','Ingrese el Codigo');
+		}
+	});
+	
+	$("#precio_unit").click(function(event) {
+		if ($("#precio_unit").val() == "") {
+			$("#precio_unit").removeClass("alert-danger");
+			$("#precio_unit").attr('value','');
+			$("#precio_unit").attr('placeholder','Ingrese el Precio Unit...');
+		}
+    });
+
+	$("#precio_unit").change(function(event) {
+		if ($("#precio_unit").val() == "") {
+			$("#precio_unit").removeClass("alert-danger");
+			$("#precio_unit").attr('placeholder','Ingrese el Precio Unit');
+		}
+	});
+	
+	$("#stock").click(function(event) {
+		if ($("#stock").val() == "") {
+			$("#stock").removeClass("alert-danger");
+			$("#stock").attr('value','');
+			$("#stock").attr('placeholder','Ingrese el Stock...');
+		}
+    });
+
+	$("#stock").change(function(event) {
+		if ($("#stock").val() == "") {
+			$("#stock").removeClass("alert-danger");
+			$("#stock").attr('placeholder','Ingrese el Stock');
+		}
+	});
+	
+	$("#stock_min").click(function(event) {
+		if ($("#stock_min").val() == "") {
+			$("#stock_min").removeClass("alert-danger");
+			$("#stock_min").attr('value','');
+			$("#stock_min").attr('placeholder','Ingrese el Stock Minimo...');
+		}
+    });
+
+	$("#stock_min").change(function(event) {
+		if ($("#stock_min").val() == "") {
+			$("#stock_min").removeClass("alert-danger");
+			$("#stock_min").attr('placeholder','Ingrese el Stock Minimo');
+		}
 	});
 	
 	function validador(){
 
 			$error = "";
-
+//idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas
 			
-			if ($("#proveedor").val() == "") {
-				$error = "Es obligatorio el campo proveedor.";
-				$("#proveedor").addClass("alert-danger");
-				$("#proveedor").attr('placeholder',$error);
+			if ($("#nombre").val() == "") {
+				$error = "Es obligatorio el campo nombre.";
+				$("#nombre").addClass("alert-danger");
+				$("#nombre").attr('placeholder',$error);
+			}
+			
+			if ($("#codigo").val() == "") {
+				$error = "Es obligatorio el campo codigo.";
+				$("#codigo").addClass("alert-danger");
+				$("#codigo").attr('placeholder',$error);
+			}
+			
+			if ($("#precio_unit").val() == "") {
+				$error = "Es obligatorio el campo Precio Unit.";
+				$("#precio_unit").addClass("alert-danger");
+				$("#precio_unit").attr('placeholder',$error);
+			}
+			
+			if ($("#stock").val() == "") {
+				$error = "Es obligatorio el campo stock.";
+				$("#stock").addClass("alert-danger");
+				$("#stock").attr('placeholder',$error);
+			}
+			
+			if ($("#stock_min").val() == "") {
+				$error = "Es obligatorio el campo stock min.";
+				$("#stock_min").addClass("alert-danger");
+				$("#stock_min").attr('placeholder',$error);
 			}
 
 
@@ -465,7 +563,7 @@ $(document).ready(function(){
     }
 	
 	//al enviar el formulario
-    $('#cargar').click(function(){
+    $('#modificar').click(function(){
 		if (validador() == "")
         {
 			//información del formulario
@@ -473,7 +571,7 @@ $(document).ready(function(){
 			var message = "";
 			//hacemos la petición ajax  
 			$.ajax({
-				url: '../../ajax/ajax.php',  
+				url: '../../ajax/ajax_clientes.php',  
 				type: 'POST',
 				// Form data
 				//datos del formulario
@@ -493,7 +591,7 @@ $(document).ready(function(){
                                             $(".alert").removeClass("alert-danger");
 											$(".alert").removeClass("alert-info");
                                             $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Proveedor</strong>. ');
+                                            $(".alert").html('<strong>Ok!</strong> Se modifico exitosamente el <strong>Cliente</strong>. ');
 											$(".alert").delay(3000).queue(function(){
 												/*aca lo que quiero hacer 
 												  después de los 2 segundos de retraso*/
@@ -501,7 +599,7 @@ $(document).ready(function(){
 												
 											});
 											$("#load").html('');
-											url = "index.php";
+											url = "modificar.php?id="+$('#id').val();
 											$(location).attr('href',url);
                                             
 											
@@ -520,7 +618,8 @@ $(document).ready(function(){
 			});
 		}
     });
-
+	
+	
 });//fin del document ready
 </script>
 <?php } ?>
