@@ -73,6 +73,29 @@ switch ($accion) {
 	case 'crearTablaTurnos':
 		crearTablaTurnos($serviciosTurnos);
 		break;
+	case 'modificarTurno':
+		modificarTurno($serviciosTurnos);
+		break;
+	case 'eliminarTurno':
+		eliminarTurno($serviciosTurnos);
+		break;
+}
+
+function eliminarTurno($serviciosTurnos) {
+	$id 	=	$_POST['id'];
+	echo $serviciosTurnos->eliminarTurno($id);
+}
+
+
+function modificarTurno($serviciosTurnos) {
+	$id 				=	$_POST['id'];
+	$refcancha			=	$_POST['refcancha'];
+	$fechautilizacion	=	$_POST['fechautilizacion'];
+	$horautilizacion	=	$_POST['horautilizacion'];
+	$refcliente			=	$_POST['refcliente'];
+	$fechacreacion		=	'';
+	$usuacrea			=	$_POST['usuacrea'];
+	echo $serviciosTurnos->modificarTurno($id,$refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea);	
 }
 
 

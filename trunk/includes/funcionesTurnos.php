@@ -33,8 +33,10 @@ function traerTurnos() {
 }
 
 function traerTurnosPorId($id) {
-	$sql = "select idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea
-			from lcdd_turnos where idturno = ".$id;
+	$sql = "select t.idturno,t.refcancha,t.fechautilizacion,t.horautilizacion,t.refcliente,t.fechacreacion,t.usuacrea,c.nombre
+			from lcdd_turnos t
+			inner join lcdd_clientes c on t.refcliente = c.idcliente
+			where idturno = ".$id;
 	$res = $this->query($sql,0);
 	return $res;
 }
@@ -115,13 +117,22 @@ function modificarTurno($id,$refcancha,$fechautilizacion,$horautilizacion,$refcl
 						fechautilizacion = '".$fechautilizacion."',
 						horautilizacion = '".$horautilizacion.":00:00',
 						refcliente = ".$refcliente.",
-						usuacrea = '".$$usuacrea."'
+						usuacrea = '".utf8_decode($usuacrea)."'
 						where idturno = ".$id;
 
-	$res		=	$this->query($sql,1);
-	return $res;
+	if ($this->existeTurno($fechautilizacion,$horautilizacion,$refcancha,$id) == '') {
+		$res		=	$this->query($sql,1);
+	} else {
+		return 'Ya existe un turno';	
+	}
+	return '';
 }
 
+function eliminarTurno($i) {
+	$sql		=	"delete from lcdd_turnos where idturno =".$i;
+	$res 		=	$this->query($sql,0);
+	echo $res;
+}
 
 /* fin */
 

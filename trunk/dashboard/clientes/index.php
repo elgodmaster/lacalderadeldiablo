@@ -2,18 +2,18 @@
 
 session_start();
 
-if ((!isset($_SESSION['usua_se'])) && ($_SESSION['refrol_se'] == 1))
+if (!isset($_SESSION['usua_se']))
 {
-	header('Location: /wportalinmobiliario/vistas/');
+	header('Location: /lacalderadeldiablo/vistas/');
 } else {
 
 
-require '../../includes/funcionesProductos.php';
+require '../../includes/funcionesClientes.php';
 
 
-$serviciosProductos = new ServiciosProductos();
+$serviciosClientes = new ServiciosClientes();
 
-$resProveedores = $serviciosProductos->traerProveedores();
+$resClientes = $serviciosClientes->traerClientes();
 
 ?>
 
@@ -40,13 +40,15 @@ $resProveedores = $serviciosProductos->traerProveedores();
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 
 	<style type="text/css">
-		
+		.form-group {
+			padding:10px;
+		}
 		
 	</style>
     
     <script type="text/javascript">
 		$( document ).ready(function() {
-			$('.icodashboard2, .icoalquileres2, .icousuarios2, .icoinmubles2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
+			$('.icodashboard2, .icoventas2, .icousuarios2, .icoturnos2, .icoproductos2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
 				$('.menuHober').hide();
 				$('.todoMenu').show(100, function() {
 					$('#navigation').animate({'margin-left':'0px'}, {
@@ -223,9 +225,9 @@ $resProveedores = $serviciosProductos->traerProveedores();
                 <li class="arriba"><div class="icodashboard"></div><a href="../index.php">Dashboard</a></li>
                 <li><div class="icoturnos"></div><a href="../turnos/">Turnos</a></li>
                 <li><div class="icoventas"></div><a href="../ventas/">Ventas</a></li>
-                <li><div class="icousuarios"></div><a href="../clientes/">Clientes</a></li>
+                <li><div class="icousuarios"></div><a href="index.php">Clientes</a></li>
                 <li><div class="icoproductos"></div><a href="../productos/">Productos</a></li>
-                <li><div class="icocontratos"></div><a href="index.php">Proveedores</a></li>
+                <li><div class="icocontratos"></div><a href="../proveedores/">Proveedores</a></li>
                 <li><div class="icoreportes"></div><a href="../reportes/">Reportes</a></li>
                 <li><div class="icosalir"></div><a href="../salir/">Salir</a></li>
             </ul>
@@ -282,60 +284,60 @@ $resProveedores = $serviciosProductos->traerProveedores();
 
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Proveedor</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Cliente</p>
         </div>
     	<div class="cuerpoBox">
-        <form class="form-horizontal formulario" role="form">
+        
+        <div class="row"> 
+        <div class="col-sm-12 col-md-12">
+        <form class="form-inline formulario" role="form">
                 	
-                <!--proveedor,direccion, telefono, cuit, nombre, email -->
-                
-                	<div class="form-group">
-                    	<label for="proveedor" class="col-lg-3 control-label" style="text-align:left">Proveedor</label>
-                        <div class="col-lg-5">
-                        	<input type="text" class="form-control" id="proveedor" name="proveedor" placeholder="Ingrese el Proveedor..." required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                    	<label for="direccion" class="col-lg-3 control-label" style="text-align:left">Dirección</label>
-                        <div class="col-lg-5">
-                        	<input type="text" class="form-control" id="direccion" name="direccion" placeholder="Ingrese el Dirección..." required>
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="form-group">
-                    	<label for="nombre" class="col-lg-3 control-label" style="text-align:left">Nombre</label>
-                        <div class="col-lg-5">
+<!--idcliente,nombre,nrocliente,email,telefono,nrodocumento-->
+                	
+				              	
+                    <div class="form-group col-md-6">
+                    	<label for="nombre" class="control-label" style="text-align:left">Nombre</label>
+                        <div class="input-group col-md-12">
                         	<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el Nombre..." required>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                    	<label for="telefono" class="col-lg-3 control-label" style="text-align:left">Teléfono</label>
-                        <div class="col-lg-5">
-                        	<input type="text" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el Teléfono..." required>
+
+                    
+                    <div class="form-group col-md-6">
+                    	<label for="nrocliente" class="control-label" style="text-align:left">NroCliente</label>
+                        <div class="input-group col-md-12">
+                            <p class="form-control">El Nro de Cliente se generara automaticamente</p>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="email" class="control-label" style="text-align:left">E-Mail</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" class="form-control" id="email" name="email" placeholder="Ingrese el E-Mail..." required>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="telefono" class="control-label" style="text-align:left">Telefono</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el Precio Telefono..." required>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                    	<label for="cuit" class="col-lg-3 control-label" style="text-align:left">Cuit</label>
-                        <div class="col-lg-5">
-                        	<input type="text" class="form-control" id="cuit" name="cuit" placeholder="Ingrese el Cuit..." required>
+                    <div class="form-group col-md-6">
+                    	<label for="nrodocumento" class="control-label" style="text-align:left">NroDocumento</label>
+                        <div class="input-group col-md-12">
+                            <input type="text" class="form-control" id="nrodocumento" name="nrodocumento" placeholder="Ingrese el NroDocumento..." required>
                         </div>
                     </div>
-                    
-                    
-                	<div class="form-group">
-                    	<label for="eamil" class="col-lg-3 control-label" style="text-align:left">E-Mail</label>
-                        <div class="col-lg-5">
-                        	<input type="email" class="form-control" id="email" name="email" placeholder="Ingrese el E-Mail..." required>
-                        </div>
+
+
                     </div>
-                
-                    
-                    
-                    <ul class="list-inline">
+                    </div>
+                    <ul class="list-inline" style="padding-top:15px;">
                     	<li>
                     		<button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Crear</button>
                         </li>
@@ -346,52 +348,52 @@ $resProveedores = $serviciosProductos->traerProveedores();
                     
                     </div>
                     <div id="error" class="alert alert-info">
-                		<p><strong>Importante!:</strong> El campo proveedor es obligatorio</p>
+                		<p><strong>Importante!:</strong> El campo nombre es obligatorios</p>
                 	</div>
-                    <input type="hidden" id="accion" name="accion" value="insertarProveedores"/>
+                    <input type="hidden" id="accion" name="accion" value="insertarCliente"/>
                 </form>
                 
                 <br>
+                
                 
         </div>
     </div>
 
     
-    <div class="boxInfo">
+    <div class="boxInfoLargo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 10 Proveedores Cargados</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 10 Clientes Cargados</p>
         </div>
     	<div class="cuerpoBox">
         	<table class="table table-striped">
             	<thead>
                 	<tr>
-                    	<th>Proveedor</th>
-                        <th>Dirección</th>
-                        <th>Teléfono</th>
-                        <th>Cuit</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
+                    	<th>Nombre</th>
+                        <th>NroCliente</th>
+                        <th>E-Mail</th>
+                        <th>NroDocumento</th>
+                        <th>Telefono</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                <!--proveedor,direccion, telefono, cuit, nombre, email -->
+<!--idcliente,nombre,nrocliente,email,telefono,nrodocumento-->
                 	<?php
-						if (mysql_num_rows($resProveedores)>0) {
+						if (mysql_num_rows($resClientes)>0) {
 							$cant = 0;
-							while ($row = mysql_fetch_array($resProveedores)) {
+							while ($row = mysql_fetch_array($resClientes)) {
 								$cant+=1;
 								if ($cant == 11) {
 									break;	
 								}
 					?>
                     	<tr>
-                        	<td><?php echo utf8_encode($row['proveedor']); ?></td>
-                            <td><?php echo utf8_encode($row['direccion']); ?></td>
+                        	<td><?php echo utf8_encode($row['nombre']); ?></td>
+                            <td><?php echo $row['nrocliente']; ?></td>
+                            <td><?php echo $row['email']; ?></td>
+                            <td><?php echo $row['nrodocumento']; ?></td>
                             <td><?php echo $row['telefono']; ?></td>
-                            <td><?php echo $row['cuit']; ?></td>
-                            <td><?php echo utf8_encode($row['nombre']); ?></td>
-                            <td><?php echo utf8_encode($row['email']); ?></td>
+                            
                             <td>
                             		<div class="btn-group">
 										<button class="btn btn-success" type="button">Acciones</button>
@@ -403,11 +405,11 @@ $resProveedores = $serviciosProductos->traerProveedores();
 										
 										<ul class="dropdown-menu" role="menu">
 											<li>
-											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idproveedor']; ?>">Modificar</a>
+											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idcliente']; ?>">Modificar</a>
 											</li>
 
 											<li>
-											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idproveedor']; ?>">Borrar</a>
+											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idcliente']; ?>">Borrar</a>
 											</li>
 
 										</ul>
@@ -416,7 +418,7 @@ $resProveedores = $serviciosProductos->traerProveedores();
                         </tr>
                     <?php } ?>
                     <?php } else { ?>
-                    	<h3>No hay proveedores cargados.</h3>
+                    	<h3>No hay clientes cargados.</h3>
                     <?php } ?>
                 </tbody>
             </table>
@@ -429,12 +431,12 @@ $resProveedores = $serviciosProductos->traerProveedores();
 
 </div>
 
-<div id="dialog2" title="Eliminar Proveedor">
+<div id="dialog2" title="Eliminar Cliente">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar al Proveedor?.<span id="proveedorEli"></span>
+            ¿Esta seguro que desea eliminar al Cliente?.<span id="proveedorEli"></span>
         </p>
-        <p><strong>Importante: </strong>También se borrara la relación con los productos asociados</p>
+        <p><strong>Importante: </strong>También se borrara la relación con las canchas y cuentas asociadas</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
 
@@ -479,8 +481,8 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarProveedores'},
-									url:   '../../ajax/ajax.php',
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarCliente'},
+									url:   '../../ajax/ajax_clientes.php',
 									type:  'post',
 									beforeSend: function () {
 											
@@ -506,26 +508,114 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 
-	$("#proveedor").click(function(event) {
-		$("#proveedor").removeClass("alert-danger");
-		$("#proveedor").attr('value','');
-		$("#proveedor").attr('placeholder','Ingrese el Proveedor...');
+	$("#nombre").click(function(event) {
+		if ($("#nombre").val() == "") {
+			$("#nombre").removeClass("alert-danger");
+			$("#nombre").attr('value','');
+			$("#nombre").attr('placeholder','Ingrese el Nombre...');
+		}
     });
 
-	$("#proveedor").change(function(event) {
-		$("#proveedor").removeClass("alert-danger");
-		$("#proveedor").attr('placeholder','Ingrese el Proveedor');
+	$("#nombre").change(function(event) {
+		if ($("#nombre").val() == "") {
+			$("#nombre").removeClass("alert-danger");
+			$("#nombre").attr('placeholder','Ingrese el Nombre');
+		}
+	});
+	
+	$("#codigo").click(function(event) {
+		if ($("#codigo").val() == "") {
+			$("#codigo").removeClass("alert-danger");
+			$("#codigo").attr('value','');
+			$("#codigo").attr('placeholder','Ingrese el Codigo...');
+		}
+    });
+
+	$("#codigo").change(function(event) {
+		if ($("#codigo").val() == "") {
+			$("#codigo").removeClass("alert-danger");
+			$("#codigo").attr('placeholder','Ingrese el Codigo');
+		}
+	});
+	
+	$("#precio_unit").click(function(event) {
+		if ($("#precio_unit").val() == "") {
+			$("#precio_unit").removeClass("alert-danger");
+			$("#precio_unit").attr('value','');
+			$("#precio_unit").attr('placeholder','Ingrese el Precio Unit...');
+		}
+    });
+
+	$("#precio_unit").change(function(event) {
+		if ($("#precio_unit").val() == "") {
+			$("#precio_unit").removeClass("alert-danger");
+			$("#precio_unit").attr('placeholder','Ingrese el Precio Unit');
+		}
+	});
+	
+	$("#stock").click(function(event) {
+		if ($("#stock").val() == "") {
+			$("#stock").removeClass("alert-danger");
+			$("#stock").attr('value','');
+			$("#stock").attr('placeholder','Ingrese el Stock...');
+		}
+    });
+
+	$("#stock").change(function(event) {
+		if ($("#stock").val() == "") {
+			$("#stock").removeClass("alert-danger");
+			$("#stock").attr('placeholder','Ingrese el Stock');
+		}
+	});
+	
+	$("#stock_min").click(function(event) {
+		if ($("#stock_min").val() == "") {
+			$("#stock_min").removeClass("alert-danger");
+			$("#stock_min").attr('value','');
+			$("#stock_min").attr('placeholder','Ingrese el Stock Minimo...');
+		}
+    });
+
+	$("#stock_min").change(function(event) {
+		if ($("#stock_min").val() == "") {
+			$("#stock_min").removeClass("alert-danger");
+			$("#stock_min").attr('placeholder','Ingrese el Stock Minimo');
+		}
 	});
 	
 	function validador(){
 
 			$error = "";
-
+//idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas
 			
-			if ($("#proveedor").val() == "") {
-				$error = "Es obligatorio el campo proveedor.";
-				$("#proveedor").addClass("alert-danger");
-				$("#proveedor").attr('placeholder',$error);
+			if ($("#nombre").val() == "") {
+				$error = "Es obligatorio el campo nombre.";
+				$("#nombre").addClass("alert-danger");
+				$("#nombre").attr('placeholder',$error);
+			}
+			
+			if ($("#codigo").val() == "") {
+				$error = "Es obligatorio el campo codigo.";
+				$("#codigo").addClass("alert-danger");
+				$("#codigo").attr('placeholder',$error);
+			}
+			
+			if ($("#precio_unit").val() == "") {
+				$error = "Es obligatorio el campo Precio Unit.";
+				$("#precio_unit").addClass("alert-danger");
+				$("#precio_unit").attr('placeholder',$error);
+			}
+			
+			if ($("#stock").val() == "") {
+				$error = "Es obligatorio el campo stock.";
+				$("#stock").addClass("alert-danger");
+				$("#stock").attr('placeholder',$error);
+			}
+			
+			if ($("#stock_min").val() == "") {
+				$error = "Es obligatorio el campo stock min.";
+				$("#stock_min").addClass("alert-danger");
+				$("#stock_min").attr('placeholder',$error);
 			}
 
 
@@ -534,6 +624,7 @@ $(document).ready(function(){
 	
 	//al enviar el formulario
     $('#cargar').click(function(){
+		
 		if (validador() == "")
         {
 			//información del formulario
@@ -541,7 +632,7 @@ $(document).ready(function(){
 			var message = "";
 			//hacemos la petición ajax  
 			$.ajax({
-				url: '../../ajax/ajax.php',  
+				url: '../../ajax/ajax_clientes.php',  
 				type: 'POST',
 				// Form data
 				//datos del formulario
@@ -561,7 +652,7 @@ $(document).ready(function(){
                                             $(".alert").removeClass("alert-danger");
 											$(".alert").removeClass("alert-info");
                                             $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Proveedor</strong>. ');
+                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Cliente</strong>. ');
 											$(".alert").delay(3000).queue(function(){
 												/*aca lo que quiero hacer 
 												  después de los 2 segundos de retraso*/
@@ -588,6 +679,8 @@ $(document).ready(function(){
 			});
 		}
     });
+	
+	
 
 });//fin del document ready
 </script>

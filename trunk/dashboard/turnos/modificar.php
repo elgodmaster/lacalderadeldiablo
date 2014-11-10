@@ -2,20 +2,28 @@
 
 session_start();
 
-if ((!isset($_SESSION['usua_se'])) && ($_SESSION['refrol_se'] == 1))
+if (!isset($_SESSION['usua_se'])) 
 {
-	header('Location: /wportalinmobiliario/vistas/');
+	header('Location: /lacalderadeldiablo/vistas/');
 } else {
 
 
+date_default_timezone_set('America/Buenos_Aires');
 require '../../includes/funcionesProductos.php';
-
+require '../../includes/funcionesTurnos.php';
 
 $serviciosProductos = new ServiciosProductos();
+$serviciosTurnos    = new ServiciosTurnos();
 
 $id = $_GET['id'];
 
-$resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
+$resCanchas = $serviciosTurnos->traerCanchas();
+$resClientes= $serviciosTurnos->traerClientes();
+$resTurnos = $serviciosTurnos->traerTurnos();
+
+$fecha = date('Y-m-d');
+
+$resTurno = $serviciosTurnos->traerTurnosPorId($id);
 
 ?>
 
@@ -49,7 +57,7 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
     
     <script type="text/javascript">
 		$( document ).ready(function() {
-			$('.icodashboard2, .icoalquileres2, .icousuarios2, .icoinmubles2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
+			$('.icodashboard2, .icoventas2, .icousuarios2, .icoturnos2, .icoproductos2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
 				$('.menuHober').hide();
 				$('.todoMenu').show(100, function() {
 					$('#navigation').animate({'margin-left':'0px'}, {
@@ -204,8 +212,51 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
       jQuery(document).ready(function ($) {
         "use strict";
         $('#navigation').perfectScrollbar();
+      	
+		$("#fechautilizacion").datepicker({
+		      showOn: 'both',
+			  dateFormat: 'yy-mm-dd',
+		      buttonImage: 'calendar.png',
+		      buttonImageOnly: true,
+		      changeYear: true,
+		      numberOfMonths: 2,
+		      onSelect: function(textoFecha, objDatepicker){
+				 $('#fechaCambio').html(textoFecha);
+		         $.ajax({
+					data:  {fecha: textoFecha,
+							accion: 'crearTablaTurnos'},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />'); 
+					},
+					success:  function (response) {
+						
+						$('#datos').html(response);
+						$("#load").html('');
+					}
+				});
+		      }
+		 });
       });
+	  
+	
     </script>
+    <style>
+			
+			$("#fechautilizacion").datepicker({
+		   showOn: 'both',
+		   buttonImage: 'calendar.png',
+		   buttonImageOnly: true,
+		   changeYear: true,
+		   numberOfMonths: 2,
+		   onSelect: function(textoFecha, objDatepicker){
+		      $("#mensaje").html("<p>Has seleccionado: " + textoFecha + "</p>");
+		   }
+		}); 
+		</style>
+        
+        <link rel="stylesheet" href="../../css/chosen.css">
 </head>
 
 <body>
@@ -217,18 +268,18 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
 	<div class="todoMenu">
         <div id="mobile-header">
             Menu
-            <p>Usuario: <span style="color: #333; font-weight:900;">AdminMarcos</span></p>
+            <p>Usuario: <span style="color: #333; font-weight:900;"><?php echo $_SESSION['nombre_se']; ?></span></p>
             <p class="ocultar" style="color: #900; font-weight:bold; cursor:pointer; font-family:'Courier New', Courier, monospace; height:20px;">(Ocultar)</p>
         </div>
     
         <nav class="nav">
             <ul>
                 <li class="arriba"><div class="icodashboard"></div><a href="../index.php">Dashboard</a></li>
-                <li><div class="icoturnos"></div><a href="../turnos/">Turnos</a></li>
+                <li><div class="icoturnos"></div><a href="index.php">Turnos</a></li>
                 <li><div class="icoventas"></div><a href="../ventas/">Ventas</a></li>
                 <li><div class="icousuarios"></div><a href="../clientes/">Clientes</a></li>
                 <li><div class="icoproductos"></div><a href="../productos/">Productos</a></li>
-                <li><div class="icocontratos"></div><a href="index.php">Proveedores</a></li>
+                <li><div class="icocontratos"></div><a href="../proveedores/">Proveedores</a></li>
                 <li><div class="icoreportes"></div><a href="../reportes/">Reportes</a></li>
                 <li><div class="icosalir"></div><a href="../salir/">Salir</a></li>
             </ul>
@@ -285,81 +336,89 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
 
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Proveedor</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Modificar Turno</p>
         </div>
     	<div class="cuerpoBox">
-        <form class="form-horizontal" role="form">
+        <form class="form-horizontal formulario" role="form">
                 	
-                <!--proveedor,direccion, telefono, cuit, nombre -->
+                <!--refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea -->
                 
                 	<div class="form-group">
-                    	<label for="proveedor" class="col-lg-3 control-label" style="text-align:left">Proveedor</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'proveedor'); ?>" class="form-control" id="proveedor" name="proveedor" placeholder="Ingrese el Proveedor..." required>
+                    	<label for="fechautilizacion" class="control-label col-lg-3" style="text-align:left">Fecha Utilizaci贸n</label>
+                        <div class="col-lg-2">
+                            <input type="text" class="form-control" id="fechautilizacion" name="fechautilizacion" value="<?php echo mysql_result($resTurno,0,2); ?>" >
                         </div>
                     </div>
                     
                     <div class="form-group">
-                    	<label for="direccion" class="col-lg-3 control-label" style="text-align:left">Direcci贸n</label>
+                    	<label for="refcancha" class="control-label col-lg-3" style="text-align:left">Cancha</label>
                         <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'direccion'); ?>" class="form-control" id="direccion" name="direccion" placeholder="Ingrese el Direcci贸n..." required>
+                        	<select class="form-control" id="refcancha" name="refcancha">
+                            	<?php while ($rowTP = mysql_fetch_array($resCanchas)) { ?>
+                                    <?php if (mysql_result($resTurno,0,1)== $rowTP[0]) { ?>
+                                    <option value="<?php echo $rowTP[0]; ?>" selected="selected"><?php echo $rowTP[1]; ?></option>
+                                    <?php } else { ?>
+                                        <option value="<?php echo $rowTP[0]; ?>"><?php echo $rowTP[1]; ?></option>
+                                    <?php } ?>
+                                <?php } ?>
+                            </select>
                         </div>
                     </div>
                     
                     
                     <div class="form-group">
-                    	<label for="nombre" class="col-lg-3 control-label" style="text-align:left">Nombre</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'nombre'); ?>" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el Nombre..." required>
+                    	<label for="horautilizacion" class="control-label col-lg-3" style="text-align:left">Hora Utilizaci贸n</label>
+                        <div class="col-lg-2">
+                        	<select class="form-control" id="horautilizacion" name="horautilizacion">
+                            	<?php for($i=0;$i<24;$i++) { ?>
+                                    <?php if (mysql_result($resTurno,0,3)== $i.":00:00") { ?>
+                                    <option value="<?php echo $i; ?>" selected="selected"><?php echo $i.':00'; ?></option>
+                                    <?php } else { ?>
+                                        <option value="<?php echo $i; ?>"><?php echo $i.':00'; ?></option>
+                                    <?php } ?>
+                                	
+                                <?php } ?>
+                            </select>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                    	<label for="telefono" class="col-lg-3 control-label" style="text-align:left">Tel茅fono</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'telefono'); ?>" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el Tel茅fono..." required>
+                    	<label for="refcliente" class="control-label col-lg-3" style="text-align:left">Cliente</label>
+                        <div class="col-lg-6">
+                            <select data-placeholder="selecione el cliente..." id="refcliente" name="refcliente" class="chosen-select" style="width:450px;" tabindex="2">
+            			<option value=""></option>
+                                <?php while ($rowC = mysql_fetch_array($resClientes)) { ?>
+
+                                    <option value="<?php echo $rowC[0]; ?>"><?php echo $rowC[1]; ?></option>
+	
+                                <?php } ?>
+                                
+                            </select>
+                            <span class="block-help">Cliente Actual: <?php echo mysql_result($resTurno,0,7); ?></span>
                         </div>
-                    </div>
-                    
-                    <div class="form-group">
-                    	<label for="cuit" class="col-lg-3 control-label" style="text-align:left">Cuit</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'cuit'); ?>" class="form-control" id="cuit" name="cuit" placeholder="Ingrese el Cuit..." required>
-                        </div>
-                    </div>
-                    
-                    
-                	<div class="form-group">
-                    	<label for="eamil" class="col-lg-3 control-label" style="text-align:left">E-Mail</label>
-                        <div class="col-lg-5">
-                        	<input type="email" value="<?php echo mysql_result($resProveedores,0,'email'); ?>" class="form-control" id="email" name="email" placeholder="Ingrese el E-Mail..." required>
+                        <div class="col-lg-3">
+                        	<button type="button" class="btn btn-success" id="crearcliente" style="margin-left:0px;">Nuevo Cliente</button>
                         </div>
                     </div>
                 
                     
                     
-                    <ul class="list-inline">
+                    <ul class="list-inline" style="padding-top:15px;">
                     	<li>
-                    		<button type="button" class="btn btn-warning" id="modificar" style="margin-left:0px;">Modificar</button>
+                    		<button type="button" class="btn btn-primary" id="modificar" style="margin-left:0px;">Modificar</button>
+                            
                         </li>
-                        <li>
-                        	<button type="button" class="btn btn-danger varborrar" id="<?php echo $id; ?>" style="margin-left:0px;">Eliminar</button>
-                        </li>
-                        <li>
- 							<button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>                       
-                        </li>
+                        
    
                     </ul>
                     <div id="load">
                     
                     </div>
-                    <div class="alert">
+                    <div id="error" class="alert alert-info">
+                		<p><strong>Importante!:</strong> El campo fecha de utilizaci贸n y cliente son obligatorios</p>
+                	</div>
                     
-                    </div>
-                    <input type="hidden" id="accion" name="accion" value="modificarProveedores"/>
-                    <input type="hidden" id="id" name="id" value="<?php echo $id; ?>"/>
                 </form>
-                
                 <br>
                 <div id="error">
                 
@@ -372,18 +431,77 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
 
 </div>
 
-<div id="dialog2" title="Eliminar Proveedor">
+<div id="dialog2" title="Eliminar Turno">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            驴Esta seguro que desea eliminar al Proveedor?.<span id="proveedorEli"></span>
+            驴Esta seguro que desea eliminar el Turno?.<span id="proveedorEli"></span>
         </p>
-        <p><strong>Importante: </strong>Tambi茅n se borrara la relaci贸n con los productos asociados</p>
+        <p><strong>Importante: </strong>El turno se perdera.</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
 
+<div id="dialogCliente" title="Crear Cliente">
+    	<div class="row"> 
+        <div class="col-sm-12 col-md-12">
+    <div class="form-group col-md-6">
+                    	<label for="nombre" class="control-label" style="text-align:left">Nombre</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el Nombre..." required>
+                        </div>
+                    </div>
+                    
+
+                    
+                    <div class="form-group col-md-6">
+                    	<label for="nrocliente" class="control-label" style="text-align:left">NroCliente</label>
+                        <div class="input-group col-md-12">
+                            <p class="form-control">El Nro de Cliente se generara automaticamente</p>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="email" class="control-label" style="text-align:left">E-Mail</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" class="form-control" id="email" name="email" placeholder="Ingrese el E-Mail..." required>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="telefono" class="control-label" style="text-align:left">Telefono</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el Precio Telefono..." required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                    	<label for="nrodocumento" class="control-label" style="text-align:left">NroDocumento</label>
+                        <div class="input-group col-md-12">
+                            <input type="text" class="form-control" id="nrodocumento" name="nrodocumento" placeholder="Ingrese el NroDocumento..." required>
+                        </div>
+                    </div>
+
+
+                    </div>
+                    </div>
+               
+                    <div id="load">
+                    
+                    </div>
+                    <div id="error" class="alert alert-info">
+                		<p><strong>Importante!:</strong> El campo nombre es obligatorios</p>
+                    </div>
+                    
+</div>
+    
 <script type="text/javascript">
 $(document).ready(function(){
 	
+        $('#crearcliente').click(function(event){
+            $("#dialogCliente").dialog("open");
+	});//fin del boton crea cliente
+        
 	$('.varborrar').click(function(event){
 			  usersid =  $(this).attr("id");
 			  if (!isNaN(usersid)) {
@@ -396,10 +514,59 @@ $(document).ready(function(){
 	});//fin del boton eliminar
 	
 	$('.volver').click(function(event){
-				url = "../proveedores/index.php";
+				url = "index.php";
 				$(location).attr('href',url);
 	});//fin del boton eliminar
 
+
+        $( "#dialogCliente" ).dialog({
+		 	
+			    autoOpen: false,
+			 	resizable: false,
+				width:800,
+				height:540,
+				modal: true,
+				buttons: {
+				    "Cargar": function() {
+                                            if ($('#nombre').val() != '') {
+						$.ajax({
+									data:  {nombre: $('#nombre').val(),
+                                                                                email: $('#email').val(),
+                                                                                nrodocumento: $('#nrodocumento').val(),
+                                                                                telefono: $('#telefono').val(),
+                                                                                accion: 'insertarCliente'},
+									url:   '../../ajax/ajax_clientes.php',
+									type:  'post',
+									beforeSend: function () {
+											
+									},
+									success:  function (response) {
+											url = "modificar.php?id=<?php echo $id; ?>";
+											$(location).attr('href',url);
+											
+									}
+							});
+                                                        
+                                                        $( this ).dialog( "close" );
+                                                        $( this ).dialog( "close" );
+                                                                $('html, body').animate({
+                                                                scrollTop: '1000px'
+                                                        },
+                                                        1500);
+                                                    } else {
+                                                        alert("El campo Nombre es obligatorio.");
+                                                        
+                                                    }
+						
+				    },
+				    Cancelar: function() {
+						$( this ).dialog( "close" );
+				    }
+				}
+		 
+		 
+	 		}); //fin del dialogo para crear cliente
+                        
 	$( "#dialog2" ).dialog({
 		 	
 			    autoOpen: false,
@@ -411,7 +578,7 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarProveedores'},
+									data:  {id: <?php echo $id; ?>, accion: 'eliminarTurno'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
@@ -438,26 +605,31 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 
-	$("#proveedor").click(function(event) {
-		$("#proveedor").removeClass("alert-danger");
-		$("#proveedor").attr('value','');
-		$("#proveedor").attr('placeholder','Ingrese el Proveedor...');
+	$("#fechautilizacion").click(function(event) {
+		$("#fechautilizacion").removeClass("alert-danger");
+		$("#fechautilizacion").attr('value','');
+		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilizaci髇...');
     });
 
-	$("#proveedor").change(function(event) {
-		$("#proveedor").removeClass("alert-danger");
-		$("#proveedor").attr('placeholder','Ingrese el Proveedor');
+	$("#fechautilizacion").change(function(event) {
+		$("#fechautilizacion").removeClass("alert-danger");
+		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilizaci髇');
 	});
 	
 	function validador(){
 
 			$error = "";
+                        
+                        if ($("#refcliente").chosen().val() == "") {
+				$error = "Es obligatorio el campo cliente.";
 
+				alert($error);
+			}
 			
-			if ($("#proveedor").val() == "") {
-				$error = "Es obligatorio el campo proveedor.";
-				$("#proveedor").addClass("alert-danger");
-				$("#proveedor").attr('placeholder',$error);
+			if ($("#fechautilizacion").val() == "") {
+				$error = "Es obligatorio el campo Fecha Utilizaci髇.";
+				$("#fechautilizacion").addClass("alert-danger");
+				$("#fechautilizacion").attr('placeholder',$error);
 			}
 
 
@@ -465,64 +637,73 @@ $(document).ready(function(){
     }
 	
 	//al enviar el formulario
-    $('#cargar').click(function(){
-		if (validador() == "")
+    $('#modificar').click(function(){
+		
+		
+	if (validador() == "") 
         {
-			//informaci贸n del formulario
-			var formData = new FormData($(".formulario")[0]);
-			var message = "";
-			//hacemos la petici贸n ajax  
-			$.ajax({
-				url: '../../ajax/ajax.php',  
-				type: 'POST',
-				// Form data
-				//datos del formulario
-				data: formData,
-				//necesario para subir archivos via ajax
-				cache: false,
-				contentType: false,
-				processData: false,
-				//mientras enviamos el archivo
-				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
-				},
-				//una vez finalizado correctamente
-				success: function(data){
 
-					if (data != '') {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Proveedor</strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
-												  despu茅s de los 2 segundos de retraso*/
-												$(this).dequeue(); //contin煤o con el siguiente 铆tem en la cola
-												
-											});
-											$("#load").html('');
-											url = "index.php";
-											$(location).attr('href',url);
-                                            
-											
-                                        } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
-                                            $("#load").html('');
-                                        }
-				},
-				//si ha ocurrido un error
-				error: function(){
-					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
-                    $("#load").html('');
-				}
-			});
+				$.ajax({
+					data:  {id: <?php echo $id; ?>,
+                                                nombre: $('#nombre').val(),
+						refcliente: $("#refcliente").chosen().val(),
+						refcancha: $('#refcancha').val(),
+						horautilizacion: $('#horautilizacion').val(),
+						fechautilizacion: $('#fechautilizacion').val(),
+						usuacrea:	<?php echo "'".$_SESSION['nombre_se']."'"; ?>,
+						accion: 'modificarTurno'},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />'); 
+					},
+					success:  function (response) {
+						
+						if (response == '') {
+							$(".alert").removeClass("alert-danger");
+							$(".alert").removeClass("alert-info");
+							$(".alert").addClass("alert-success");
+							$(".alert").html('<strong>Ok!</strong> Se modifico exitosamente el <strong>Turno</strong>. ');
+							$(".alert").delay(3000).queue(function(){
+								/*aca lo que quiero hacer 
+								  despu茅s de los 2 segundos de retraso*/
+								$(this).dequeue(); //contin煤o con el siguiente 铆tem en la cola
+								
+							});
+							$("#load").html('');
+							
+						} else {
+							$(".alert").removeClass("alert-danger");
+							$(".alert").removeClass("alert-info");
+							$(".alert").removeClass("alert-success");
+							$(".alert").addClass("alert-danger");
+							$(".alert").html('<strong>Error!</strong>'+response);
+							$("#load").html('');
+						}
+					}
+				});
 		}
     });
 
 });//fin del document ready
 </script>
+
+<script src="../../js/chosen.jquery.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var config = {
+      '.chosen-select'           : {},
+      '.chosen-select-deselect'  : {allow_single_deselect:true},
+      '.chosen-select-no-single' : {disable_search_threshold:10},
+      '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+      '.chosen-select-width'     : {width:"95%"}
+    }
+    for (var selector in config) {
+      $(selector).chosen(config[selector]);
+    }
+    
+
+  </script>
+  
 <?php } ?>
 </body>
 </html>

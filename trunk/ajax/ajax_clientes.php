@@ -13,78 +13,77 @@ switch ($accion) {
 		insertarCliente($serviciosClientes);
 		break;	
 	case 'generarNroCliente':
-		generarNroCliente($serviciosProductos);
+		generarNroCliente($serviciosClientes);
 		break;
 
 	case 'eliminarCliente':
-		eliminarCliente($serviciosProductos);
+		eliminarCliente($serviciosClientes);
 		break;
 
 	case 'modificarCliente':
-		modificarCliente($serviciosProductos);
+		modificarCliente($serviciosClientes);
 		break;
 
 	case 'traerClientePorId':
-		traerClientePorId($serviciosProductos);
+		traerClientePorId($serviciosClientes);
 		break;
 		
 	case 'traerClientePorNroCliente':
-		traerClientePorNroCliente($serviciosProductos);
+		traerClientePorNroCliente($serviciosClientes);
 		break;	
 	case 'traerClientePorNroDocumento':
-		traerClientePorNroDocumento($serviciosProductos);
+		traerClientePorNroDocumento($serviciosClientes);
 		break;
 		
 }
 
 function insertarCliente($serviciosClientes) {
 	$nombre			=	$_POST['nombre'];
-	$nrocliente		=	$_POST['nrocliente'];
 	$email			=	$_POST['email'];
 	$nrodocumento	=	$_POST['nrodocumento'];
-	echo $serviciosClientes->insertarCliente($nombre,$nrocliente,$email,$nrodocumento);
+	$telefono		=	$_POST['telefono'];
+	echo $serviciosClientes->insertarCliente($nombre,'',$email,$nrodocumento,$telefono);
 }
 
 
-function eliminarCliente($serviciosProductos) {
+function eliminarCliente($serviciosClientes) {
 	$id 			=	$_POST['id'];
 
-	$res 			= $serviciosProductos->eliminarCliente($id);
+	$res 			= $serviciosClientes->eliminarCliente($id);
 	echo $res;
 }
 
 
-function modificarCliente($serviciosProductos) {
+function modificarCliente($serviciosClientes) {
 	$id 			=	$_POST['id'];
 	$nombre			=	$_POST['nombre'];
-	$nrocliente		=	$_POST['nrocliente'];
 	$email			=	$_POST['email'];
 	$nrodocumento	=	$_POST['nrodocumento']; 
-	
-	$res 			= $serviciosProductos->modificarCliente($id,$nombre,$nrocliente,$email,$nrodocumento);
+	$telefono		=	$_POST['telefono'];
+	$res 			= $serviciosClientes->modificarCliente($id,$nombre,'',$email,$nrodocumento,$telefono);
 	echo $res;
 }
 
-function traerClientePorId($serviciosProductos) {
+function traerClientePorId($serviciosClientes) {
 	$id 	=	$_POST['id'];
 	
-	$res 	= $serviciosProductos->traerClientePorId($id);
+	$res 	= $serviciosClientes->traerClientePorId($id);
 	echo $res;
 }
 
 
 
-function traerClientePorNroCliente($serviciosProductos) {
+function traerClientePorNroCliente($serviciosClientes) {
 	$nrodocumento	=	$_POST['nrodocumento'];
 	
-	$res 			= $serviciosProductos->traerClientePorNroCliente($nrodocumento);
+	$res 			= $serviciosClientes->traerClientePorNroCliente($nrodocumento);
 	echo $res;
 }
 
-function traerClientePorNroDocumento($serviciosProductos) {
+function traerClientePorNroDocumento($serviciosClientes) {
 	$codigobarra 	=	$_POST['$codigobarra'];
 	
-	$res			= $serviciosProductos->traerClientePorNroDocumento($codigobarra);
+	$res			= $serviciosClientes->traerClientePorNroDocumento($codigobarra);
 	echo $res;
 }
 

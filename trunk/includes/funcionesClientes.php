@@ -16,7 +16,7 @@ function generarNroCliente($nombre) {
 	$sql = "select idcliente from lcdd_clientes order by idcliente desc";
 	$res = $this->query($sql,0);
 	if (mysql_num_rows($res)>0) {
-		$num = mysql_result($res,0,0);	
+		$num = mysql_result($res,0,0) + 1;	
 	} else {
 		$num = 1;
 	}
@@ -27,14 +27,16 @@ function generarNroCliente($nombre) {
 
 //el utf8_decode($cadena) este va en todos los campos que sean tipo string o cadena o varchar
 
-function insertarCliente($nombre,$nrocliente,$email,$nrodocumento) {
-	$sql	=	"insert into lcdd_clientes(idcliente,nombre,nrocliente,email,nrodocumento)
+function insertarCliente($nombre,$nrocliente,$email,$nrodocumento,$telefono) {
+	$sql	=	"insert into lcdd_clientes(idcliente,nombre,nrocliente,email,nrodocumento,telefono)
 					values
 						('',
-						 nombre			=	'".$nombre."',
-						 nrocliente		=	'".utf8_decode($this->generarNroCliente($nombre))."',
-						 email			=	'".$email."',
-						 nrodocumento	=	'".$nrodocumento."')";
+						 '".utf8_decode($nombre)."',
+						 '".utf8_decode($this->generarNroCliente($nombre))."',
+						 '".utf8_decode($email)."',
+						 ".($nrodocumento == '' ? 'null' : $nrodocumento).",
+						 '".$telefono."')";
+	//return $sql;
 	$res	=	$this->query($sql,1);
 	if ($res == false) {
 		return 'Error al insertar datos';
@@ -46,34 +48,51 @@ function insertarCliente($nombre,$nrocliente,$email,$nrodocumento) {
 	
 
 	function eliminarCliente($id) {
-		$sqlD = "delete from lcdd_clientes idcliente =".$id;
-		$this->query($sqlD,0);
 	
 		$sql = "delete from lcdd_clientes where idcliente =".$id;
-		$this->query($sql,0);
-		return true;
+		$res = $this->query($sql,0);
+		if ($res == false) {
+			return 'Error al eliminar datos';
+		} else {
+			return '';
+		}
 }
 
 
-function modificarCliente($id,$nombre,$nrocliente,$email,$nrodocumento) {
+function modificarCliente($id,$nombre,$nrocliente,$email,$nrodocumento,$telefono) {
 	$sql = "update lcdd_clientes 			
 			SET
-			nombre = '".$nombre."',
-			nrocliente = ".$nrocliente.",
-			email = ".$email.",
-			nrodocumento = ".$nrodocumento.",
+			nombre = '".utf8_decode($nombre)."',
+			email = '".utf8_decode($email)."',
+			nrodocumento = ".($nrodocumento == '' ? 'null' : $nrodocumento).",
+			telefono	= '".$telefono."'
 			WHERE idcliente = ".$id;
-	$res = $this->query($sql,0) or die ('Hubo un error');
-	return $res;
+	//return $sql;
+	$res = $this->query($sql,0);
+	if ($res == false) {
+		return 'Error al modificar datos';
+	} else {
+		return '';
+	}
 
+}
+
+function traerClientes() {
+	$sql	=	"select idcliente,nombre,nrocliente,email,nrodocumento,telefono from lcdd_clientes ";
+	$res	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		return $res;
+	}
 }
 
 
 function traerClientePorId($id) {
-	$sql	=	"select idcliente from lcdd_clientes where idcliente =".$id;
+	$sql	=	"select idcliente,nombre,nrocliente,email,nrodocumento,telefono from lcdd_clientes where idcliente =".$id;
 	$res	=	$this->query($sql,0);
 	if ($res == false) {
-		return 'Error al insertar datos';
+		return 'Error al traer datos';
 	} else {
 		return $res;
 	}
@@ -81,10 +100,10 @@ function traerClientePorId($id) {
 
 
 function traerClientePorNroCliente($nrocliente) {
-	$sql	=	"select nrocliente from lcdd_cliente where nrocliente =".$nrocliente;
+	$sql	=	"select idcliente,nombre,nrocliente,email,nrodocumento,telefono from lcdd_cliente where nrocliente ='".$nrocliente."'";
 	$res	=	$this->query($sql,0);
 	if ($res == false) {
-		return 'Error al insertar datos';
+		return 'Error al traer datos';
 	} else {
 		return $res;
 	}
@@ -92,10 +111,10 @@ function traerClientePorNroCliente($nrocliente) {
 
 
 function traerClientePorNroDocumento($nrodocumento) {
-	$sql	=	"select nrodocumento from lcdd_cliente where nrodocumento =".$nrodocumento;
+	$sql	=	"select idcliente,nombre,nrocliente,email,nrodocumento,telefono from lcdd_cliente where nrodocumento =".$nrodocumento;
 	$res	=	$this->query($sql,0);
 	if ($res == false) {
-		return 'Error al insertar datos';
+		return 'Error al traer datos';
 	} else {
 		return $res;
 	}

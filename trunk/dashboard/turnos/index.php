@@ -2,7 +2,7 @@
 
 session_start();
 
-if ((!isset($_SESSION['usua_se'])) && ($_SESSION['refrol_se'] == 1))
+if (!isset($_SESSION['usua_se']))
 {
 	header('Location: /lacalderadeldiablo/vistas/');
 } else {
@@ -59,7 +59,7 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
     
     <script type="text/javascript">
 		$( document ).ready(function() {
-			$('.icodashboard2, .icoalquileres2, .icousuarios2, .icoinmubles2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
+			$('.icodashboard2, .icoventas2, .icousuarios2, .icoturnos2, .icoproductos2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
 				$('.menuHober').hide();
 				$('.todoMenu').show(100, function() {
 					$('#navigation').animate({'margin-left':'0px'}, {
@@ -277,11 +277,11 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
         <nav class="nav">
             <ul>
                 <li class="arriba"><div class="icodashboard"></div><a href="../index.php">Dashboard</a></li>
-                <li><div class="icoturnos"></div><a href="../turnos/">Turnos</a></li>
+                <li><div class="icoturnos"></div><a href="index.php">Turnos</a></li>
                 <li><div class="icoventas"></div><a href="../ventas/">Ventas</a></li>
                 <li><div class="icousuarios"></div><a href="../clientes/">Clientes</a></li>
                 <li><div class="icoproductos"></div><a href="../productos/">Productos</a></li>
-                <li><div class="icocontratos"></div><a href="index.php">Proveedores</a></li>
+                <li><div class="icocontratos"></div><a href="../proveedores/">Proveedores</a></li>
                 <li><div class="icoreportes"></div><a href="../reportes/">Reportes</a></li>
                 <li><div class="icosalir"></div><a href="../salir/">Salir</a></li>
             </ul>
@@ -407,7 +407,7 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
                     
                     </div>
                     <div id="error" class="alert alert-info">
-                		<p><strong>Importante!:</strong> El campo proveedor es obligatorio</p>
+                		<p><strong>Importante!:</strong> El campo fecha de utilización y cliente son obligatorios</p>
                 	</div>
                     
                 </form>
@@ -524,12 +524,75 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
 
+<div id="dialogCliente" title="Crear Cliente">
+    	<div class="row"> 
+        <div class="col-sm-12 col-md-12">
+    <div class="form-group col-md-6">
+                    	<label for="nombre" class="control-label" style="text-align:left">Nombre</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el Nombre..." required>
+                        </div>
+                    </div>
+                    
+
+                    
+                    <div class="form-group col-md-6">
+                    	<label for="nrocliente" class="control-label" style="text-align:left">NroCliente</label>
+                        <div class="input-group col-md-12">
+                            <p class="form-control">El Nro de Cliente se generara automaticamente</p>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="email" class="control-label" style="text-align:left">E-Mail</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" class="form-control" id="email" name="email" placeholder="Ingrese el E-Mail..." required>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group col-md-6">
+                    	<label for="telefono" class="control-label" style="text-align:left">Telefono</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el Precio Telefono..." required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-6">
+                    	<label for="nrodocumento" class="control-label" style="text-align:left">NroDocumento</label>
+                        <div class="input-group col-md-12">
+                            <input type="text" class="form-control" id="nrodocumento" name="nrodocumento" placeholder="Ingrese el NroDocumento..." required>
+                        </div>
+                    </div>
+
+
+                    </div>
+                    </div>
+               
+                    <div id="load">
+                    
+                    </div>
+                    <div id="error" class="alert alert-info">
+                		<p><strong>Importante!:</strong> El campo nombre es obligatorios</p>
+                    </div>
+                    
+</div>
+    
+    
+    
+    
+    
 <script type="text/javascript">
 $(document).ready(function(){
 	
 	
 	
-	
+	$('#crearcliente').click(function(event){
+            $("#dialogCliente").dialog("open");
+	});//fin del boton eliminar
+        
+        
 	$('.ver').click(function(event){
 			url = "ver.php";
 			$(location).attr('href',url);
@@ -557,7 +620,53 @@ $(document).ready(function(){
 		  }
 	});//fin del boton modificar
 	
-	
+	$( "#dialogCliente" ).dialog({
+		 	
+			    autoOpen: false,
+			 	resizable: false,
+				width:800,
+				height:540,
+				modal: true,
+				buttons: {
+				    "Cargar": function() {
+                                            if ($('#nombre').val() != '') {
+						$.ajax({
+									data:  {nombre: $('#nombre').val(),
+                                                                                email: $('#email').val(),
+                                                                                nrodocumento: $('#nrodocumento').val(),
+                                                                                telefono: $('#telefono').val(),
+                                                                                accion: 'insertarCliente'},
+									url:   '../../ajax/ajax_clientes.php',
+									type:  'post',
+									beforeSend: function () {
+											
+									},
+									success:  function (response) {
+											url = "index.php";
+											$(location).attr('href',url);
+											
+									}
+							});
+                                                        
+                                                        $( this ).dialog( "close" );
+                                                        $( this ).dialog( "close" );
+                                                                $('html, body').animate({
+                                                                scrollTop: '1000px'
+                                                        },
+                                                        1500);
+                                                    } else {
+                                                        alert("El campo Nombre es obligatorio.");
+                                                        
+                                                    }
+						
+				    },
+				    Cancelar: function() {
+						$( this ).dialog( "close" );
+				    }
+				}
+		 
+		 
+	 		}); //fin del dialogo para crear cliente
 	
 	
 	$( "#dialog2" ).dialog({
@@ -598,15 +707,15 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 
-	$("#proveedor").click(function(event) {
-		$("#proveedor").removeClass("alert-danger");
-		$("#proveedor").attr('value','');
-		$("#proveedor").attr('placeholder','Ingrese el Proveedor...');
+	$("#fechautilizacion").click(function(event) {
+		$("#fechautilizacion").removeClass("alert-danger");
+		$("#fechautilizacion").attr('value','');
+		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilización...');
     });
 
-	$("#proveedor").change(function(event) {
-		$("#proveedor").removeClass("alert-danger");
-		$("#proveedor").attr('placeholder','Ingrese el Proveedor');
+	$("#fechautilizacion").change(function(event) {
+		$("#fechautilizacion").removeClass("alert-danger");
+		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilización');
 	});
 	
 	function validaDisponibilidadCancha(cancha,fecha,hora,e) {
