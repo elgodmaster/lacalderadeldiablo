@@ -329,7 +329,10 @@ $resTurnosAgrup = $serviciosTurnos->traerTurnosPorDiaAgrupado($fecha);
 
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Proximos 5 Turnos <a href="turnos/" style="color:#0f0;">Nuevo</a></p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Proximos 5 Turnos 
+        		<button type="button" class="btn btn-default btn-xs nuevoTurno">
+  <span class="glyphicon glyphicon-plus-sign"><span style="padding-left:3px;">Nuevo</span></button></p>
+        	
         </div>
     	<div class="cuerpoBox">
     		<table class="table table-striped">
@@ -370,7 +373,8 @@ $resTurnosAgrup = $serviciosTurnos->traerTurnosPorDiaAgrupado($fecha);
     </div>
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimas 5 Ventas  <a href="ventas/" style="color:#0f0;">Nuevo</a></p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Ultimas 5 Ventas  <button type="button" class="btn btn-default btn-xs nuevoVentas">
+  <span class="glyphicon glyphicon-plus-sign"><span style="padding-left:3px;">Nuevo</span></button></p>
         </div>
     	<div class="cuerpoBox">
 
@@ -378,7 +382,8 @@ $resTurnosAgrup = $serviciosTurnos->traerTurnosPorDiaAgrupado($fecha);
     </div>
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 5 Productos Cargados  <a href="productos/" style="color:#0f0;">Nuevo</a></p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 5 Productos Cargados  <button type="button" class="btn btn-default btn-xs nuevoProducto">
+  <span class="glyphicon glyphicon-plus-sign"><span style="padding-left:3px;">Nuevo</span></button></p>
         </div>
     	<div class="cuerpoBox">
     		<table class="table table-striped">
@@ -431,7 +436,8 @@ $resTurnosAgrup = $serviciosTurnos->traerTurnosPorDiaAgrupado($fecha);
     
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Fiestas Proximas</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Fiestas Proximas <button type="button" class="btn btn-default btn-xs nuevoFiesta">
+  <span class="glyphicon glyphicon-plus-sign"><span style="padding-left:3px;">Nuevo</span></button></p>
         </div>
     	<div class="cuerpoBox">
 
@@ -447,7 +453,21 @@ $(document).ready(function(){
 			url = "turnos/";
 			$(location).attr('href',url);
 	});//fin del boton nuevo
-
+  
+  $('.nuevoVentas').click(function(event){
+			url = "ventas/";
+			$(location).attr('href',url);
+	});//fin del boton nuevo
+	
+	$('.nuevoProducto').click(function(event){
+			url = "productos/";
+			$(location).attr('href',url);
+	});//fin del boton nuevo
+	
+	$('.nuevoFiesta').click(function(event){
+			url = "fiestas/";
+			$(location).attr('href',url);
+	});//fin del boton nuevo
 });
 </script>
 <?php } ?>
