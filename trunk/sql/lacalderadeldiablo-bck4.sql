@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 10-11-2014 a las 17:44:53
--- Versión del servidor: 5.1.36-community-log
+-- Tiempo de generación: 10-11-2014 a las 06:52:56
+-- Versión del servidor: 5.5.24-log
 -- Versión de PHP: 5.4.3
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -64,45 +64,11 @@ CREATE TABLE IF NOT EXISTS `lcdd_clientes` (
 INSERT INTO `lcdd_clientes` (`idcliente`, `nombre`, `nrocliente`, `email`, `nrodocumento`, `telefono`) VALUES
 (1, 'marcos', 'ma0001', NULL, NULL, NULL),
 (2, 'enzo franchescoli', 'en0002', 'elenzo@hotmail.com', NULL, ''),
-(3, 'nora', 'no0003', NULL, NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `lcdd_cuentas`
---
-
-CREATE TABLE IF NOT EXISTS `lcdd_cuentas` (
-  `idcuenta` int(11) NOT NULL AUTO_INCREMENT,
-  `refcliente` int(11) NOT NULL,
-  `saldo` decimal(10,0) NOT NULL,
-  PRIMARY KEY (`idcuenta`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=4 ;
-
---
--- Volcado de datos para la tabla `lcdd_cuentas`
---
-
-INSERT INTO `lcdd_cuentas` (`idcuenta`, `refcliente`, `saldo`) VALUES
-(1, 1, '0'),
-(2, 2, '0'),
-(3, 3, '0');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `lcdd_movimientos`
---
-
-CREATE TABLE IF NOT EXISTS `lcdd_movimientos` (
-  `idmovimiento` int(11) NOT NULL AUTO_INCREMENT,
-  `refcuenta` int(11) NOT NULL,
-  `refventa` int(11) NOT NULL,
-  `monto` decimal(10,0) NOT NULL,
-  `fechacreacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `usuacrea` varchar(20) COLLATE utf8_spanish_ci DEFAULT NULL,
-  PRIMARY KEY (`idmovimiento`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
+(3, 'nora', 'no0003', NULL, NULL, NULL),
+(7, 'cabrera juan', 'ca0007', '', 16448995, '15849846'),
+(9, 'Pedro', 'Pe0008', 'pedro@msn.com', 12300300, '156234878'),
+(10, 'pantro', 'pa0010', 'asjdhask', 12315, '645498'),
+(11, 'Gaston Milanovich', 'Ga0011', 'milanga@yahoo.com.ar', 32568456, '152364578');
 
 -- --------------------------------------------------------
 
@@ -200,7 +166,7 @@ CREATE TABLE IF NOT EXISTS `lcdd_turnos` (
   `fechacreacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `usuacrea` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`idturno`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=8 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=7 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_turnos`
@@ -209,7 +175,9 @@ CREATE TABLE IF NOT EXISTS `lcdd_turnos` (
 INSERT INTO `lcdd_turnos` (`idturno`, `refcancha`, `fechautilizacion`, `horautilizacion`, `refcliente`, `fechacreacion`, `usuacrea`) VALUES
 (1, 2, '2014-11-09', '17:00:00', 10, '2014-11-09 20:43:51', 'Saupurein '),
 (2, 2, '2014-11-09', '12:00:00', 3, '2014-11-09 20:44:59', 'Saupurein '),
-(7, 3, '2014-11-10', '17:00:00', 7, '2014-11-10 16:36:23', 'Saupurein ');
+(4, 1, '2014-11-10', '14:00:00', 9, '2014-11-10 06:09:40', 'Saupurein '),
+(5, 1, '2014-11-10', '23:00:00', 2, '2014-11-10 06:24:08', 'Saupurein '),
+(6, 2, '2014-11-10', '14:00:00', 7, '2014-11-10 06:32:47', 'Saupurein ');
 
 -- --------------------------------------------------------
 
