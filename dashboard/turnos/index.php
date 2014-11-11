@@ -593,12 +593,12 @@ $(document).ready(function(){
 	});//fin del boton eliminar
         
         
-	$('.ver').click(function(event){
+	$('.ver').live("click",function(event){
 			url = "ver.php";
 			$(location).attr('href',url);
 	});//fin del boton eliminar
 	
-	$('.varborrar').click(function(event){
+	$('.varborrar').live("click",function(event){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
 			$("#idEliminar").val(usersid);
@@ -610,7 +610,7 @@ $(document).ready(function(){
 		  }
 	});//fin del boton eliminar
 	
-	$('.varmodificar').click(function(event){
+	$('.varmodificar').live("click",function(event){
 		  usersid =  $(this).attr("id");
 		  if (!isNaN(usersid)) {
 			url = "modificar.php?id=" + usersid;
@@ -710,12 +710,12 @@ $(document).ready(function(){
 	$("#fechautilizacion").click(function(event) {
 		$("#fechautilizacion").removeClass("alert-danger");
 		$("#fechautilizacion").attr('value','');
-		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilización...');
+		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilizacin...');
     });
 
 	$("#fechautilizacion").change(function(event) {
 		$("#fechautilizacion").removeClass("alert-danger");
-		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilización');
+		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilizacin');
 	});
 	
 	function validaDisponibilidadCancha(cancha,fecha,hora,e) {

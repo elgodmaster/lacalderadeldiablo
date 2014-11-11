@@ -48,7 +48,9 @@ function insertarCliente($nombre,$nrocliente,$email,$nrodocumento,$telefono) {
 	
 
 	function eliminarCliente($id) {
-	
+		$sqlTurnoDesactivar = "update lcdd_turnos set activo = 0 where refcliente =".$id;
+		$this->query($sqlTurnoDesactivar,0);
+		
 		$sql = "delete from lcdd_clientes where idcliente =".$id;
 		$res = $this->query($sql,0);
 		if ($res == false) {
@@ -99,7 +101,11 @@ function traerClientes() {
 
 
 function traerClientePorId($id) {
-	$sql	=	"select idcliente,nombre,nrocliente,email,nrodocumento,telefono from lcdd_clientes where idcliente =".$id;
+	$sql	=	"select c.idcliente,c.nombre,c.nrocliente,c.email,c.nrodocumento,c.telefono,cc.saldo
+				 from lcdd_clientes c
+				 join	lcdd_cuentas cc
+				 on c.idcliente = cc.refcliente
+				 where idcliente =".$id;
 	$res	=	$this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';
@@ -108,6 +114,22 @@ function traerClientePorId($id) {
 	}
 }
 
+
+function traerClienteMovimientos($id) {
+	$sql	=	"select c.idcliente,c.nombre,c.nrocliente,c.email,c.nrodocumento,c.telefono,cc.saldo
+				 from lcdd_clientes c
+				 inner join	lcdd_cuentas cc
+				 on c.idcliente = cc.refcliente
+				 inner join lcdd_movimientos m
+				 on cc.idcuenta = m.refcuenta
+				 where c.idcliente =".$id;
+	$res	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		return $res;
+	}
+}
 
 function traerClientePorNroCliente($nrocliente) {
 	$sql	=	"select idcliente,nombre,nrocliente,email,nrodocumento,telefono from lcdd_clientes where nrocliente ='".$nrocliente."'";

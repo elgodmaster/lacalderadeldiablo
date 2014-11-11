@@ -4,6 +4,7 @@ include ('../includes/funcionesClientes.php');
 
 $serviciosClientes  = new ServiciosClientes();
 
+
 $accion = $_POST['accion'];
 
 
@@ -47,6 +48,7 @@ function insertarCliente($serviciosClientes) {
 
 
 function eliminarCliente($serviciosClientes) {
+	
 	$id 			=	$_POST['id'];
 
 	$res 			= $serviciosClientes->eliminarCliente($id);

@@ -42,7 +42,9 @@ function traerCanchas() {
 
 function traerTurnos() {
 	$sql = "select idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea
-			from lcdd_turnos order by fechautilizacion,horautilizacion";
+			from lcdd_turnos 
+			where activo = 1
+			order by fechautilizacion,horautilizacion";
 	$res = $this->query($sql,0);
 	return $res;
 }
@@ -51,7 +53,7 @@ function traerTurnosPorId($id) {
 	$sql = "select t.idturno,t.refcancha,t.fechautilizacion,t.horautilizacion,t.refcliente,t.fechacreacion,t.usuacrea,c.nombre
 			from lcdd_turnos t
 			inner join lcdd_clientes c on t.refcliente = c.idcliente
-			where idturno = ".$id;
+			where activo = 1 and idturno = ".$id;
 	$res = $this->query($sql,0);
 	return $res;
 }
@@ -60,7 +62,7 @@ function traerTurnosPorDia($fecha) {
 	$sql = "select t.idturno,t.refcancha,t.fechautilizacion,t.horautilizacion,t.refcliente,t.fechacreacion,t.usuacrea,c.nombre
 			from lcdd_turnos t
 			inner join lcdd_clientes c on t.refcliente = c.idcliente 
-			where t.fechautilizacion = '".$fecha."' order by t.horautilizacion";
+			where activo = 1 and t.fechautilizacion = '".$fecha."' order by t.horautilizacion";
 	$res = $this->query($sql,0);
 	return $res;
 }
@@ -98,7 +100,7 @@ function traerTurnosPorDiaAgrupado($fecha) {
 			        inner join
 			    lcdd_clientes c ON t.refcliente = c.idcliente
 			where
-			    t.fechautilizacion = '".$fecha."'
+			    t.fechautilizacion = '".$fecha."' and t.activo = 1
 			group by t.fechautilizacion , t.horautilizacion
 			order by t.horautilizacion";
 	$res = $this->query($sql,0);
@@ -109,7 +111,7 @@ function traerTurnosPorDiaCanchaFecha($fecha,$horario,$refcancha) {
 	$sql = "select c.nombre,t.idturno,c.idcliente
 			from lcdd_turnos t 
 			inner join lcdd_clientes c on t.refcliente = c.idcliente
-			where t.fechautilizacion = '".$fecha."' and hour(t.horautilizacion) = '".$horario."' and t.refcancha =".$refcancha;
+			where t.activo = 1 and t.fechautilizacion = '".$fecha."' and hour(t.horautilizacion) = '".$horario."' and t.refcancha =".$refcancha;
 	$res = $this->query($sql,0);
 
 	return $res;
@@ -117,7 +119,7 @@ function traerTurnosPorDiaCanchaFecha($fecha,$horario,$refcancha) {
 
 function hayTurnos($fecha,$horario,$refcancha) {
 	$sql = "select idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea
-			from lcdd_turnos where fechautilizacion = '".$fecha."' and hour(horautilizacion) = '".$horario."' and refcancha =".$refcancha;
+			from lcdd_turnos where activo = 1 and fechautilizacion = '".$fecha."' and hour(horautilizacion) = '".$horario."' and refcancha =".$refcancha;
 	$res = $this->query($sql,0);
 
 	if (mysql_num_rows($res) > 0) {
@@ -129,7 +131,7 @@ function hayTurnos($fecha,$horario,$refcancha) {
 
 function existeTurno($fecha,$horario,$refcancha,$id) {
 	$sql = "select idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea
-			from lcdd_turnos where fechautilizacion = '".$fecha."' and hour(horautilizacion) = '".$horario."' and refcancha =".$refcancha;
+			from lcdd_turnos where activo = 1 and fechautilizacion = '".$fecha."' and hour(horautilizacion) = '".$horario."' and refcancha =".$refcancha;
 	$res = $this->query($sql,0);
 	if (mysql_num_rows($res) > 0) {
 			if (mysql_result($res,0,0) != $id) {
@@ -145,13 +147,13 @@ function existeTurno($fecha,$horario,$refcancha,$id) {
 function traerPrimerUltimoTurno($fecha) {
 	$sql = "select IFNULL(min(hour(horautilizacion)),12) as primer,IFNULL(max(hour(horautilizacion)),24) as ultimo
 			from		lcdd_turnos t
-			where		t.fechautilizacion = '".$fecha."'";	
+			where		t.activo = 1 and t.fechautilizacion = '".$fecha."'";	
 	$res = $this->query($sql,0);
 	return $res;
 }
 
 function insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea) {
-	$sql		=	"insert into lcdd_turnos(idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea)
+	$sql		=	"insert into lcdd_turnos(idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea,activo)
 					values
 						('',
 						".$refcancha.",
@@ -159,7 +161,8 @@ function insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente
 						'".$horautilizacion.":00:00',
 						".$refcliente.",
 						null,
-						'".utf8_decode($usuacrea)."')";
+						'".utf8_decode($usuacrea)."',
+						1)";
 	if ($this->hayTurnos($fechautilizacion,$horautilizacion,$refcancha) == '') {
 		$res		=	$this->query($sql,1);
 	} else {
