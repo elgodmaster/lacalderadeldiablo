@@ -362,10 +362,31 @@ $resCliente = $serviciosClientes->traerClientePorId($id);
                     <input type="hidden" id="id" name="id" value="<?php echo $id; ?>"/>
                 </form>
                 
-                <br>
                 <div id="error">
                 
                 </div>
+                <hr>
+                <div class="row"> 
+		        <div class="col-sm-12 col-md-12">
+                <div class="form-group col-md-12">
+                    	<label for="saldo" class="control-label" style="text-align:left">Saldo</label>
+                        <div class="input-group col-md-4">
+                        	<span class="input-group-addon">$</span>
+                        	<input type="text" value="<?php echo mysql_result($resCliente,0,'saldo'); ?>" class="form-control" id="saldo" name="saldo" readonly>
+                        </div>
+                </div>
+                
+                <div class="form-group col-md-12">
+                    	<label for="movimientos" class="control-label" style="text-align:left">Movimientos</label>
+                        <div class="input-group col-md-8">
+                        	
+                        </div>
+                </div>
+                
+                
+                </div>
+                </div>
+                
         </div>
     </div>
 
