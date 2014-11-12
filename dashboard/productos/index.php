@@ -392,6 +392,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                 
                     </div>
                     </div>
+                    
                     <ul class="list-inline" style="padding-top:15px;">
                     	<li>
                     		<button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Crear</button>
