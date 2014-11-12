@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 
 if (!isset($_SESSION['usua_se']))
@@ -12,16 +13,18 @@ require '../../includes/funcionesProductos.php';
 
 $serviciosProductos = new ServiciosProductos();
 
+
 $resTipoProducto = $serviciosProductos->traerTipoProducto();
 
-
 ?>
+
 <!DOCTYPE HTML>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Gestión de Cancha: La Caldera del Diablo</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 
 
 <link href="../../css/estiloDash.css" rel="stylesheet" type="text/css">
@@ -215,7 +218,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
 	<div class="todoMenu">
         <div id="mobile-header">
             Menu
-            <p>Usuario: <span style="color: #333; font-weight:900;"><?php echo $_SESSION['nombre_se']; ?></span></p>
+            <p>Usuario: <span style="color: #333; font-weight:900;">AdminMarcos</span></p>
             <p class="ocultar" style="color: #900; font-weight:bold; cursor:pointer; font-family:'Courier New', Courier, monospace; height:20px;">(Ocultar)</p>
         </div>
     
@@ -225,7 +228,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                 <li><div class="icoturnos"></div><a href="../turnos/">Turnos</a></li>
                 <li><div class="icoventas"></div><a href="../ventas/">Ventas</a></li>
                 <li><div class="icousuarios"></div><a href="../clientes/">Clientes</a></li>
-                <li><div class="icoproductos"></div><a href="../productos/">Productos</a></li>
+                <li><div class="icoproductos"></div><a href="index.php">Productos</a></li>
                 <li><div class="icocontratos"></div><a href="../proveedores/">Proveedores</a></li>
                 <li><div class="icoreportes"></div><a href="../reportes/">Reportes</a></li>
                 <li><div class="icosalir"></div><a href="../salir/">Salir</a></li>
@@ -277,33 +280,32 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
      </div>
 </div>
 
-
-
-
-
 <div id="ingoGral" style=" margin-left:240px; padding-top:20px;">
 
-	<div class="boxInfo">
+
+
+    <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Tipo Producto</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Modificar Tipo Producto</p>
         </div>
     	<div class="cuerpoBox">
-        
- <!--idtipoproducto ,tipoproducto, activo -->       
-        	<div class="row"> 
-        		<div class="col-sm-12 col-md-12">
-            		<form class="form-inline formulario" role="form">
-                    	
-                        
-                        <div class="form-group col-md-6">
-                            <label for="tipoproducto" class="control-label" style="text-align:left">Tipo de Producto</label>
-                            <div class="input-group col-md-12">
-                                <input type="text" class="form-control" id="tipoproducto" name="tipoproducto" placeholder="Ingrese el Tipo Producto..." required>
-                            </div>
+        <div class="row"> 
+        <div class="col-sm-12 col-md-12">
+        <form class="form-inline formulario" role="form">
+
+
+        <!--idtipoproducto ,tipoproducto, activo -->    
+
+
+      				<div class="form-group col-md-3">
+                    	<label for="tipoproducto" class="control-label" style="text-align:left">Tipo De Producto</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" value="<?php echo mysql_result($resProductos,0,'tipoproducto'); ?>" class="form-control" id="tipoproducto" name="tipoproducto" placeholder="Ingrese el Tipo de Producto..." required>
+                           
                         </div>
-                        
-                        
-                        <div class="form-group col-md-6">
+                    </div>
+
+                    <div class="form-group col-md-6">
                             <label for="tipoproducto" class="control-label" style="text-align:left">Tipo Producto</label>
                             <div class="input-group col-md-12">
                                 <select class="form-control" id="reftipoproducto" name="reftipoproducto">
@@ -311,108 +313,40 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                                     <option value="0">Inactivo</option>
                            		</select>
                             </div>
-                        </div>
-                        
-                        <ul class="list-inline" style="padding-top:15px;">
+                    </div>
+
+                    <ul class="list-inline" style="padding-top:15px;">
                             <li>
-                                <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Crear</button>
+                                <button type="button" class="btn btn-warning" id="modificar" style="margin-left:0px;">Modificar</button>
                             </li>
+                            <li>
+                        		<button type="button" class="btn btn-danger varborrar" id="<?php echo $id; ?>" style="margin-left:0px;">Eliminar</button>
+	                        </li>
+	                        <li>
+	 							<button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>                       
+	                        </li>
                             
        
-                        </ul>
-                        <div id="load">
+                    </ul>
+                    <div id="load">
                         
-                        </div>
-                        <div id="error" class="alert alert-info">
-                            <p><strong>Importante!:</strong> El campo Tipo Producto es obligatorios</p>
-                        </div>
-                        <input type="hidden" id="accion" name="accion" value="insertarTipoProducto"/>
+                    </div>
+                    <div id="error" class="alert alert-info">
+                        <p><strong>Importante!:</strong> El campo Tipo Producto es obligatorios</p>
+                    </div>
+                    <input type="hidden" id="accion" name="accion" value="modificarTipoProducto"/>
                         
-                    </form>
-            	</div>
-            </div>
-            
-            
-            
-            
+        </form>
+        </div>
+        </div>
         </div>
         
     </div>
 
-	
-    <div class="boxInfo">
-        <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 10 Tipos de Productos cargados</p>
-        </div>
-    	<div class="cuerpoBox">
-        	<table class="table table-striped">
-            	<thead>
-                	<tr>
-                    	<th>Tipo Producto</th>
-                        <th>Activo</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-            	<tbody>
-<!--idtipoproducto ,tipoproducto, activo -->
-                    <?php
-						if (mysql_num_rows($resTipoProducto)>0) {
-							while ($row = mysql_fetch_array($resTipoProducto)) {
-					?>
-                    		<tr>
-                            	<td>
-                                	<?php echo $row['tipoproducto']; ?>
-                                </td>
-                                <td>
-                                	<?php 
-										if ($row['activo'] == 1) {
-											echo "Activo";
-										}else{
-											echo "Inactivo";
-										}
-									?>
-                                </td>
-                                <td>
-                            		<div class="btn-group">
-										<button class="btn btn-success" type="button">Acciones</button>
-										
-										<button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
-										<span class="caret"></span>
-										<span class="sr-only">Toggle Dropdown</span>
-										</button>
-										
-										<ul class="dropdown-menu" role="menu">
-											<li>
-											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idtipoproducto']; ?>">Modificar</a>
-											</li>
 
-											<li>
-											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idtipoproducto']; ?>">Borrar</a>
-											</li>
 
-										</ul>
-									</div>
-                             </td>
-                            </tr>
-                    
-                    <?php
-							}
-						} else {
-					?>
-                    	<tr>
-                        	<td colspan="2">No hay Tipos de Productos Cargados.</td>
-                        </tr>
-                    <?php
-						}
-					?>
-						
-                </tbody>
-            </table>
-        </div>
-        
-    </div>
 
-</div><!-- fin del div infoGral -->
+
 
 
 
