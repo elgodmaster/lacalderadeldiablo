@@ -408,16 +408,238 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
 						
                 </tbody>
             </table>
+            <div style="height:50px;">
+            
+            </div>
+            <button type="button" class="btn btn-default ver" style="margin-left:0px;">Ver Todos</button>
         </div>
         
     </div>
 
 </div><!-- fin del div infoGral -->
 
+<div id="dialog2" title="Eliminar Producto">
+    	<p>
+        	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
+            ¿Esta seguro que desea eliminar el Tipo de Producto?.<span id="proveedorEli"></span>
+        </p>
+        <p><strong>Importante: </strong>También se borrara la relación con los productos asociados</p>
+        <input type="hidden" value="" id="idEliminar" name="idEliminar">
+</div>
 
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$('.ver').click(function(event){
+			url = "ver.php";
+			$(location).attr('href',url);
+	});//fin del boton eliminar
+	
+	$('.varborrar').click(function(event){
+		  usersid =  $(this).attr("id");
+		  if (!isNaN(usersid)) {
+			$("#idEliminar").val(usersid);
+			$("#dialog2").dialog("open");
+			//url = "../clienteseleccionado/index.php?idcliente=" + usersid;
+			//$(location).attr('href',url);
+		  } else {
+			alert("Error, vuelva a realizar la acción.");	
+		  }
+	});//fin del boton eliminar
+	
+	$('.varmodificar').click(function(event){
+		  usersid =  $(this).attr("id");
+		  if (!isNaN(usersid)) {
+			url = "modificar.php?id=" + usersid;
+			$(location).attr('href',url);
+		  } else {
+			alert("Error, vuelva a realizar la acción.");	
+		  }
+	});//fin del boton modificar
 
+	$( "#dialog2" ).dialog({
+		 	
+			    autoOpen: false,
+			 	resizable: false,
+				width:600,
+				height:240,
+				modal: true,
+				buttons: {
+				    "Eliminar": function() {
+	
+						$.ajax({
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarTipoProducto'},
+									url:   '../../ajax/ajax.php',
+									type:  'post',
+									beforeSend: function () {
+											
+									},
+									success:  function (response) {
+											url = "index.php";
+											$(location).attr('href',url);
+											
+									}
+							});
+						$( this ).dialog( "close" );
+						$( this ).dialog( "close" );
+							$('html, body').animate({
+	           					scrollTop: '1000px'
+	       					},
+	       					1500);
+				    },
+				    Cancelar: function() {
+						$( this ).dialog( "close" );
+				    }
+				}
+		 
+		 
+	 		}); //fin del dialogo para eliminar
+
+	// idtipoproducto ,tipoproducto, activo 
+
+	$("#tipoproducto").click(function(event) {
+		if ($("#tipoproducto").val() == "") {
+			$("#tipoproducto").removeClass("alert-danger");
+			$("#tipoproducto").attr('value','');
+			$("#tipoproducto").attr('placeholder','Ingrese el Tipo de Productotipoproducto...');
+		}
+    });
+
+	$("#tipoproducto").change(function(event) {
+		if ($("#tipoproducto").val() == "") {
+			$("#tipoproducto").removeClass("alert-danger");
+			$("#tipoproducto").attr('placeholder','Ingrese el Tipo de Producto');
+		}
+	});
+	
+	$("#activoactivo").click(function(event) {
+		if ($("#activo").val() == "") {
+			$("#activo").removeClass("alert-danger");
+			$("#activo").attr('value','');
+			$("#activo").attr('placeholder','Ingrese el Estado...');
+		}
+    });
+
+	
+	function validador(){
+
+			$error = "";
+// idtipoproducto ,tipoproducto, activo 
+			
+			if ($("#tipoproducto").val() == "") {
+				$error = "Es obligatorio el campo Tipo de Producto.";
+				$("#tipoproducto").addClass("alert-danger");
+				$("#tipoproducto").attr('placeholder',$error);
+			}
+			
+			if ($("#activo").val() == "") {
+				$error = "Es obligatorio el campo Estado.";
+				$("#activo").addClass("alert-danger");
+				$("#activo").attr('placeholder',$error);
+			}
+			
+			
+			return $error;
+    }
+	
+	//al enviar el formulario
+    $('#cargar').click(function(){
+		existeCodigo($( this ).val());
+		if (validador() == "")
+        {
+			//información del formulario
+			var formData = new FormData($(".formulario")[0]);
+			var message = "";
+			//hacemos la petición ajax  
+			$.ajax({
+				url: '../../ajax/ajax.php',  
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: formData,
+				//necesario para subir archivos via ajax
+				cache: false,
+				contentType: false,
+				processData: false,
+				//mientras enviamos el archivo
+				beforeSend: function(){
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+
+					if (data != '') {
+                                            $(".alert").removeClass("alert-danger");
+											$(".alert").removeClass("alert-info");
+                                            $(".alert").addClass("alert-success");
+                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Producto</strong>. ');
+											$(".alert").delay(3000).queue(function(){
+												/*aca lo que quiero hacer 
+												  después de los 2 segundos de retraso*/
+												$(this).dequeue(); //continúo con el siguiente ítem en la cola
+												
+											});
+											$("#load").html('');
+											url = "index.php";
+											$(location).attr('href',url);
+                                            
+											
+                                        } else {
+                                        	$(".alert").removeClass("alert-danger");
+                                            $(".alert").addClass("alert-danger");
+                                            $(".alert").html('<strong>Error!</strong> '+data);
+                                            $("#load").html('');
+                                        }
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+                    $("#load").html('');
+				}
+			});
+		}
+    });
+	
+	function existeCodigo(codigo) {
+		$.ajax({
+			data:  {codigo:	$("#codigo").val(),
+					accion:	'existeCodigo'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');
+			},
+			success:  function (response) {
+					
+					if (response == '') {
+						
+						$("#load").html('');
+						$("#codigo").val('');
+						$error = "Ya existe ese codigo.";
+						$("#codigo").addClass("alert-danger");
+						$("#codigo").attr('placeholder',$error);
+						$("#errorCodigo").html('');
+						$("#errorCodigo").html('<strong>Error!</strong> El codigo ya existe');
+
+					} else {
+						$("#load").html('');
+						$("#errorCodigo").html('');
+						$("#errorCodigo").html('<strong>Ok!</strong> El codigo se puede utilizar');
+						
+					}
+					
+			}
+		});
+	}
+	
+	$('#codigo').focusout(function(e) {
+        existeCodigo($( this ).val());
+    });
+
+});//fin del document ready
+</script>
+
+<?php } ?>
 
 </body>
 </html>
-
-<?php } ?>
