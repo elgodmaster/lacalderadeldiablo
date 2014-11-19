@@ -40,7 +40,7 @@
 
 
 
-<title>Administrador de Entradas</title>
+<title>La Caldera del Diablo</title>
 
 
 
