@@ -304,7 +304,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                         
                         
                         <div class="form-group col-md-6">
-                            <label for="tipoproducto" class="control-label" style="text-align:left">Tipo Producto</label>
+                            <label for="tipoproducto" class="control-label" style="text-align:left">Estado</label>
                             <div class="input-group col-md-12">
                                 <select class="form-control" id="reftipoproducto" name="reftipoproducto">
 									<option value="1">Activo</option>
