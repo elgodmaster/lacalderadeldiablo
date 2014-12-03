@@ -46,7 +46,7 @@ $resTurno = $serviciosTurnos->traerTurnosPorId($id);
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
-	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 
@@ -608,12 +608,12 @@ $(document).ready(function(){
 	$("#fechautilizacion").click(function(event) {
 		$("#fechautilizacion").removeClass("alert-danger");
 		$("#fechautilizacion").attr('value','');
-		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilización...');
+		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilizaciï¿½n...');
     });
 
 	$("#fechautilizacion").change(function(event) {
 		$("#fechautilizacion").removeClass("alert-danger");
-		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilización');
+		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilizaciï¿½n');
 	});
 	
 	function validador(){
@@ -627,7 +627,7 @@ $(document).ready(function(){
 			}
 			
 			if ($("#fechautilizacion").val() == "") {
-				$error = "Es obligatorio el campo Fecha Utilización.";
+				$error = "Es obligatorio el campo Fecha Utilizaciï¿½n.";
 				$("#fechautilizacion").addClass("alert-danger");
 				$("#fechautilizacion").attr('placeholder',$error);
 			}

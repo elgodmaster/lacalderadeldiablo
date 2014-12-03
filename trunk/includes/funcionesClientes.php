@@ -27,7 +27,7 @@ function generarNroCliente($nombre) {
 
 //el utf8_decode($cadena) este va en todos los campos que sean tipo string o cadena o varchar
 
-function insertarCliente($nombre,$nrocliente,$email,$nrodocumento,$telefono) {
+function insertarCliente($nombre,$nrocliente,$email,$nrodocumento,$telefono,$saldo) {
 	$sql	=	"insert into lcdd_clientes(idcliente,nombre,nrocliente,email,nrodocumento,telefono)
 					values
 						('',
@@ -41,6 +41,7 @@ function insertarCliente($nombre,$nrocliente,$email,$nrodocumento,$telefono) {
 	if ($res == false) {
 		return 'Error al insertar datos';
 	} else {
+		$this->insertarCuenta($res,$saldo);
 		return '';
 	}
 }
@@ -61,7 +62,7 @@ function insertarCliente($nombre,$nrocliente,$email,$nrodocumento,$telefono) {
 }
 
 
-function modificarCliente($id,$nombre,$nrocliente,$email,$nrodocumento,$telefono) {
+function modificarCliente($id,$nombre,$nrocliente,$email,$nrodocumento,$telefono,$saldo) {
 	$sql = "update lcdd_clientes 			
 			SET
 			nombre = '".utf8_decode($nombre)."',
@@ -74,6 +75,7 @@ function modificarCliente($id,$nombre,$nrocliente,$email,$nrodocumento,$telefono
 	if ($res == false) {
 		return 'Error al modificar datos';
 	} else {
+		$this->modificarCuenta($id,$saldo);
 		return '';
 	}
 
@@ -90,7 +92,10 @@ function traerCantidadClientes() {
 }
 
 function traerClientes() {
-	$sql	=	"select idcliente,nombre,nrocliente,email,nrodocumento,telefono from lcdd_clientes ";
+	$sql	=	"select c.idcliente,c.nombre,c.nrocliente,c.email,c.nrodocumento,c.telefono,cc.saldo
+				 from lcdd_clientes c
+				 join	lcdd_cuentas cc
+				 on c.idcliente = cc.refcliente ";
 	$res	=	$this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';
@@ -152,6 +157,39 @@ function traerClientePorNroDocumento($nrodocumento) {
 	}
 }
 
+function insertarCuenta($idCliente,$saldo)
+{
+	$sql 	=	"insert into lcdd_cuentas(idcuenta, refcliente, saldo)
+				values
+				('',".$idCliente.",".$saldo.")";
+	$res	=	$this->query($sql,1);
+	if ($res == false) {
+		return 'Error al insertar datos';
+	} else {
+		return '';
+	}			 
+}
+
+function modificarCuenta($idCliente,$saldo) {
+	$sql	=	"update lcdd_cuentas
+				 SET saldo = ".$saldo." where refcliente = ".$idCliente;	
+	$res	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al modificar datos';
+	} else {
+		return '';
+	}
+}
+
+function eliminarCuenta($idCliente) {
+	$sql	=	"delete lcdd_cuentas where refcliente = ".$idCliente;	
+	$res	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al eliminar datos';
+	} else {
+		return '';
+	}
+}
 
 
 /* fin */

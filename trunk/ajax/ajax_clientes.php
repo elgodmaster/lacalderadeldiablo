@@ -43,7 +43,8 @@ function insertarCliente($serviciosClientes) {
 	$email			=	$_POST['email'];
 	$nrodocumento	=	$_POST['nrodocumento'];
 	$telefono		=	$_POST['telefono'];
-	echo $serviciosClientes->insertarCliente($nombre,'',$email,$nrodocumento,$telefono);
+	$saldo			=	$_POST['saldo'];
+	echo $serviciosClientes->insertarCliente($nombre,'',$email,$nrodocumento,$telefono,$saldo);
 }
 
 
@@ -62,7 +63,8 @@ function modificarCliente($serviciosClientes) {
 	$email			=	$_POST['email'];
 	$nrodocumento	=	$_POST['nrodocumento']; 
 	$telefono		=	$_POST['telefono'];
-	$res 			= $serviciosClientes->modificarCliente($id,$nombre,'',$email,$nrodocumento,$telefono);
+	$saldo			=	$_POST['saldo'];
+	$res 			= $serviciosClientes->modificarCliente($id,$nombre,'',$email,$nrodocumento,$telefono,$saldo);
 	echo $res;
 }
 

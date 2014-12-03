@@ -7,10 +7,10 @@ if (!isset($_SESSION['usua_se']))
 	header('Location: /lacalderadeldiablo/vistas/');
 } else {
 
-
+require '../../includes/funcionesHTML.php';
 require '../../includes/funcionesProductos.php';
 
-
+$serviciosHTML = new ServiciosHTML();
 $serviciosProductos = new ServiciosProductos();
 
 $id = $_GET['id'];
@@ -219,71 +219,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
 
 
  
-<div id="navigation" >
-	<div class="todoMenu">
-        <div id="mobile-header">
-            Menu
-            <p>Usuario: <span style="color: #333; font-weight:900;">AdminMarcos</span></p>
-            <p class="ocultar" style="color: #900; font-weight:bold; cursor:pointer; font-family:'Courier New', Courier, monospace; height:20px;">(Ocultar)</p>
-        </div>
-    
-        <nav class="nav">
-            <ul>
-                <li class="arriba"><div class="icodashboard"></div><a href="../index.php">Dashboard</a></li>
-                <li><div class="icoturnos"></div><a href="../turnos/">Turnos</a></li>
-                <li><div class="icoventas"></div><a href="../ventas/">Ventas</a></li>
-                <li><div class="icousuarios"></div><a href="../clientes/">Clientes</a></li>
-                <li><div class="icoproductos"></div><a href="index.php">Productos</a></li>
-                <li><div class="icocontratos"></div><a href="../proveedores/">Proveedores</a></li>
-                <li><div class="icoreportes"></div><a href="../reportes/">Reportes</a></li>
-                <li><div class="icosalir"></div><a href="../salir/">Salir</a></li>
-            </ul>
-        </nav>
-        
-        <div id="infoMenu">
-            <p>Información del Menu</p>
-        </div>
-        <div id="infoDescrMenu">
-            <p>La descripción breve de cada item sera detallada aqui, deslizando el mouse por encima de cada menu.</p>
-        </div>
-     </div>
-     <div class="menuHober">
-     	<ul class="ulHober">
-                <li class="arriba">
-                	<div class="icodashboard2" id="tooltip2"></div>
-                    <div class="tooltip-dash">Dashboard</div>
-                </li>
-                <li>
-                	<div class="icoturnos2" id="tooltip3"></div>
-                    <div class="tooltip-inmu">Turnos</div>
-                </li>
-                <li>
-                	<div class="icoventas2" id="tooltip4"></div>
-                    <div class="tooltip-alqui">Ventas</div>
-                </li>
-                <li>
-                	<div class="icousuarios2" id="tooltip5"></div>
-                    <div class="tooltip-usua">Clientes</div>
-                </li>
-                <li>
-                	<div class="icoproductos2" id="tooltip9"></div>
-                    <div class="tooltip-con">Productos</div>
-                </li>
-                <li>
-                	<div class="icocontratos2" id="tooltip6"></div>
-                    <div class="tooltip-con">Proveedores</div>
-                </li>
-                <li>
-                	<div class="icoreportes2" id="tooltip7"></div>
-                    <div class="tooltip-rep">Reportes</div>
-                </li>
-                <li>
-                	<div class="icosalir2" id="tooltip8"></div>
-                    <div class="tooltip-sal">Salir</div>
-                </li>
-            </ul>
-     </div>
-</div>
+<?php echo $serviciosHTML->menu($_SESSION['usua_se'],"Productos"); ?>
 
 <div id="ingoGral" style=" margin-left:240px; padding-top:20px;">
 

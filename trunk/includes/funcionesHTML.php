@@ -35,6 +35,69 @@ function enviarMail($nombre,$mensaje,$email)
 
 }
 
+function menu($usuario,$titulo) {
+	$sql = "select idmenu,url,icono, nombre from lcdd_menu order by orden";
+	$res = $this->query($sql,0);
+	
+	$cadmenu = "";
+	$cadhover= "";
+	
+	$cant = 1;
+	while ($row = mysql_fetch_array($res)) {
+		if ($titulo == $row['nombre']) {
+			$nombre = $row['nombre'];
+			$row['url'] = "index.php";	
+		}
+		
+		if ($row['idmenu'] == 1) {
+			$cadmenu = $cadmenu.'<li class="arriba"><div class="'.$row['icono'].'"></div><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';
+			$cadhover = $cadhover.' <li class="arriba">
+										<div class="'.$row['icono'].'2" id="tooltip'.$cant.'"></div>
+										<div class="tooltip-dash">'.$row['nombre'].'</div>
+									</li>';	
+		} else {
+			$cadmenu = $cadmenu.'<li><div class="'.$row['icono'].'"></div><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';
+			$cadhover = $cadhover.'  <li>
+										<div class="'.$row['icono'].'2" id="tooltip'.$cant.'"></div>
+										<div class="tooltip-con">'.$row['nombre'].'</div>
+									</li>';
+		}
+		$cant+=1;
+	}
+	
+	
+	$menu = '<div id="navigation" >
+			<div class="todoMenu">
+				<div id="mobile-header">
+					Menu
+					<p>Usuario: <span style="color: #333; font-weight:900;">'.$usuario.'</span></p>
+					<p class="ocultar" style="color: #900; font-weight:bold; cursor:pointer; font-family:"Courier New", Courier, monospace; height:20px;">(Ocultar)</p>
+				</div>
+			
+				<nav class="nav">
+					<ul>
+						'.$cadmenu.'
+					</ul>
+				</nav>
+				
+				<div id="infoMenu">
+					<p>Información del Menu</p>
+				</div>
+				<div id="infoDescrMenu">
+					<p>La descripción breve de cada item sera detallada aqui, deslizando el mouse por encima de cada menu.</p>
+				</div>
+			 </div>
+			 <div class="menuHober">
+				<ul class="ulHober">
+						'.$cadhover.'
+					</ul>
+			 </div>
+		</div>';
+	
+	return $menu;
+	
+}
+
 Function query($sql,$accion) {
 		
 		
