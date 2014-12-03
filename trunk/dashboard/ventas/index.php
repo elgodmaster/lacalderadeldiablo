@@ -223,6 +223,38 @@ $resProductos = $serviciosProductos->traerProductos();
 <script type="text/javascript">
 $(document).ready(function(){
 	
+	$('#idproducto').live('change', function () {
+        //alert($(this).val());
+		$.ajax({
+					data:  {idproducto: $(this).val(),
+							accion: 'traerProductoVenta'},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							
+					},
+					success:  function (response) {
+						if (response == '') {
+							$('#precio').val('');
+							$('#precioprod').html('');
+							$('#producto').html('');
+							$('#stock').html('');
+							$('#carateristicas').html('');
+							$('#idprod').val();
+						} else {
+							prod = response.split('##');
+							$('#precio').val(prod[1]);
+							$('#precioprod').html(prod[1]);
+							$('#producto').html(prod[0]);
+							$('#stock').html(prod[2]);
+							$('#carateristicas').html(prod[5]);
+							$('#idprod').val(prod[6]);
+						}
+					}
+			});
+    });
+	
+	
 	function SumarTabla() {
 		var suma = 0;
 		$('.detalle tr').each(function(){

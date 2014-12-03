@@ -131,7 +131,7 @@ function traerProductoVenta($serviciosProductos) {
 	$cad	= "";
 
 	while ($row = mysql_fetch_array($res)) {
-		$cad = $cad.$row[1].'##'.$row[3].'##'.$row[4].'##'.$row[8].'##'.$row[9].'##'.$row[10];
+		$cad = $cad.$row[1].'##'.$row[3].'##'.$row[4].'##'.$row[8].'##'.$row[9].'##'.$row[10].'##'.$row[0];
 	}
 
 	echo $cad;

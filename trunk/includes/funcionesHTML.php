@@ -102,7 +102,7 @@ Function query($sql,$accion) {
 		
 		
 		$hostname = "localhost";
-		$database = "reycanguro";
+		$database = "lacalderadeldiablo";
 		$username = "root";
 		$password = "";
 		/*
