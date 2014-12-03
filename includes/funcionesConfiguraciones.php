@@ -123,6 +123,27 @@ function traerTipoVenta() {
 	}
 }
 
+function traerTipoVentaId($id) {
+	$sql	=	"select idtipoventa, tipoventa, precio, detalle from lcdd_tipoventa where idtipoventa =".$id;
+	$res 	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		return $res;
+	}
+}
+
+
+function traerTipoVentaNombre($nombre) {
+	$sql	=	"select idtipoventa, tipoventa, precio, detalle from lcdd_tipoventa where tipoventa = '".$nombre."'";
+	$res 	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		return $res;
+	}
+}
+
 
 
 /* fin */

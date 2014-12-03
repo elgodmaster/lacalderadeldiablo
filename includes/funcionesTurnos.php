@@ -40,6 +40,12 @@ function traerCanchas() {
 }
 
 
+function traerCanchasId($id) {
+	$sql = "select cancha from lcdd_canchas where idcancha =".$id;
+	$res = $this->query($sql,0);
+	return $res;	
+}
+
 function traerTurnos() {
 	$sql = "select idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea
 			from lcdd_turnos 

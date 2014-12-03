@@ -47,155 +47,7 @@ $resProductos = $serviciosProductos->traerProductos();
 		
 	</style>
     
-    <script type="text/javascript">
-		$( document ).ready(function() {
-			$('.icodashboard2, .icoalquileres2, .icousuarios2, .icoinmubles2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
-				$('.menuHober').hide();
-				$('.todoMenu').show(100, function() {
-					$('#navigation').animate({'margin-left':'0px'}, {
-													duration: 800,
-													specialEasing: {
-													width: "linear",
-													height: "easeOutBounce"
-													}});
-				});
-			});
-			
-			$('.ocultar').click(function(){
-				$('.menuHober').show(100, function() {
-					$('#navigation').animate({'margin-left':'-185px'}, {
-													duration: 800,
-													specialEasing: {
-													width: "linear",
-													height: "easeOutBounce"
-													}});
-				});
-				$('.todoMenu').hide();
-			});
-			
-			
-						$("#tooltip2").mouseover(function(){
-							$("#tooltip2").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip3").mouseover(function(){
-							$("#tooltip3").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip4").mouseover(function(){
-							$("#tooltip4").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip5").mouseover(function(){
-							$("#tooltip5").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip6").mouseover(function(){
-							$("#tooltip6").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip7").mouseover(function(){
-							$("#tooltip7").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip8").mouseover(function(){
-							$("#tooltip8").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip9").mouseover(function(){
-							$("#tooltip9").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-
-		});
-	</script>
+   <script src="../../js/dashboard.js"></script>
    	  <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -314,7 +166,6 @@ $resProductos = $serviciosProductos->traerProductos();
                     <div id="error" class="alert alert-info">
                 		<p><strong>Importante!:</strong> El campo precio y cantidad son obligatorio</p>
                 	</div>
-                    <input type="hidden" id="accion" name="accion" value="insertarVenta"/>
                     
                     <table class="table table-striped">
                         <thead>
@@ -390,11 +241,54 @@ $(document).ready(function(){
 		$('#total').val(SumarTabla());
 	  });
 	  
+		  
+	function insertarDetalle(id, producto, cantidad, monto) {
+		$.ajax({
+			data:  {id: id,
+					producto: producto,
+					cantidad: cantidad,
+					monto: monto,
+					tipoventa: 1,
+					usuacrea: '<?php echo $_SESSION['usua_se']; ?>',
+					accion: 'insertarDetalle'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+					
+			},
+			success:  function (response) {
+				//ver que pasa
+			}
+		});
+	}
+	
+	$('#cargar').click(function(e) {
+        $('.detalle tr').each(function(){
+
+			insertarDetalle(parseInt($(this).find('td').eq(0).text()||0,10),$(this).find('td').eq(1).text(),parseInt($(this).find('td').eq(2).text()||0,10),parseFloat($(this).find('td').eq(3).text()||0,10));
+						
+		})
+		
+		$(".alert").removeClass("alert-danger");
+		$(".alert").removeClass("alert-info");
+		$(".alert").addClass("alert-success");
+		$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente la <strong>Venta</strong>. ');
+		$(".alert").delay(3000).queue(function(){
+			/*aca lo que quiero hacer 
+			  después de los 2 segundos de retraso*/
+			$(this).dequeue(); //continúo con el siguiente ítem en la cola
+			
+		});
+		$("#load").html('');
+		url = "index.php";
+		//$(location).attr('href',url);
+											
+    });
 	
 	
 	$('#agregar').click(function(e) {
 		monto = parseFloat($('#precio').val()) * parseInt($('#cantidad').val());
-        $('.detalle').prepend('<tr><td>'+$('#idprod').val()+'</td><td>'+$('#producto').html()+'</td><td>'+$('#cantidad').val()+'</td><td>'+monto+'</td><td><button type="button" class="btn btn-danger eliminarfila" id="eliminar" style="margin-left:0px;">Eliminar</button></td></tr>');
+        $('.detalle').prepend('<tr><td>'+$('#idprod').val()+'</td><td>'+$('#producto').html()+' '+$('#carateristicas').html()+'</td><td>'+$('#cantidad').val()+'</td><td>'+monto+'</td><td><button type="button" class="btn btn-danger eliminarfila" id="eliminar" style="margin-left:0px;">Eliminar</button></td></tr>');
 		
 		$('#total').val(SumarTabla());
     });
@@ -491,7 +385,7 @@ $(document).ready(function(){
 			return $error;
     }
 	
-	$('#limpiar').click(function(){
+	function limpiar() {
 		$('#precio').val('');
 		$('#precioprod').html('');
 		$('#producto').html('');
@@ -500,6 +394,10 @@ $(document).ready(function(){
 		$('#codbarra').val('');
 		$('#cantidad').val('1');
 		$('#idprod').val();
+	}
+	
+	$('#limpiar').click(function(){
+		limpiar();
 	});
 	
 	
@@ -539,62 +437,7 @@ $(document).ready(function(){
 		}
     });
 	
-	//al enviar el formulario
-    $('#cargar').click(function(){
-		if (validador() == "")
-        {
-			//información del formulario
-			var formData = new FormData($(".formulario")[0]);
-			var message = "";
-			//hacemos la petición ajax  
-			$.ajax({
-				url: '../../ajax/ajax.php',  
-				type: 'POST',
-				// Form data
-				//datos del formulario
-				data: formData,
-				//necesario para subir archivos via ajax
-				cache: false,
-				contentType: false,
-				processData: false,
-				//mientras enviamos el archivo
-				beforeSend: function(){
-					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
-				},
-				//una vez finalizado correctamente
-				success: function(data){
-
-					if (data != '') {
-                                            $(".alert").removeClass("alert-danger");
-											$(".alert").removeClass("alert-info");
-                                            $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Proveedor</strong>. ');
-											$(".alert").delay(3000).queue(function(){
-												/*aca lo que quiero hacer 
-												  después de los 2 segundos de retraso*/
-												$(this).dequeue(); //continúo con el siguiente ítem en la cola
-												
-											});
-											$("#load").html('');
-											url = "index.php";
-											$(location).attr('href',url);
-                                            
-											
-                                        } else {
-                                        	$(".alert").removeClass("alert-danger");
-                                            $(".alert").addClass("alert-danger");
-                                            $(".alert").html('<strong>Error!</strong> '+data);
-                                            $("#load").html('');
-                                        }
-				},
-				//si ha ocurrido un error
-				error: function(){
-					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
-                    $("#load").html('');
-				}
-			});
-		}
-    });
+	
 
 });//fin del document ready
 </script>
