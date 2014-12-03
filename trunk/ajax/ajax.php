@@ -6,14 +6,14 @@ include ('../includes/funcionesUsuarios.php');
 include ('../includes/funcionesProductos.php');
 include ('../includes/funcionesTurnos.php');
 include ('../includes/funcionesConfiguraciones.php');
-
+include ('../includes/funcionesVentas.php');
 
 $ServiciosFunciones = new ServiciosHTML();
 $serviciosTurnos	= new ServiciosTurnos();
 $serviciosUsuarios  = new ServiciosUsuarios();
 $serviciosProductos  = new ServiciosProductos();
 $serviciosConfiguraciones = new ServiciosConfiguraciones();
-
+$serviciosVentas = new ServiciosVentas();
 
 $accion = $_POST['accion'];
 
@@ -66,7 +66,7 @@ switch ($accion) {
 		existeCodigoMod($serviciosProductos);
 		break;
 	case 'insertarTurno':
-		insertarTurno($serviciosTurnos);
+		insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones);
 		break;
 	case 'hayTurnos':
 		hayTurnos($serviciosTurnos);
@@ -95,6 +95,19 @@ switch ($accion) {
 	case 'traerProductoVentaBarra':
 		traerProductoVentaBarra($serviciosProductos);
 		break;
+	case 'insertarDetalle':
+		insertarDetalle($serviciosVentas);
+		break;
+}
+
+function insertarDetalle($serviciosVentas) {
+	$id  		= $_POST['id'];
+	$producto 	= $_POST['producto'];
+	$cantidad 	= $_POST['cantidad'];
+	$monto 		= $_POST['monto'];
+	$tipoventa  = $_POST['tipoventa'];
+	$usuacrea	= $_POST['usuacrea'];
+	echo $serviciosVentas->insertarVenta($id,1,$monto,'',0,$usuacrea,'','',$producto,'Venta de Productos');
 }
 
 function traerProductoVentaBarra($serviciosProductos) {
@@ -269,14 +282,26 @@ function hayTurnos($serviciosTurnos) {
 }
 
 
-function insertarTurno($serviciosTurnos) {
+function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones) {
 	$refcancha			=	$_POST['refcancha'];
 	$fechautilizacion	=	$_POST['fechautilizacion'];
 	$horautilizacion	=	$_POST['horautilizacion'];
 	$refcliente			=	$_POST['refcliente'];
 	$fechacreacion		=	'';
 	$usuacrea			=	$_POST['usuacrea'];
-	echo $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea);	
+
+
+	$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea);
+
+	if ($res == '') {
+		$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
+		$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId(2), 0,2);
+		$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId(2), 0,3);
+
+		$serviciosVentas->insertarVenta('',2,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha);
+	}
+
+	echo $res;
 }
 
 

@@ -71,19 +71,21 @@ function camposTabla($accion) {
 
 //$idVenta,$Venta,$precio,$detalle
 
-function insertarVenta($idventa,$refproducto,$reftipoventa,$importe,$fechacreacion,$cancelado,$usuacrea,$fechamodificacion,$usuamodi,$concepto,$observaciones) {
+function insertarVenta($refproducto,$reftipoventa,$importe,$fechacreacion,$cancelado,$usuacrea,$fechamodificacion,$usuamodi,$concepto,$observaciones) {
+	
+	$refproducto = $refproducto == '' ? 'null' : $refproducto;
 	$sql	=	"insert into lcdd_ventas(idventa,refproducto,reftipoventa,importe,fechacreacion,cancelado,usuacrea,fechamodificacion,usuamodi,concepto,observaciones)
 				 values
 				 ('',
 				 ".$refproducto.",
 				 ".$reftipoventa.",
 				 ".$importe.",
-				 '',
-				 '0',
+				 null,
+				 false,
 				 '".utf8_decode($usuacrea)."',
+				 null,
 				 '',
-				 '',
-				 '".utf8_decode($concepto)."'
+				 '".utf8_decode($concepto)."',
 				 '".utf8_decode($observaciones)."')";
 	//return $sql;
 	$res 	=	$this->query($sql,1);
@@ -120,8 +122,30 @@ function eliminarVenta($id) {
 
 
 function traerVenta() {
-	$sql	=	"select idventa,refproducto,reftipoventa,importe,fechacreacion,cancelado,usuacrea,fechamodificacion,usuamodi,concepto,observaciones 
-				 from lcdd_ventas order by Venta";
+	$sql	=	"SELECT 
+				    v.idventa,
+				    v.refproducto,
+				    v.reftipoventa,
+				    v.importe,
+				    v.fechacreacion,
+				    v.cancelado,
+				    v.usuacrea,
+				    v.fechamodificacion,
+				    v.usuamodi,
+				    v.concepto,
+				    v.observaciones,
+				    p.nombre,
+				    p.codigo,
+				    p.precio_unit,
+				    tv.detalle
+				FROM
+				    lcdd_ventas v
+				        INNER JOIN
+				    lcdd_tipoventa tv ON v.reftipoventa = tv.idtipoventa
+				        LEFT JOIN
+				    lcdd_productos p ON v.refproducto = p.idproducto
+				ORDER BY v.fechacreacion DESC";
+				
 	$res 	=	$this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';
