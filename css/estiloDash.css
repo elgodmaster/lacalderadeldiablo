@@ -4,6 +4,8 @@
   padding:0;
 }
 
+
+
 body {
 	background:url(../imagenes/crossword.png) repeat;
 
@@ -251,6 +253,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 			margin-right:10px;
 		}
 		
+		.icoconfiguracion  {
+			background: url(../imagenes/iconmenu/configuracion.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			float:left;
+			margin-right:10px;
+		}
+		
+		
 		.icoalquileres {
 			background:url(../imagenes/iconmenu/alquiler.png) no-repeat;
 			background-position: center center;
@@ -325,6 +337,17 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 		
 		.icoproductos2 {
 			background:url(../imagenes/iconmenu/barras.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			margin-right:9px;
+			margin-bottom:25px;
+			cursor:pointer;
+		}
+		
+		
+		.icoconfiguracion2 {
+			background: url(../imagenes/iconmenu/configuracion.png) no-repeat;
 			background-position: center center;
 			width:40px;
 			height:25px;
@@ -515,5 +538,20 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc3bc', end
  padding:6px; height:36px; border-bottom:1px solid #C40000;
 			}
   
-
+/* latin-ext */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fuentes/UyBMtLsHKBKXelqf4x7VRQ.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: url(../fuentes/7aC-Y4V2UPHQp-tqeekgkA.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
 

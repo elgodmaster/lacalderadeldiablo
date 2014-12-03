@@ -42,7 +42,7 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
-	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 
@@ -632,10 +632,10 @@ $(document).ready(function(){
                                             if ($('#nombre').val() != '') {
 						$.ajax({
 									data:  {nombre: $('#nombre').val(),
-                                                                                email: $('#email').val(),
-                                                                                nrodocumento: $('#nrodocumento').val(),
-                                                                                telefono: $('#telefono').val(),
-                                                                                accion: 'insertarCliente'},
+											email: $('#email').val(),
+											nrodocumento: $('#nrodocumento').val(),
+											telefono: $('#telefono').val(),
+											accion: 'insertarCliente'},
 									url:   '../../ajax/ajax_clientes.php',
 									type:  'post',
 									beforeSend: function () {

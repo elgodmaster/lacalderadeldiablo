@@ -8,15 +8,17 @@ if (!isset($_SESSION['usua_se']))
 } else {
 
 
-require '../../includes/funcionesClientes.php';
+require '../../includes/funcionesConfiguraciones.php';
 require '../../includes/funcionesHTML.php';
 
 $serviciosHTML = new ServiciosHTML();
-$serviciosClientes = new ServiciosClientes();
+$serviciosConfiguraciones = new ServiciosConfiguraciones();
 
-$resClientes = $serviciosClientes->traerClientes();
+$resTipoVenta = $serviciosConfiguraciones->traerTipoVenta();
 
-$resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Clientes");
+$resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Configuraciones");
+
+
 
 ?>
 
@@ -38,7 +40,7 @@ $resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Clientes");
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
-	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 
@@ -77,7 +79,7 @@ $resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Clientes");
 
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Cliente</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Cargar Configuraciones</p>
         </div>
     	<div class="cuerpoBox">
         
@@ -85,56 +87,9 @@ $resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Clientes");
         <div class="col-sm-12 col-md-12">
         <form class="form-inline formulario" role="form">
                 	
-<!--idcliente,nombre,nrocliente,email,telefono,nrodocumento-->
                 	
 				              	
-                    <div class="form-group col-md-6">
-                    	<label for="nombre" class="control-label" style="text-align:left">Nombre</label>
-                        <div class="input-group col-md-12">
-                        	<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el Nombre..." required>
-                        </div>
-                    </div>
-                    
-
-                    
-                    <div class="form-group col-md-6">
-                    	<label for="nrocliente" class="control-label" style="text-align:left">NroCliente</label>
-                        <div class="input-group col-md-12">
-                            <p class="form-control">El Nro de Cliente se generara automaticamente</p>
-                        </div>
-                    </div>
-
-
-                    <div class="form-group col-md-6">
-                    	<label for="email" class="control-label" style="text-align:left">E-Mail</label>
-                        <div class="input-group col-md-12">
-                        	<input type="text" class="form-control" id="email" name="email" placeholder="Ingrese el E-Mail..." required>
-                        </div>
-                    </div>
-
-
-                    <div class="form-group col-md-6">
-                    	<label for="telefono" class="control-label" style="text-align:left">Telefono</label>
-                        <div class="input-group col-md-12">
-                        	<input type="text" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el Precio Telefono..." required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group col-md-6">
-                    	<label for="nrodocumento" class="control-label" style="text-align:left">NroDocumento</label>
-                        <div class="input-group col-md-12">
-                            <input type="text" class="form-control" id="nrodocumento" name="nrodocumento" placeholder="Ingrese el NroDocumento..." required>
-                        </div>
-                    </div>
-					
-                    <div class="form-group col-md-6">
-                    	<label for="saldo" class="control-label" style="text-align:left">Saldo</label>
-                        <div class="input-group col-md-12">
-                        	<span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" value="0" id="saldo" name="saldo" placeholder="Ingrese el Saldo..." required>
-                            <span class="input-group-addon">.00</span>
-                        </div>
-                    </div>
+                    <?php echo $serviciosConfiguraciones->camposTabla('insertarTipoVenta'); ?>
 
                     </div>
                     </div>
@@ -151,7 +106,6 @@ $resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Clientes");
                     <div id="error" class="alert alert-info">
                 		<p><strong>Importante!:</strong> El campo nombre es obligatorios</p>
                 	</div>
-                    <input type="hidden" id="accion" name="accion" value="insertarCliente"/>
                 </form>
                 
                 <br>
@@ -163,39 +117,33 @@ $resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Clientes");
     
     <div class="boxInfoLargo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 10 Clientes Cargados</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Ultimos 10 Cargados</p>
         </div>
     	<div class="cuerpoBox">
         	<table class="table table-striped">
             	<thead>
                 	<tr>
-                    	<th>Nombre</th>
-                        <th>NroCliente</th>
-                        <th>E-Mail</th>
-                        <th>NroDocumento</th>
-                        <th>Teléfono</th>
-                        <th>Saldo</th>
+                    	<th>Tipo Venta</th>
+                        <th>Precio</th>
+                        <th>Detalle</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
 <!--idcliente,nombre,nrocliente,email,telefono,nrodocumento-->
                 	<?php
-						if (mysql_num_rows($resClientes)>0) {
+						if (mysql_num_rows($resTipoVenta)>0) {
 							$cant = 0;
-							while ($row = mysql_fetch_array($resClientes)) {
+							while ($row = mysql_fetch_array($resTipoVenta)) {
 								$cant+=1;
 								if ($cant == 11) {
 									break;	
 								}
 					?>
                     	<tr>
-                        	<td><?php echo utf8_encode($row['nombre']); ?></td>
-                            <td><?php echo $row['nrocliente']; ?></td>
-                            <td><?php echo $row['email']; ?></td>
-                            <td><?php echo $row['nrodocumento']; ?></td>
-                            <td><?php echo $row['telefono']; ?></td>
-                            <td><?php echo $row['saldo']; ?></td>
+                        	<td><?php echo utf8_encode($row['tipoventa']); ?></td>
+                            <td><?php echo $row['precio']; ?></td>
+                            <td><?php echo utf8_encode($row['detalle']); ?></td>
                             <td>
                             		<div class="btn-group">
 										<button class="btn btn-success" type="button">Acciones</button>
@@ -207,11 +155,11 @@ $resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Clientes");
 										
 										<ul class="dropdown-menu" role="menu">
 											<li>
-											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idcliente']; ?>">Modificar</a>
+											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idtipoventa']; ?>">Modificar</a>
 											</li>
 
 											<li>
-											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idcliente']; ?>">Borrar</a>
+											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idtipoventa']; ?>">Borrar</a>
 											</li>
 
 										</ul>
@@ -233,10 +181,10 @@ $resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Clientes");
 
 </div>
 
-<div id="dialog2" title="Eliminar Cliente">
+<div id="dialog2" title="Eliminar Tipo Venta">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar al Cliente?.<span id="proveedorEli"></span>
+            ¿Esta seguro que desea eliminar el tipo de venta?.<span id="proveedorEli"></span>
         </p>
         <p><strong>Importante: </strong>También se borrara la relación con las canchas y cuentas asociadas</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
@@ -283,8 +231,8 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarCliente'},
-									url:   '../../ajax/ajax_clientes.php',
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarTipoVenta'},
+									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
 											
@@ -310,116 +258,54 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 
-	$("#nombre").click(function(event) {
-		if ($("#nombre").val() == "") {
-			$("#nombre").removeClass("alert-danger");
-			$("#nombre").attr('value','');
-			$("#nombre").attr('placeholder','Ingrese el Nombre...');
+	$("#tipoventa").click(function(event) {
+		if ($("#tipoventa").val() == "") {
+			$("#tipoventa").removeClass("alert-danger");
+			$("#tipoventa").attr('value','');
+			$("#tipoventa").attr('placeholder','Ingrese el Tipo Venta...');
 		}
     });
 
-	$("#nombre").change(function(event) {
-		if ($("#nombre").val() == "") {
-			$("#nombre").removeClass("alert-danger");
-			$("#nombre").attr('placeholder','Ingrese el Nombre');
+	$("#tipoventa").change(function(event) {
+		if ($("#tipoventa").val() == "") {
+			$("#tipoventa").removeClass("alert-danger");
+			$("#tipoventa").attr('placeholder','Ingrese el Tipo Venta');
 		}
 	});
 	
-	$("#codigo").click(function(event) {
-		if ($("#codigo").val() == "") {
-			$("#codigo").removeClass("alert-danger");
-			$("#codigo").attr('value','');
-			$("#codigo").attr('placeholder','Ingrese el Codigo...');
+	$("#precio").click(function(event) {
+		if ($("#precio").val() == "") {
+			$("#precio").removeClass("alert-danger");
+			$("#precio").attr('value','');
+			$("#precio").attr('placeholder','Ingrese el Precio...');
 		}
     });
 
-	$("#codigo").change(function(event) {
-		if ($("#codigo").val() == "") {
-			$("#codigo").removeClass("alert-danger");
-			$("#codigo").attr('placeholder','Ingrese el Codigo');
+	$("#precio").change(function(event) {
+		if ($("#precio").val() == "") {
+			$("#precio").removeClass("alert-danger");
+			$("#precio").attr('placeholder','Ingrese el Precio');
 		}
 	});
-	
-	$("#precio_unit").click(function(event) {
-		if ($("#precio_unit").val() == "") {
-			$("#precio_unit").removeClass("alert-danger");
-			$("#precio_unit").attr('value','');
-			$("#precio_unit").attr('placeholder','Ingrese el Precio Unit...');
-		}
-    });
 
-	$("#precio_unit").change(function(event) {
-		if ($("#precio_unit").val() == "") {
-			$("#precio_unit").removeClass("alert-danger");
-			$("#precio_unit").attr('placeholder','Ingrese el Precio Unit');
-		}
-	});
-	
-	$("#stock").click(function(event) {
-		if ($("#stock").val() == "") {
-			$("#stock").removeClass("alert-danger");
-			$("#stock").attr('value','');
-			$("#stock").attr('placeholder','Ingrese el Stock...');
-		}
-    });
-
-	$("#stock").change(function(event) {
-		if ($("#stock").val() == "") {
-			$("#stock").removeClass("alert-danger");
-			$("#stock").attr('placeholder','Ingrese el Stock');
-		}
-	});
-	
-	$("#stock_min").click(function(event) {
-		if ($("#stock_min").val() == "") {
-			$("#stock_min").removeClass("alert-danger");
-			$("#stock_min").attr('value','');
-			$("#stock_min").attr('placeholder','Ingrese el Stock Minimo...');
-		}
-    });
-
-	$("#stock_min").change(function(event) {
-		if ($("#stock_min").val() == "") {
-			$("#stock_min").removeClass("alert-danger");
-			$("#stock_min").attr('placeholder','Ingrese el Stock Minimo');
-		}
-	});
 	
 	function validador(){
 
 			$error = "";
 //idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas
 			
-			if ($("#nombre").val() == "") {
-				$error = "Es obligatorio el campo nombre.";
-				$("#nombre").addClass("alert-danger");
-				$("#nombre").attr('placeholder',$error);
+			if ($("#tipoventa").val() == "") {
+				$error = "Es obligatorio el campo Tipo Venta.";
+				$("#tipoventa").addClass("alert-danger");
+				$("#tipoventa").attr('placeholder',$error);
 			}
 			
-			if ($("#codigo").val() == "") {
-				$error = "Es obligatorio el campo codigo.";
-				$("#codigo").addClass("alert-danger");
-				$("#codigo").attr('placeholder',$error);
+			if ($("#precio").val() == "") {
+				$error = "Es obligatorio el campo Precio.";
+				$("#precio").addClass("alert-danger");
+				$("#precio").attr('placeholder',$error);
 			}
-			
-			if ($("#precio_unit").val() == "") {
-				$error = "Es obligatorio el campo Precio Unit.";
-				$("#precio_unit").addClass("alert-danger");
-				$("#precio_unit").attr('placeholder',$error);
-			}
-			
-			if ($("#stock").val() == "") {
-				$error = "Es obligatorio el campo stock.";
-				$("#stock").addClass("alert-danger");
-				$("#stock").attr('placeholder',$error);
-			}
-			
-			if ($("#stock_min").val() == "") {
-				$error = "Es obligatorio el campo stock min.";
-				$("#stock_min").addClass("alert-danger");
-				$("#stock_min").attr('placeholder',$error);
-			}
-
+		
 
 			return $error;
     }
@@ -434,7 +320,7 @@ $(document).ready(function(){
 			var message = "";
 			//hacemos la petición ajax  
 			$.ajax({
-				url: '../../ajax/ajax_clientes.php',  
+				url: '../../ajax/ajax.php',  
 				type: 'POST',
 				// Form data
 				//datos del formulario
@@ -454,7 +340,7 @@ $(document).ready(function(){
                                             $(".alert").removeClass("alert-danger");
 											$(".alert").removeClass("alert-info");
                                             $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Cliente</strong>. ');
+                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Tipo de Venta</strong>. ');
 											$(".alert").delay(3000).queue(function(){
 												/*aca lo que quiero hacer 
 												  después de los 2 segundos de retraso*/

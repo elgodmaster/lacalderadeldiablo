@@ -7,13 +7,12 @@ if (!isset($_SESSION['usua_se']))
 	header('Location: /lacalderadeldiablo/vistas/');
 } else {
 
+require '../../includes/funcionesClientes.php';
 
-require '../../includes/funcionesTurnos.php';
 
-$fecha = date('Y-m-d');
-$serviciosTurnos = new serviciosTurnos();
+$serviciosClientes = new ServiciosClientes();
 
-$resTurnosAgrup = $serviciosTurnos->traerTurnosPorDiaAgrupado($fecha);
+$resClientes = $serviciosClientes->traerClientes();
 
 ?>
 
@@ -36,7 +35,7 @@ $resTurnosAgrup = $serviciosTurnos->traerTurnosPorDiaAgrupado($fecha);
     <link rel="stylesheet" href="../../css/jquery-ui.css">
 	<!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css"/>
-
+	<link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <!-- Latest compiled and minified JavaScript -->
     <script src="../../bootstrap/js/bootstrap.min.js"></script>
 
@@ -47,7 +46,7 @@ $resTurnosAgrup = $serviciosTurnos->traerTurnosPorDiaAgrupado($fecha);
     
     <script type="text/javascript">
 		$( document ).ready(function() {
-			$('.icodashboard2, .icoalquileres2, .icousuarios2, .icoinmubles2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
+			$('.icodashboard2, .icoventas2, .icousuarios2, .icoturnos2, .icoproductos2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
 				$('.menuHober').hide();
 				$('.todoMenu').show(100, function() {
 					$('#navigation').animate({'margin-left':'0px'}, {
@@ -222,9 +221,9 @@ $resTurnosAgrup = $serviciosTurnos->traerTurnosPorDiaAgrupado($fecha);
         <nav class="nav">
             <ul>
                 <li class="arriba"><div class="icodashboard"></div><a href="../index.php">Dashboard</a></li>
-                <li><div class="icoturnos"></div><a href="index.php">Turnos</a></li>
+                <li><div class="icoturnos"></div><a href="../turnos/">Turnos</a></li>
                 <li><div class="icoventas"></div><a href="../ventas/">Ventas</a></li>
-                <li><div class="icousuarios"></div><a href="../clientes/">Clientes</a></li>
+                <li><div class="icousuarios"></div><a href="index.php">Clientes</a></li>
                 <li><div class="icoproductos"></div><a href="../productos/">Productos</a></li>
                 <li><div class="icocontratos"></div><a href="../proveedores/">Proveedores</a></li>
                 <li><div class="icoreportes"></div><a href="../reportes/">Reportes</a></li>
@@ -282,41 +281,59 @@ $resTurnosAgrup = $serviciosTurnos->traerTurnosPorDiaAgrupado($fecha);
 	
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Turnos Cargados de la fecha: <?php echo $fecha; ?></p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Clientes Cargados</p>
         </div>
     	<div class="cuerpoBox">
-        <button type="button" class="btn btn-primary nuevo" style="margin-left:0px;">Nuevo Turno</button>
+        <button type="button" class="btn btn-primary nuevo" style="margin-left:0px;">Nuevo Cliente</button>
         	<table class="table table-striped">
             	<thead>
                 	<tr>
-                    	<th>Horario</th>
-                        <th>Cancha 1</th>
-                        <th>Cancha 2</th>
-                        <th>Cancha 3</th>
+                    	<th>Nombre</th>
+                        <th>NroCliente</th>
+                        <th>E-Mail</th>
+                        <th>NroDocumento</th>
+                        <th>Telefono</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-						<?php
-						if (mysql_num_rows($resTurnosAgrup)>0) {
-							$cant = 0;
-							while ($row = mysql_fetch_array($resTurnosAgrup)) {
-								$cant+=1;
-								if ($cant == 6) {
-									break;	
-								}
+<!--idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas -->
+                	<?php
+						if (mysql_num_rows($resClientes)>0) {
+							while ($row = mysql_fetch_array($resClientes)) {
 					?>
                     	<tr>
-                        	<td><?php echo $row['horautilizacion']; ?></td>
-                            <td><a href="modificar.php?id=<?php echo $row['turno1']; ?>"><?php echo $row['Cancha1']; ?></a></td>
-                            <td><a href="modificar.php?id=<?php echo $row['turno2']; ?>"><?php echo $row['Cancha2']; ?></a></td>
-                            <td><a href="modificar.php?id=<?php echo $row['turno3']; ?>"><?php echo $row['Cancha3']; ?></a></td>
+                        	<td><?php echo utf8_encode($row['nombre']); ?></td>
+                            <td><?php echo $row['nrocliente']; ?></td>
+                            <td><?php echo $row['email']; ?></td>
+                            <td><?php echo $row['nrodocumento']; ?></td>
+                            <td><?php echo $row['telefono']; ?></td>
+                            <td>
+                            		<div class="btn-group">
+										<button class="btn btn-success" type="button">Acciones</button>
+										
+										<button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+										<span class="caret"></span>
+										<span class="sr-only">Toggle Dropdown</span>
+										</button>
+										
+										<ul class="dropdown-menu" role="menu">
+											<li>
+											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idcliente']; ?>">Modificar</a>
+											</li>
 
+											<li>
+											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idcliente']; ?>">Borrar</a>
+											</li>
+
+										</ul>
+									</div>
+                             </td>
                         </tr>
                     <?php } ?>
                     <?php } else { ?>
-                    	<h3>No hay turnos cargados.</h3>
+                    	<h3>No hay proveedores cargados.</h3>
                     <?php } ?>
-
                 </tbody>
             </table>
             <div style="height:50px;">
@@ -328,12 +345,12 @@ $resTurnosAgrup = $serviciosTurnos->traerTurnosPorDiaAgrupado($fecha);
 
 </div>
 
-<div id="dialog2" title="Eliminar Proveedor">
+<div id="dialog2" title="Eliminar Cliente">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar al Proveedor?.<span id="proveedorEli"></span>
+            ¿Esta seguro que desea eliminar al Cliente?.<span id="proveedorEli"></span>
         </p>
-        <p><strong>Importante: </strong>También se borrara la relación con los productos asociados</p>
+        <p><strong>Importante: </strong>También se borrara la relación con los turnos y cuentas asociadas</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
 
@@ -378,8 +395,8 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarProveedores'},
-									url:   '../../ajax/ajax.php',
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarCliente'},
+									url:   '../../ajax/ajax_clientes.php',
 									type:  'post',
 									beforeSend: function () {
 											

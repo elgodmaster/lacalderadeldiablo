@@ -5,11 +5,15 @@ include ('../includes/funcionesHTML.php');
 include ('../includes/funcionesUsuarios.php');
 include ('../includes/funcionesProductos.php');
 include ('../includes/funcionesTurnos.php');
+include ('../includes/funcionesConfiguraciones.php');
+
 
 $ServiciosFunciones = new ServiciosHTML();
 $serviciosTurnos	= new ServiciosTurnos();
 $serviciosUsuarios  = new ServiciosUsuarios();
 $serviciosProductos  = new ServiciosProductos();
+$serviciosConfiguraciones = new ServiciosConfiguraciones();
+
 
 $accion = $_POST['accion'];
 
@@ -79,7 +83,61 @@ switch ($accion) {
 	case 'eliminarTurno':
 		eliminarTurno($serviciosTurnos);
 		break;
+	case 'insertarTipoVenta':
+		insertarTipoVenta($serviciosConfiguraciones);
+		break;
+	case 'eliminarTipoVenta':
+		eliminarTipoVenta($serviciosConfiguraciones);
+		break;
+	case 'traerProductoVenta':
+		traerProductoVenta($serviciosProductos);
+		break;
+	case 'traerProductoVentaBarra':
+		traerProductoVentaBarra($serviciosProductos);
+		break;
 }
+
+function traerProductoVentaBarra($serviciosProductos) {
+	$id 	=	$_POST['idproducto'];
+	$res 	=	$serviciosProductos->traerProductoPorCodigoBarra($id);
+
+	$cad	= "";
+
+	while ($row = mysql_fetch_array($res)) {
+		$cad = $cad.$row[1].'##'.$row[3].'##'.$row[4].'##'.$row[8].'##'.$row[9].'##'.$row[10].'##'.$row[0];
+	}
+
+	echo $cad;
+}
+
+
+function traerProductoVenta($serviciosProductos) {
+	$id 	=	$_POST['idproducto'];
+	$res 	=	$serviciosProductos->traerProductoPorId($id);
+
+	$cad	= "";
+
+	while ($row = mysql_fetch_array($res)) {
+		$cad = $cad.$row[1].'##'.$row[3].'##'.$row[4].'##'.$row[8].'##'.$row[9].'##'.$row[10];
+	}
+
+	echo $cad;
+}
+
+function eliminarTipoVenta($serviciosConfiguraciones) {
+	$id		=	$_POST['id'];
+	echo $serviciosConfiguraciones->eliminarTipoVenta($id);	
+}
+
+function insertarTipoVenta($serviciosConfiguraciones) {
+	$tipoventa 		=	$_POST['tipoventa'];
+	$precio 		=	$_POST['precio'];
+	$detalle 		=	$_POST['detalle'];
+
+	echo $serviciosConfiguraciones->insertarTipoVenta($tipoventa,$precio,$detalle);
+}
+
+
 
 function eliminarTurno($serviciosTurnos) {
 	$id 	=	$_POST['id'];

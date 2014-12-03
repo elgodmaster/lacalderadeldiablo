@@ -260,9 +260,9 @@ function traerProductoPorCodigo($codigo) {
 	return $res;
 }
 
-function traerProductoPorCodigoBarra($codigobarra,$orden) {
+function traerProductoPorCodigoBarra($codigobarra) {
 	$sql = "select
-					p.idproducto,
+				p.idproducto,
 					p.nombre,
 					p.precio_unit,
 					p.precio_venta,
@@ -275,15 +275,15 @@ function traerProductoPorCodigoBarra($codigobarra,$orden) {
 					p.caracteristicas,
 					tp.tipoproducto,
 					pr.proveedor
-				from		lcdd_productos p
+					from		lcdd_productos p
 
-				inner
-				join		lcdd_tipoproducto tp
-				on			p.reftipoproducto = tp.idtipoproducto and tp.activo = 1
+					inner
+					join		lcdd_tipoproducto tp
+					on			p.reftipoproducto = tp.idtipoproducto and tp.activo = 1
 
-				inner
-				join		lcdd_proveedores pr
-				on			pr.idproveedor = p.refproveedor
+					inner
+					join		lcdd_proveedores pr
+					on			pr.idproveedor = p.refproveedor
 
 				where		p.codigobarra = '".$codigobarra."'";
 	$res = $this->query($sql,0) or die ('Hubo un error');
