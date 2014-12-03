@@ -8,19 +8,16 @@ if (!isset($_SESSION['usua_se']))
 } else {
 
 date_default_timezone_set('America/Buenos_Aires');
-require '../../includes/funcionesProductos.php';
-require '../../includes/funcionesTurnos.php';
 
-$serviciosProductos = new ServiciosProductos();
-$serviciosTurnos	= new ServiciosTurnos();
+require '../../includes/funcionesHTML.php';
+require '../../includes/funcionesFiestas.php';
 
-$resCanchas = $serviciosTurnos->traerCanchas();
-$resClientes= $serviciosTurnos->traerClientes();
-$resTurnos = $serviciosTurnos->traerTurnos();
+$serviciosFiestas = new ServiciosFiestas();
+$serviciosHTML = new ServiciosHTML();
+
+$resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Fiestas');
 
 $fecha = date('Y-m-d');
-
-$resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
 
 ?>
 
@@ -57,155 +54,8 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
 		
 	</style>
     
-    <script type="text/javascript">
-		$( document ).ready(function() {
-			$('.icodashboard2, .icoventas2, .icousuarios2, .icoturnos2, .icoproductos2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
-				$('.menuHober').hide();
-				$('.todoMenu').show(100, function() {
-					$('#navigation').animate({'margin-left':'0px'}, {
-													duration: 800,
-													specialEasing: {
-													width: "linear",
-													height: "easeOutBounce"
-													}});
-				});
-			});
-			
-			$('.ocultar').click(function(){
-				$('.menuHober').show(100, function() {
-					$('#navigation').animate({'margin-left':'-185px'}, {
-													duration: 800,
-													specialEasing: {
-													width: "linear",
-													height: "easeOutBounce"
-													}});
-				});
-				$('.todoMenu').hide();
-			});
-			
-			
-						$("#tooltip2").mouseover(function(){
-							$("#tooltip2").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip3").mouseover(function(){
-							$("#tooltip3").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip4").mouseover(function(){
-							$("#tooltip4").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip5").mouseover(function(){
-							$("#tooltip5").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip6").mouseover(function(){
-							$("#tooltip6").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip7").mouseover(function(){
-							$("#tooltip7").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip8").mouseover(function(){
-							$("#tooltip8").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip9").mouseover(function(){
-							$("#tooltip9").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-
-		});
-	</script>
+    <script src="../../js/dashboard.js"></script>
+   
    	  <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -215,7 +65,7 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
         "use strict";
         $('#navigation').perfectScrollbar();
 		
-		$("#fechautilizacion").datepicker({
+		$("#dia").datepicker({
 		      showOn: 'both',
 			  dateFormat: 'yy-mm-dd',
 		      buttonImage: 'calendar.png',
@@ -224,20 +74,7 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
 		      numberOfMonths: 2,
 		      onSelect: function(textoFecha, objDatepicker){
 				 $('#fechaCambio').html(textoFecha);
-		         $.ajax({
-					data:  {fecha: textoFecha,
-							accion: 'crearTablaTurnos'},
-					url:   '../../ajax/ajax.php',
-					type:  'post',
-					beforeSend: function () {
-							$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />'); 
-					},
-					success:  function (response) {
-						
-						$('#datos').html(response);
-						$("#load").html('');
-					}
-				});
+		       
 		      }
 		 });
       });
@@ -245,8 +82,10 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
 	
     </script>
     <style>
-			
-			$("#fechautilizacion").datepicker({
+			.form-group {
+				padding:10px;
+			}
+			$("#dia").datepicker({
 		   showOn: 'both',
 		   buttonImage: 'calendar.png',
 		   buttonImageOnly: true,
@@ -266,71 +105,7 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
 
 
  
-<div id="navigation" >
-	<div class="todoMenu">
-        <div id="mobile-header">
-            Menu
-            <p>Usuario: <span style="color: #333; font-weight:900;"><?php echo $_SESSION['nombre_se']; ?></span></p>
-            <p class="ocultar" style="color: #900; font-weight:bold; cursor:pointer; font-family:'Courier New', Courier, monospace; height:20px;">(Ocultar)</p>
-        </div>
-    
-        <nav class="nav">
-            <ul>
-                <li class="arriba"><div class="icodashboard"></div><a href="../index.php">Dashboard</a></li>
-                <li><div class="icoturnos"></div><a href="index.php">Turnos</a></li>
-                <li><div class="icoventas"></div><a href="../ventas/">Ventas</a></li>
-                <li><div class="icousuarios"></div><a href="../clientes/">Clientes</a></li>
-                <li><div class="icoproductos"></div><a href="../productos/">Productos</a></li>
-                <li><div class="icocontratos"></div><a href="../proveedores/">Proveedores</a></li>
-                <li><div class="icoreportes"></div><a href="../reportes/">Reportes</a></li>
-                <li><div class="icosalir"></div><a href="../salir/">Salir</a></li>
-            </ul>
-        </nav>
-        
-        <div id="infoMenu">
-            <p>Información del Menu</p>
-        </div>
-        <div id="infoDescrMenu">
-            <p>La descripción breve de cada item sera detallada aqui, deslizando el mouse por encima de cada menu.</p>
-        </div>
-     </div>
-     <div class="menuHober">
-     	<ul class="ulHober">
-                <li class="arriba">
-                	<div class="icodashboard2" id="tooltip2"></div>
-                    <div class="tooltip-dash">Dashboard</div>
-                </li>
-                <li>
-                	<div class="icoturnos2" id="tooltip3"></div>
-                    <div class="tooltip-inmu">Turnos</div>
-                </li>
-                <li>
-                	<div class="icoventas2" id="tooltip4"></div>
-                    <div class="tooltip-alqui">Ventas</div>
-                </li>
-                <li>
-                	<div class="icousuarios2" id="tooltip5"></div>
-                    <div class="tooltip-usua">Clientes</div>
-                </li>
-                <li>
-                	<div class="icoproductos2" id="tooltip9"></div>
-                    <div class="tooltip-con">Productos</div>
-                </li>
-                <li>
-                	<div class="icocontratos2" id="tooltip6"></div>
-                    <div class="tooltip-con">Proveedores</div>
-                </li>
-                <li>
-                	<div class="icoreportes2" id="tooltip7"></div>
-                    <div class="tooltip-rep">Reportes</div>
-                </li>
-                <li>
-                	<div class="icosalir2" id="tooltip8"></div>
-                    <div class="tooltip-sal">Salir</div>
-                </li>
-            </ul>
-     </div>
-</div>
+<?php echo $resMenu; ?>
 
 <div id="ingoGral" style=" margin-left:240px; padding-top:20px;">
 
@@ -338,37 +113,34 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
 
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Turno</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Cargar Fiesta</p>
         </div>
     	<div class="cuerpoBox">
         
-        <form class="form-horizontal formulario" role="form">
+        <form class="form-inline formulario" role="form">
                 	
                 <!--refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea -->
+                <div class="row">
+                    <div class="form-group col-md-12">
+                    	<label for="nombre" class="control-label" style="text-align:left">Nombre del que Alquila</label>
+                        <div class="input-group col-md-6">
+                        	<input type="text" class="form-control" id="nombre" name="nombre" >
+                        </div>
+                    </div>
+                </div>  
+                <div class="row">   
+                	<div class="form-group col-md-3">
+                    	<label for="fechautilizacion" class="control-label" style="text-align:left">Fecha</label>
+                        <div class="input-group col-md-12">
+                        	<input type="text" class="form-control" id="dia" name="dia" >
+                        </div>
+                    </div>
                 
-                	<div class="form-group">
-                    	<label for="fechautilizacion" class="control-label col-lg-3" style="text-align:left">Fecha Utilización</label>
-                        <div class="col-lg-2">
-                        	<input type="text" class="form-control" id="fechautilizacion" name="fechautilizacion" >
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                    	<label for="refcancha" class="control-label col-lg-3" style="text-align:left">Cancha</label>
-                        <div class="col-lg-5">
-                        	<select class="form-control" id="refcancha" name="refcancha">
-                            	<?php while ($rowTP = mysql_fetch_array($resCanchas)) { ?>
-                                	<option value="<?php echo $rowTP[0]; ?>"><?php echo $rowTP[1]; ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="form-group">
-                    	<label for="horautilizacion" class="control-label col-lg-3" style="text-align:left">Hora Utilización</label>
-                        <div class="col-lg-2">
-                        	<select class="form-control" id="horautilizacion" name="horautilizacion">
+                 
+                    <div class="form-group col-md-3">
+                    	<label for="horadesde" class="control-label" style="text-align:left">Hora Desde</label>
+                        <div class="input-group col-md-12">
+                        	<select class="form-control" id="horadesde" name="horadesde">
                             	<?php for($i=0;$i<24;$i++) { ?>
                                 	<option value="<?php echo $i; ?>"><?php echo $i.':00'; ?></option>
                                 <?php } ?>
@@ -376,28 +148,35 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                    	<label for="refcliente" class="control-label col-lg-3" style="text-align:left">Cliente</label>
-                        <div class="col-lg-6">
-                        	<select data-placeholder="selecione el cliente..." id="refcliente" name="refcliente" class="chosen-select" style="width:450px;" tabindex="2">
-            					<option value=""></option>
-                                <?php while ($rowC = mysql_fetch_array($resClientes)) { ?>
-                                	<option value="<?php echo $rowC[0]; ?>"><?php echo $rowC[1]; ?></option>
+                    
+                    <div class="form-group col-md-3">
+                    	<label for="horahasta" class="control-label" style="text-align:left">Hora Hasta</label>
+                        <div class="input-group col-md-12">
+                        	<select class="form-control" id="horahasta" name="horahasta">
+                            	<?php for($i=0;$i<24;$i++) { ?>
+                                	<option value="<?php echo $i; ?>"><?php echo $i.':00'; ?></option>
                                 <?php } ?>
-                                
                             </select>
-							
-                        </div>
-                        <div class="col-lg-3">
-                        	<button type="button" class="btn btn-success" id="crearcliente" style="margin-left:0px;">Nuevo Cliente</button>
                         </div>
                     </div>
-                
+                    
+                    <div class="form-group col-md-3">
+                    	<label for="concatering" class="control-label" style="text-align:left">Con Catering</label>
+                        <div class="input-group col-md-12">
+                        	<select class="form-control" id="concatering" name="concatering">
+                                <option value="1">Con Catering</option>
+                                <option value="0">Sin catering</option>
+                            </select>
+                        </div>
+                    </div>
+                 </div>
+
+                	<input type="hidden" id="accion" name="accion" value="insertarFiesta"/>
                     
                     
                     <ul class="list-inline" style="padding-top:15px;">
                     	<li>
-                    		<button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Crear</button>
+                    		<button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Cargar</button>
                             
                         </li>
                         
@@ -407,7 +186,7 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
                     
                     </div>
                     <div id="error" class="alert alert-info">
-                		<p><strong>Importante!:</strong> El campo fecha de utilización y cliente son obligatorios</p>
+                		<p><strong>Importante!:</strong> Todos los campos son obligatorios</p>
                 	</div>
                     
                 </form>
@@ -434,76 +213,7 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
                     </tr>
                 </thead>
                 <tbody>
-						<?php 
-							for($i=mysql_result($resPrimerUltimoTurno,0,0);$i<=mysql_result($resPrimerUltimoTurno,0,1);$i++) { 
-								$idTurno1 = "#";
-								$idTurno2 = "#";
-								$idTurno3 = "#";
-						?>
-                    	<tr>
-                        	<td><?php echo $i; ?>:00</td>
-                            <td>
-								<?php 
-									$cancha1 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,1);
-									if (mysql_num_rows($cancha1)>0) {
-										echo '<a href="../clientes/modificar.php?id='.mysql_result($cancha1,0,2).'">'.mysql_result($cancha1,0,0).'</a>';
-										$idTurno1 =	mysql_result($cancha1,0,1);
-									}
-								?>
-                            </td>
-                            <td>
-								<?php 
-									$cancha2 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,2);
-									if (mysql_num_rows($cancha2)>0) {
-										echo '<a href="../clientes/modificar.php?id='.mysql_result($cancha2,0,2).'">'.mysql_result($cancha2,0,0).'</a>';
-										$idTurno2 =	mysql_result($cancha2,0,1);	
-									}
-								?>
-                            </td>
-							<td>
-								<?php 
-									$cancha3 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,3);
-									if (mysql_num_rows($cancha3)>0) {
-										echo '<a href="../clientes/modificar.php?id='.mysql_result($cancha3,0,2).'">'.mysql_result($cancha3,0,0).'</a>';
-										$idTurno3 =	mysql_result($cancha3,0,1);	
-									}
-								?>
-                            </td>
-                            <td align="center">
-                            		<div class="btn-group">
-										<button class="btn btn-success" type="button">Acciones</button>
-										
-										<button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
-										<span class="caret"></span>
-										<span class="sr-only">Toggle Dropdown</span>
-										</button>
-										
-										<ul class="dropdown-menu" role="menu">
-											<li>
-											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $idTurno1; ?>">Modificar Cancha 1</a>
-											</li>
-											<li>
-											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $idTurno2; ?>">Modificar Cancha 2</a>
-											</li>
-                                            <li>
-											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $idTurno3; ?>">Modificar Cancha 3</a>
-											</li>
-											<li>
-											<a href="javascript:void(0)" class="varborrar" id="<?php echo $idTurno1; ?>">Borrar Turno 1</a>
-											</li>
-                                            <li>
-											<a href="javascript:void(0)" class="varborrar" id="<?php echo $idTurno2; ?>">Borrar Turno 2</a>
-											</li>
-                                            <li>
-											<a href="javascript:void(0)" class="varborrar" id="<?php echo $idTurno3; ?>">Borrar Turno 3</a>
-											</li>
-
-										</ul>
-									</div>
-                             </td>
-                        </tr>
-                    <?php } ?>
-
+					
                 </tbody>
             </table>
             <div style="height:50px;">
