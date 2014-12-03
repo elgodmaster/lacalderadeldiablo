@@ -244,6 +244,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 			margin-right:9px;
 		}
 		
+		.icotorta {
+			background:url(../imagenes/iconmenu/torta.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			float:left;
+			margin-right:10px;
+		}
+		
 		.icousuarios {
 			background:url(../imagenes/iconmenu/usuarios.png) no-repeat;
 			background-position: center center;
@@ -345,6 +354,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 			cursor:pointer;
 		}
 		
+		.icotorta2 {
+			background:url(../imagenes/iconmenu/torta.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			margin-right:9px;
+			margin-bottom:25px;
+			cursor:pointer;
+		}
 		
 		.icoconfiguracion2 {
 			background: url(../imagenes/iconmenu/configuracion.png) no-repeat;
