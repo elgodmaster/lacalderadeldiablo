@@ -80,7 +80,7 @@ function insertarFiesta($nombre,$horadesde,$horahasta,$dia,$concatering) {
 				 '".$horadesde."',
 				 '".$horahasta."',
 				 '".$dia."',
-				 '".$concatering."')";
+				 ".$concatering.")";
 	//return $sql;
 	$res 	=	$this->query($sql,1);
 	if ($res == false) {
@@ -117,6 +117,11 @@ function eliminarFiesta($id) {
 	}
 }
 
+function existeTurno($dia,$horadesde,$horahasta) {
+
+	return '';
+}
+
 
 function traerFiestas() {
 	$sql	=	"SELECT 
@@ -139,6 +144,66 @@ function traerFiestas() {
 	}
 }
 
+
+function traerFiestasId($id) {
+	$sql	=	"SELECT 
+				    f.idfiesta,
+				    f.nombre,
+				    f.dia,
+				    f.horadesde,
+				    f.horahasta,
+				    f.concatering
+				FROM
+				    lcdd_fiestas f
+				where f.idfiesta = ".$id;
+				
+	$res 	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		return $res;
+	}
+}
+
+function traerFiestasDia($dia) {
+	$sql	=	"SELECT 
+				    f.idfiesta,
+				    f.nombre,
+				    f.dia,
+				    f.horadesde,
+				    f.horahasta,
+				    f.concatering
+				FROM
+				    lcdd_fiestas f
+				where f.dia = '".$dia."'";
+				
+	$res 	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		return $res;
+	}
+}
+
+function traerFiestasPost($dia) {
+	$sql	=	"SELECT 
+				    f.idfiesta,
+				    f.nombre,
+				    f.dia,
+				    f.horadesde,
+				    f.horahasta,
+				    f.concatering
+				FROM
+				    lcdd_fiestas f
+				where f.dia >= '".$dia."'";
+				
+	$res 	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		return $res;
+	}
+}
 
 
 /* fin */

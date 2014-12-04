@@ -7,6 +7,7 @@ include ('../includes/funcionesProductos.php');
 include ('../includes/funcionesTurnos.php');
 include ('../includes/funcionesConfiguraciones.php');
 include ('../includes/funcionesVentas.php');
+include ('../includes/funcionesFiestas.php');
 
 $ServiciosFunciones = new ServiciosHTML();
 $serviciosTurnos	= new ServiciosTurnos();
@@ -14,6 +15,7 @@ $serviciosUsuarios  = new ServiciosUsuarios();
 $serviciosProductos  = new ServiciosProductos();
 $serviciosConfiguraciones = new ServiciosConfiguraciones();
 $serviciosVentas = new ServiciosVentas();
+$serviciosFiestas = new ServiciosFiestas();
 
 $accion = $_POST['accion'];
 
@@ -98,7 +100,44 @@ switch ($accion) {
 	case 'insertarDetalle':
 		insertarDetalle($serviciosVentas);
 		break;
+	case 'insertarFiesta':
+		insertarFiesta($serviciosFiestas);
+		break;
+	case 'eliminarFiesta':
+		eliminarFiesta($serviciosFiestas);
+		break;
+	case 'modificarFiesta':
+		modificarFiesta($serviciosFiestas);
+		break;
 }
+
+function modificarFiesta($serviciosFiestas) {
+	$id 		=	$_POST['id'];
+	$nombre		=	$_POST['nombre'];
+	$horadesde	=	$_POST['horadesde'];
+	$horahasta  =	$_POST['horahasta'];
+	$dia 		=	$_POST['dia'];
+	$concatering=	$_POST['concatering'];
+
+	echo $serviciosFiestas->modificarFiesta($id,$nombre,$horadesde,$horahasta,$dia,$concatering);
+}
+
+function eliminarFiesta($serviciosFiestas) {
+	$id 	=	$_POST['id'];
+	echo $serviciosFiestas->eliminarFiesta($id);
+}
+
+function insertarFiesta($serviciosFiestas) {
+	$nombre		=	$_POST['nombre'];
+	$dia 		=	$_POST['dia'];
+	$horadesde  =	$_POST['horadesde'];
+	$horahasta  =	$_POST['horahasta'];
+	$concatering=	$_POST['concatering'];
+
+	echo $serviciosFiestas->insertarFiesta($nombre,$horadesde,$horahasta,$dia,$concatering);
+}
+
+
 
 function insertarDetalle($serviciosVentas) {
 	$id  		= $_POST['id'];

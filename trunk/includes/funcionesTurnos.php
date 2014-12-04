@@ -169,6 +169,7 @@ function insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente
 						null,
 						'".utf8_decode($usuacrea)."',
 						1)";
+
 	if ($this->hayTurnos($fechautilizacion,$horautilizacion,$refcancha) == '') {
 		$res		=	$this->query($sql,1);
 	} else {
