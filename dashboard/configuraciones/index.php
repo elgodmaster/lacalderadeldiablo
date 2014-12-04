@@ -6,17 +6,18 @@ if (!isset($_SESSION['usua_se']))
 {
 	header('Location: /lacalderadeldiablo/vistas/');
 } else {
-
+	
+require '../../includes/funcionesHTML.php';
+$serviciosHTML = new ServiciosHTML();
+$resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Configuraciones",$_SESSION['rol_se']);
 
 require '../../includes/funcionesConfiguraciones.php';
-require '../../includes/funcionesHTML.php';
 
-$serviciosHTML = new ServiciosHTML();
 $serviciosConfiguraciones = new ServiciosConfiguraciones();
 
 $resTipoVenta = $serviciosConfiguraciones->traerTipoVenta();
 
-$resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Configuraciones");
+
 
 
 
@@ -51,9 +52,7 @@ $resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Configuraciones");
 		
 	</style>
     
-    <script src="../../js/dashboard.js">
-		
-	</script>
+    <script src="../../js/dashboard.js"></script>
    	  <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>

@@ -8,11 +8,13 @@ if (!isset($_SESSION['usua_se']))
 } else {
 
 require '../../includes/funcionesHTML.php';
+$serviciosHTML = new ServiciosHTML();
+$resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Ventas',$_SESSION['rol_se']);
+
 require '../../includes/funcionesProductos.php';
 require '../../includes/funcionesVentas.php';
 require '../../includes/funcionesClientes.php';
 
-$serviciosHTML = new ServiciosHTML();
 $serviciosProductos = new ServiciosProductos();
 $resProveedores = $serviciosProductos->traerProveedores();
 
@@ -67,7 +69,7 @@ $resProductos = $serviciosProductos->traerProductos();
 
 
  
-<?php echo $serviciosHTML->menu($_SESSION['usua_se'],"Ventas"); ?>
+ <?php echo $resMenu; ?>
 
 <div id="ingoGral" style=" margin-left:240px; padding-top:20px;">
 

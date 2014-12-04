@@ -10,12 +10,14 @@ if (!isset($_SESSION['usua_se']))
 date_default_timezone_set('America/Buenos_Aires');
 
 require '../../includes/funcionesHTML.php';
+$serviciosHTML = new ServiciosHTML();
+$resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Fiestas',$_SESSION['rol_se']);
+
+
 require '../../includes/funcionesFiestas.php';
 
 $serviciosFiestas = new ServiciosFiestas();
-$serviciosHTML = new ServiciosHTML();
 
-$resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Fiestas');
 $resFiestas = $serviciosFiestas->traerFiestas();
 
 $fecha = date('Y-m-d');
@@ -277,7 +279,7 @@ $fecha = date('Y-m-d');
 <div id="dialog2" title="Eliminar Fiesta">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar al Turno?.<span id="proveedorEli"></span>
+            ¿Esta seguro que desea eliminar la Fiesta?.<span id="proveedorEli"></span>
         </p>
         <p><strong>Importante: </strong>La Fiesta se eliminara definitivamente.</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
