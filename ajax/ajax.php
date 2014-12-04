@@ -88,6 +88,9 @@ switch ($accion) {
 	case 'insertarTipoVenta':
 		insertarTipoVenta($serviciosConfiguraciones);
 		break;
+	case 'modificarTipoVenta':
+		modificarTipoVenta($serviciosConfiguraciones);
+		break;
 	case 'eliminarTipoVenta':
 		eliminarTipoVenta($serviciosConfiguraciones);
 		break;
@@ -187,6 +190,15 @@ function insertarTipoVenta($serviciosConfiguraciones) {
 	$detalle 		=	$_POST['detalle'];
 
 	echo $serviciosConfiguraciones->insertarTipoVenta($tipoventa,$precio,$detalle);
+}
+
+function modificarTipoVenta($serviciosConfiguraciones) {
+	$tipoventa 		=	$_POST['tipoventa'];
+	$precio 		=	$_POST['precio'];
+	$detalle 		=	$_POST['detalle'];
+	$id				=	$_POST['id'];
+	
+	echo $serviciosConfiguraciones->modificarTipoVenta($id,$tipoventa,$precio,$detalle);
 }
 
 
