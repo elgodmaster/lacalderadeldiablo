@@ -75,7 +75,7 @@ $resFiestas = $serviciosFiestas->traerFiestasPost($fecha);
 		
 	</style>
     
-<script src="../../js/dashboard.js"></script>
+<script src="../js/dashboard.js"></script>
    <link href="../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../js/jquery.mousewheel.js"></script>
@@ -91,7 +91,7 @@ $resFiestas = $serviciosFiestas->traerFiestasPost($fecha);
 <body>
 
 
- <?php echo $resMenu; ?>
+ <?php echo str_replace('..','/lacalderadeldiablo/dashboard',$resMenu); ?>
 
 <div id="ingoGral" style=" margin-left:240px; padding-top:20px;">
 

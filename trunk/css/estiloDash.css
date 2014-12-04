@@ -515,14 +515,14 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 			}
 			
 	.boxInfoLargo{ 
-				width: 100%; 
+				width: 1150px; 
 				height: auto; 
 				margin-top:30px;
 				margin-bottom:30px;
 				float:left; 
 				background:#fff; 
 				z-index:-1;
-				margin-left:-90px;
+				margin-left:-155px;
 				overflow: hidden; 
 				position: relative; 
 				opacity: 0.8;

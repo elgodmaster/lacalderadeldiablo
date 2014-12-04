@@ -11,13 +11,14 @@ require '../../includes/funcionesHTML.php';
 $serviciosHTML = new ServiciosHTML();
 $resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Productos',$_SESSION['rol_se']);
 
+$id = $_GET['id'];
 require '../../includes/funcionesProductos.php';
 
 
 $serviciosProductos = new ServiciosProductos();
 
 
-$resTipoProducto = $serviciosProductos->traerTipoProducto();
+$resTipoProducto = $serviciosProductos->traerTipoProductoPorId($id);
 
 ?>
 
@@ -85,11 +86,11 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
 
         <!--idtipoproducto ,tipoproducto, activo -->    
 
-
+				<div class="row">
       				<div class="form-group col-md-3">
                     	<label for="tipoproducto" class="control-label" style="text-align:left">Tipo De Producto</label>
                         <div class="input-group col-md-12">
-                        	<input type="text" value="<?php echo mysql_result($resProductos,0,'tipoproducto'); ?>" class="form-control" id="tipoproducto" name="tipoproducto" placeholder="Ingrese el Tipo de Producto..." required>
+                        	<input type="text" value="<?php echo mysql_result($resTipoProducto,0,'tipoproducto'); ?>" class="form-control" id="tipoproducto" name="tipoproducto" placeholder="Ingrese el Tipo de Producto..." required>
                            
                         </div>
                     </div>
@@ -98,12 +99,17 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                             <label for="tipoproducto" class="control-label" style="text-align:left">Estado</label>
                             <div class="input-group col-md-12">
                                 <select class="form-control" id="reftipoproducto" name="reftipoproducto">
-									<option value="1">Activo</option>
+									<?php if (mysql_result($resTipoProducto,0,'activo') == 1) { ?>
+                                    <option value="1" selected>Activo</option>
                                     <option value="0">Inactivo</option>
+                                    <?php } else { ?>
+                                    <option value="1" >Activo</option>
+                                    <option value="0" selected>Inactivo</option>
+                                    <?php } ?>
                            		</select>
                             </div>
                     </div>
-
+			</div>
                     <ul class="list-inline" style="padding-top:15px;">
                             <li>
                                 <button type="button" class="btn btn-warning" id="modificar" style="margin-left:0px;">Modificar</button>
