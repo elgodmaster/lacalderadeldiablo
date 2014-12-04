@@ -67,6 +67,66 @@ function camposTabla($accion) {
 	}	
 }
 
+
+
+function camposTablaMod($accion,$id) {
+	
+	$resTipoVenta = $this->traerTipoVentaId($id);
+	
+	$sql	=	"show columns from lcdd_tipoventa";
+	$res 	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		
+		$form	=	'';
+		
+		while ($row = mysql_fetch_array($res)) {
+			if ($row[3] != 'PRI') {
+				if (strpos($row[1],"decimal") !== false) {
+					$form	=	$form.'
+					
+					<div class="form-group col-md-6">
+                    	<label for="'.$row[0].'" class="control-label" style="text-align:left">'.ucwords($row[0]).'</label>
+                        <div class="input-group col-md-12">
+							<span class="input-group-addon">$</span>
+                        	<input type="text" class="form-control" id="'.$row[0].'" name="'.$row[0].'" value="'.mysql_result($resTipoVenta,0,$row[0]).'" required>
+							<span class="input-group-addon">.00</span>
+                        </div>
+                    </div>
+					
+					';
+				} else {
+					if ($row[0] == "tipoventa") {
+						$label = "Tipo Venta";
+						$campo = $row[0];
+					} else {
+						$label = ucwords($row[0]);
+						$campo = $row[0];
+					}
+					
+					$form	=	$form.'
+						
+						<div class="form-group col-md-6">
+							<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+							<div class="input-group col-md-12">
+								<input type="text" class="form-control" id="'.$campo.'" value="'.utf8_encode(mysql_result($resTipoVenta,0,$campo)).'" name="'.$campo.'" placeholder="Ingrese el '.$label.'..." required>
+							</div>
+						</div>
+						
+						';
+				}
+			} else {
+				$camposEscondido = '<input type="hidden" id="id" name="id" value="'.$id.'"/>';
+				$camposEscondido = $camposEscondido.'<input type="hidden" id="accion" name="accion" value="'.$accion.'"/>';	
+			}
+		}
+		
+		$formulario = $form."<br><br>".$camposEscondido;
+		
+		return $formulario;
+	}	
+}
 //el utf8_decode($cadena) este va en todos los campos que sean tipo string o cadena o varchar
 
 //$idtipoventa,$tipoventa,$precio,$detalle
