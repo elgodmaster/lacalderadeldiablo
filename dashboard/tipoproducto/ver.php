@@ -17,7 +17,7 @@ require '../../includes/funcionesProductos.php';
 
 $serviciosProductos = new ServiciosProductos();
 
-$resProductos = $serviciosProductos->traerProductos();
+$resProductos = $serviciosProductos->traerTipoProducto();
 
 ?>
 
@@ -79,6 +79,7 @@ $resProductos = $serviciosProductos->traerProductos();
                 	<tr>
                     	<th>Tipo de producto</th>
                         <th>Activo</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -89,7 +90,7 @@ $resProductos = $serviciosProductos->traerProductos();
 					?>
                     	<tr>
                         	<td><?php echo utf8_encode($row['tipoproducto']); ?></td>
-                            <td><?php echo $row['activo']; ?></td>
+                            <td><?php if ($row['activo'] == 1) { echo 'Activo'; } else { echo 'Inactivo'; }; ?></td>
                             
                             <td>
                             		<div class="btn-group">
@@ -102,11 +103,11 @@ $resProductos = $serviciosProductos->traerProductos();
 										
 										<ul class="dropdown-menu" role="menu">
 											<li>
-											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idproducto']; ?>">Modificar</a>
+											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idtipoproducto']; ?>">Modificar</a>
 											</li>
 
 											<li>
-											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idproducto']; ?>">Borrar</a>
+											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idtipoproducto']; ?>">Borrar</a>
 											</li>
 
 										</ul>

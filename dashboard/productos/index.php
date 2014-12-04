@@ -189,7 +189,9 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                     	<li>
                     		<button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Crear</button>
                         </li>
-                        
+                        <li>
+                    		<button type="button" class="btn btn-success" id="nuevotipoproducto" style="margin-left:0px;">Nuevo Tipo Producto</button>
+                        </li>
    
                     </ul>
                     <div id="load">
@@ -304,6 +306,12 @@ $(document).ready(function(){
 			url = "ver.php";
 			$(location).attr('href',url);
 	});//fin del boton eliminar
+	
+	$('#nuevotipoproducto').click(function(event){
+			url = "../tipoproducto/";
+			$(location).attr('href',url);
+	});//fin del boton eliminar
+	
 	
 	$('.varborrar').click(function(event){
 		  usersid =  $(this).attr("id");

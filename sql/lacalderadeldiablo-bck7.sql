@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 04-12-2014 a las 23:43:21
--- Versión del servidor: 5.1.36-community-log
+-- Tiempo de generación: 03-12-2014 a las 09:47:20
+-- Versión del servidor: 5.5.24-log
 -- Versión de PHP: 5.4.3
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -94,29 +94,6 @@ INSERT INTO `lcdd_cuentas` (`idcuenta`, `refcliente`, `saldo`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `lcdd_fiestas`
---
-
-CREATE TABLE IF NOT EXISTS `lcdd_fiestas` (
-  `idfiesta` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
-  `horadesde` time NOT NULL,
-  `horahasta` time NOT NULL,
-  `dia` date NOT NULL,
-  `concatering` bit(1) DEFAULT NULL,
-  PRIMARY KEY (`idfiesta`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
-
---
--- Volcado de datos para la tabla `lcdd_fiestas`
---
-
-INSERT INTO `lcdd_fiestas` (`idfiesta`, `nombre`, `horadesde`, `horahasta`, `dia`, `concatering`) VALUES
-(1, 'NUEVO CUPS', '12:30:00', '18:30:00', '2014-12-06', b'1');
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `lcdd_menu`
 --
 
@@ -127,25 +104,23 @@ CREATE TABLE IF NOT EXISTS `lcdd_menu` (
   `nombre` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
   `Orden` smallint(6) DEFAULT NULL,
   `hover` varchar(45) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `permiso` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`idmenu`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=10 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_menu`
 --
 
-INSERT INTO `lcdd_menu` (`idmenu`, `url`, `icono`, `nombre`, `Orden`, `hover`, `permiso`) VALUES
-(1, '../index.php', 'icodashboard', 'Dashboard', 1, NULL, 'Empleado, Administrador'),
-(2, '../turnos/', 'icoturnos', 'Turnos', 2, NULL, 'Empleado, Administrador'),
-(3, '../ventas/', 'icoventas', 'Ventas', 3, NULL, 'Empleado, Administrador'),
-(4, '../clientes/', 'icousuarios', 'Clientes', 4, NULL, 'Empleado, Administrador'),
-(5, '../productos/', 'icoproductos', 'Productos', 5, NULL, 'Empleado, Administrador'),
-(6, '../proveedores/', 'icocontratos', 'Proveedores', 6, NULL, 'Empleado, Administrador'),
-(7, '../reportes/', 'icoreportes', 'Reportes', 10, NULL, 'Empleado, Administrador'),
-(8, '../logout.php', 'icosalir', 'Salir', 30, NULL, 'Empleado, Administrador'),
-(9, '../configuraciones/', 'icoconfiguracion', 'Configuraciones', 7, NULL, 'Administrador'),
-(10, '../fiestas/', 'icotorta', 'Fiestas', 8, NULL, 'Empleado, Administrador');
+INSERT INTO `lcdd_menu` (`idmenu`, `url`, `icono`, `nombre`, `Orden`, `hover`) VALUES
+(1, '../index.php', 'icodashboard', 'Dashboard', 1, NULL),
+(2, '../turnos/', 'icoturnos', 'Turnos', 2, NULL),
+(3, '../ventas/', 'icoventas', 'Ventas', 3, NULL),
+(4, '../clientes/', 'icousuarios', 'Clientes', 4, NULL),
+(5, '../productos/', 'icoproductos', 'Productos', 5, NULL),
+(6, '../proveedores/', 'icocontratos', 'Proveedores', 6, NULL),
+(7, '../reportes/', 'icoreportes', 'Reportes', 10, NULL),
+(8, '../salir/', 'icosalir', 'Salir', 30, NULL),
+(9, '../configuraciones/', 'icoconfiguracion', 'Configuraciones', 7, NULL);
 
 -- --------------------------------------------------------
 
@@ -258,7 +233,7 @@ CREATE TABLE IF NOT EXISTS `lcdd_tipoventa` (
   `precio` decimal(10,0) NOT NULL,
   `detalle` varchar(500) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`idtipoventa`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=5 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_tipoventa`
@@ -266,9 +241,8 @@ CREATE TABLE IF NOT EXISTS `lcdd_tipoventa` (
 
 INSERT INTO `lcdd_tipoventa` (`idtipoventa`, `tipoventa`, `precio`, `detalle`) VALUES
 (1, 'Venta Productos', '0', 'Venta de los productos de las heladeras'),
-(2, 'Alquiler de canchas de día', '260', 'Alquiler de cancha de día antes de las 18:00 hs'),
-(3, 'Alquiler para cumpleaños', '330', 'Alquiler para cumpleaños'),
-(5, 'Alquiler de canchas de noche', '300', 'Alquiler de canchas de noche despues de las 18:00');
+(2, 'Alquiler de canchas', '120', 'Alquiler de cancha'),
+(3, 'Alquiler para cumpleaños', '330', 'Alquiler para cumpleaños');
 
 -- --------------------------------------------------------
 
@@ -321,7 +295,7 @@ CREATE TABLE IF NOT EXISTS `lcdd_ventas` (
   `concepto` varchar(80) COLLATE utf8_spanish_ci DEFAULT NULL,
   `observaciones` varchar(150) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`idventa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=8 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_ventas`
@@ -342,19 +316,18 @@ CREATE TABLE IF NOT EXISTS `se_usuarios` (
   `idusuario` int(11) NOT NULL AUTO_INCREMENT,
   `usuario` varchar(10) NOT NULL,
   `password` varchar(10) NOT NULL,
-  `refroll` varchar(12) NOT NULL,
+  `refroll` int(11) NOT NULL,
   `email` varchar(100) NOT NULL,
   `nombrecompleto` varchar(70) NOT NULL,
   PRIMARY KEY (`idusuario`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
 
 --
 -- Volcado de datos para la tabla `se_usuarios`
 --
 
 INSERT INTO `se_usuarios` (`idusuario`, `usuario`, `password`, `refroll`, `email`, `nombrecompleto`) VALUES
-(1, 'marcos', 'marcos', 'Administrado', 'msredhotero@msn.com', 'Saupurein Marcos'),
-(2, 'carlos', 'carlos', 'Empleado', 'carlos@msn.com', 'Carlinio');
+(1, 'marcos', 'marcos', 1, 'msredhotero@msn.com', 'Saupurein Marcos');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
