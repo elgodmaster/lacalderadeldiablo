@@ -6,17 +6,18 @@ if (!isset($_SESSION['usua_se']))
 {
 	header('Location: /lacalderadeldiablo/vistas/');
 } else {
-
+	
+require '../../includes/funcionesHTML.php';
+$serviciosHTML = new ServiciosHTML();
+$resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Clientes",$_SESSION['rol_se']);
 
 require '../../includes/funcionesClientes.php';
-require '../../includes/funcionesHTML.php';
 
-$serviciosHTML = new ServiciosHTML();
 $serviciosClientes = new ServiciosClientes();
 
 $resClientes = $serviciosClientes->traerClientes();
 
-$resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Clientes");
+
 
 ?>
 

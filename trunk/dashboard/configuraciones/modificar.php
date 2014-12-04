@@ -7,15 +7,17 @@ if (!isset($_SESSION['usua_se']))
 	header('Location: /lacalderadeldiablo/vistas/');
 } else {
 
+require '../../includes/funcionesHTML.php';
+$serviciosHTML = new ServiciosHTML();
+$resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Configuraciones",$_SESSION['rol_se']);
+
 
 $id = $_GET['id'];
 
-require '../../includes/funcionesClientes.php';
+require '../../includes/funcionesConfiguraciones.php';
 
+$serviciosConfiguraciones = new ServiciosConfiguraciones();
 
-$serviciosClientes = new ServiciosClientes();
-
-$resCliente = $serviciosClientes->traerClientePorId($id);
 
 ?>
 
@@ -49,155 +51,8 @@ $resCliente = $serviciosClientes->traerClientePorId($id);
 		
 	</style>
     
-    <script type="text/javascript">
-		$( document ).ready(function() {
-			$('.icodashboard2, .icoventas2, .icousuarios2, .icoturnos2, .icoproductos2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
-				$('.menuHober').hide();
-				$('.todoMenu').show(100, function() {
-					$('#navigation').animate({'margin-left':'0px'}, {
-													duration: 800,
-													specialEasing: {
-													width: "linear",
-													height: "easeOutBounce"
-													}});
-				});
-			});
-			
-			$('.ocultar').click(function(){
-				$('.menuHober').show(100, function() {
-					$('#navigation').animate({'margin-left':'-185px'}, {
-													duration: 800,
-													specialEasing: {
-													width: "linear",
-													height: "easeOutBounce"
-													}});
-				});
-				$('.todoMenu').hide();
-			});
-			
-			
-						$("#tooltip2").mouseover(function(){
-							$("#tooltip2").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip3").mouseover(function(){
-							$("#tooltip3").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip4").mouseover(function(){
-							$("#tooltip4").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip5").mouseover(function(){
-							$("#tooltip5").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip6").mouseover(function(){
-							$("#tooltip6").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip7").mouseover(function(){
-							$("#tooltip7").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip8").mouseover(function(){
-							$("#tooltip8").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip9").mouseover(function(){
-							$("#tooltip9").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-
-		});
-	</script>
+    <script src="../../js/dashboard.js"></script>
+	
    	  <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -214,72 +69,7 @@ $resCliente = $serviciosClientes->traerClientePorId($id);
 
 
 
- 
-<div id="navigation" >
-	<div class="todoMenu">
-        <div id="mobile-header">
-            Menu
-            <p>Usuario: <span style="color: #333; font-weight:900;"><?php echo $_SESSION['nombre_se']; ?></span></p>
-            <p class="ocultar" style="color: #900; font-weight:bold; cursor:pointer; font-family:'Courier New', Courier, monospace; height:20px;">(Ocultar)</p>
-        </div>
-    
-        <nav class="nav">
-            <ul>
-                <li class="arriba"><div class="icodashboard"></div><a href="../index.php">Dashboard</a></li>
-                <li><div class="icoturnos"></div><a href="../turnos/">Turnos</a></li>
-                <li><div class="icoventas"></div><a href="../ventas/">Ventas</a></li>
-                <li><div class="icousuarios"></div><a href="index.php">Clientes</a></li>
-                <li><div class="icoproductos"></div><a href="../productos/">Productos</a></li>
-                <li><div class="icocontratos"></div><a href="../proveedores/">Proveedores</a></li>
-                <li><div class="icoreportes"></div><a href="../reportes/">Reportes</a></li>
-                <li><div class="icosalir"></div><a href="../salir/">Salir</a></li>
-            </ul>
-        </nav>
-        
-        <div id="infoMenu">
-            <p>Información del Menu</p>
-        </div>
-        <div id="infoDescrMenu">
-            <p>La descripción breve de cada item sera detallada aqui, deslizando el mouse por encima de cada menu.</p>
-        </div>
-     </div>
-     <div class="menuHober">
-     	<ul class="ulHober">
-                <li class="arriba">
-                	<div class="icodashboard2" id="tooltip2"></div>
-                    <div class="tooltip-dash">Dashboard</div>
-                </li>
-                <li>
-                	<div class="icoturnos2" id="tooltip3"></div>
-                    <div class="tooltip-inmu">Turnos</div>
-                </li>
-                <li>
-                	<div class="icoventas2" id="tooltip4"></div>
-                    <div class="tooltip-alqui">Ventas</div>
-                </li>
-                <li>
-                	<div class="icousuarios2" id="tooltip5"></div>
-                    <div class="tooltip-usua">Clientes</div>
-                </li>
-                <li>
-                	<div class="icoproductos2" id="tooltip9"></div>
-                    <div class="tooltip-con">Productos</div>
-                </li>
-                <li>
-                	<div class="icocontratos2" id="tooltip6"></div>
-                    <div class="tooltip-con">Proveedores</div>
-                </li>
-                <li>
-                	<div class="icoreportes2" id="tooltip7"></div>
-                    <div class="tooltip-rep">Reportes</div>
-                </li>
-                <li>
-                	<div class="icosalir2" id="tooltip8"></div>
-                    <div class="tooltip-sal">Salir</div>
-                </li>
-            </ul>
-     </div>
-</div>
+ <?php echo $resMenu; ?>
 
 <div id="ingoGral" style=" margin-left:240px; padding-top:20px;">
 
@@ -297,53 +87,7 @@ $resCliente = $serviciosClientes->traerClientePorId($id);
 <!--idcliente,nombre,nrocliente,email,telefono,nrodocumento-->
                 	
 				              	
-                    <div class="form-group col-md-6">
-                    	<label for="nombre" class="control-label" style="text-align:left">Nombre</label>
-                        <div class="input-group col-md-12">
-                            <input type="text" value="<?php echo mysql_result($resCliente,0,'nombre'); ?>" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el Nombre..." required>
-                        </div>
-                    </div>
-                    
-
-                    
-                    <div class="form-group col-md-6">
-                    	<label for="nrocliente" class="control-label" style="text-align:left">NroCliente</label>
-                        <div class="input-group col-md-12">
-                            <p class="form-control"><?php echo mysql_result($resCliente,0,'nrocliente'); ?></p>
-                        </div>
-                    </div>
-
-
-                    <div class="form-group col-md-6">
-                    	<label for="email" class="control-label" style="text-align:left">E-Mail</label>
-                        <div class="input-group col-md-12">
-                        	<input type="text" value="<?php echo mysql_result($resCliente,0,'email'); ?>" class="form-control" id="email" name="email" placeholder="Ingrese el E-Mail..." required>
-                        </div>
-                    </div>
-
-
-                    <div class="form-group col-md-6">
-                    	<label for="telefono" class="control-label" style="text-align:left">Telefono</label>
-                        <div class="input-group col-md-12">
-                        	<input type="text" value="<?php echo mysql_result($resCliente,0,'telefono'); ?>" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el Precio Telefono..." required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group col-md-6">
-                    	<label for="nrodocumento" class="control-label" style="text-align:left">NroDocumento</label>
-                        <div class="input-group col-md-12">
-                            <input type="text" value="<?php echo mysql_result($resCliente,0,'nrodocumento'); ?>" class="form-control" id="nrodocumento" name="nrodocumento" placeholder="Ingrese el NroDocumento..." required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group col-md-6">
-                    	<label for="saldo" class="control-label" style="text-align:left">Saldo</label>
-                        <div class="input-group col-md-12">
-                        	<span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" value="<?php echo mysql_result($resCliente,0,'saldo'); ?>" id="saldo" name="saldo" placeholder="Ingrese el Saldo..." required>
-                            <span class="input-group-addon">.00</span>
-                        </div>
-                    </div>
+                    <?php echo $serviciosConfiguraciones->camposTablaMod('modificarTipoVenta',$id); ?>
 
 
                     </div>
@@ -367,34 +111,13 @@ $resCliente = $serviciosClientes->traerClientePorId($id);
                     <div class="alert">
                     
                     </div>
-                    <input type="hidden" id="accion" name="accion" value="modificarCliente"/>
-                    <input type="hidden" id="id" name="id" value="<?php echo $id; ?>"/>
+
                 </form>
                 
                 <div id="error">
                 
                 </div>
-                <hr>
-                <div class="row"> 
-		        <div class="col-sm-12 col-md-12">
-                <div class="form-group col-md-12">
-                    	<label for="saldo" class="control-label" style="text-align:left">Saldo</label>
-                        <div class="input-group col-md-4">
-                        	<span class="input-group-addon">$</span>
-                        	<input type="text" value="<?php echo mysql_result($resCliente,0,'saldo'); ?>" class="form-control" id="saldo" name="saldo" readonly>
-                        </div>
-                </div>
-                
-                <div class="form-group col-md-12">
-                    	<label for="movimientos" class="control-label" style="text-align:left">Movimientos</label>
-                        <div class="input-group col-md-8">
-                        	
-                        </div>
-                </div>
-                
-                
-                </div>
-                </div>
+               
                 
         </div>
     </div>
@@ -451,8 +174,8 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarCliente'},
-									url:   '../../ajax/ajax_clientes.php',
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarTipoVenta'},
+									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
 											
@@ -478,116 +201,54 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 
-	$("#nombre").click(function(event) {
-		if ($("#nombre").val() == "") {
-			$("#nombre").removeClass("alert-danger");
-			$("#nombre").attr('value','');
-			$("#nombre").attr('placeholder','Ingrese el Nombre...');
+	$("#tipoventa").click(function(event) {
+		if ($("#tipoventa").val() == "") {
+			$("#tipoventa").removeClass("alert-danger");
+			$("#tipoventa").attr('value','');
+			$("#tipoventa").attr('placeholder','Ingrese el Tipo Venta...');
 		}
     });
 
-	$("#nombre").change(function(event) {
-		if ($("#nombre").val() == "") {
-			$("#nombre").removeClass("alert-danger");
-			$("#nombre").attr('placeholder','Ingrese el Nombre');
+	$("#tipoventa").change(function(event) {
+		if ($("#tipoventa").val() == "") {
+			$("#tipoventa").removeClass("alert-danger");
+			$("#tipoventa").attr('placeholder','Ingrese el Tipo Venta');
 		}
 	});
 	
-	$("#codigo").click(function(event) {
-		if ($("#codigo").val() == "") {
-			$("#codigo").removeClass("alert-danger");
-			$("#codigo").attr('value','');
-			$("#codigo").attr('placeholder','Ingrese el Codigo...');
+	$("#precio").click(function(event) {
+		if ($("#precio").val() == "") {
+			$("#precio").removeClass("alert-danger");
+			$("#precio").attr('value','');
+			$("#precio").attr('placeholder','Ingrese el Precio...');
 		}
     });
 
-	$("#codigo").change(function(event) {
-		if ($("#codigo").val() == "") {
-			$("#codigo").removeClass("alert-danger");
-			$("#codigo").attr('placeholder','Ingrese el Codigo');
+	$("#precio").change(function(event) {
+		if ($("#precio").val() == "") {
+			$("#precio").removeClass("alert-danger");
+			$("#precio").attr('placeholder','Ingrese el Precio');
 		}
 	});
-	
-	$("#precio_unit").click(function(event) {
-		if ($("#precio_unit").val() == "") {
-			$("#precio_unit").removeClass("alert-danger");
-			$("#precio_unit").attr('value','');
-			$("#precio_unit").attr('placeholder','Ingrese el Precio Unit...');
-		}
-    });
 
-	$("#precio_unit").change(function(event) {
-		if ($("#precio_unit").val() == "") {
-			$("#precio_unit").removeClass("alert-danger");
-			$("#precio_unit").attr('placeholder','Ingrese el Precio Unit');
-		}
-	});
-	
-	$("#stock").click(function(event) {
-		if ($("#stock").val() == "") {
-			$("#stock").removeClass("alert-danger");
-			$("#stock").attr('value','');
-			$("#stock").attr('placeholder','Ingrese el Stock...');
-		}
-    });
-
-	$("#stock").change(function(event) {
-		if ($("#stock").val() == "") {
-			$("#stock").removeClass("alert-danger");
-			$("#stock").attr('placeholder','Ingrese el Stock');
-		}
-	});
-	
-	$("#stock_min").click(function(event) {
-		if ($("#stock_min").val() == "") {
-			$("#stock_min").removeClass("alert-danger");
-			$("#stock_min").attr('value','');
-			$("#stock_min").attr('placeholder','Ingrese el Stock Minimo...');
-		}
-    });
-
-	$("#stock_min").change(function(event) {
-		if ($("#stock_min").val() == "") {
-			$("#stock_min").removeClass("alert-danger");
-			$("#stock_min").attr('placeholder','Ingrese el Stock Minimo');
-		}
-	});
 	
 	function validador(){
 
 			$error = "";
 //idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas
 			
-			if ($("#nombre").val() == "") {
-				$error = "Es obligatorio el campo nombre.";
-				$("#nombre").addClass("alert-danger");
-				$("#nombre").attr('placeholder',$error);
+			if ($("#tipoventa").val() == "") {
+				$error = "Es obligatorio el campo Tipo Venta.";
+				$("#tipoventa").addClass("alert-danger");
+				$("#tipoventa").attr('placeholder',$error);
 			}
 			
-			if ($("#codigo").val() == "") {
-				$error = "Es obligatorio el campo codigo.";
-				$("#codigo").addClass("alert-danger");
-				$("#codigo").attr('placeholder',$error);
+			if ($("#precio").val() == "") {
+				$error = "Es obligatorio el campo Precio.";
+				$("#precio").addClass("alert-danger");
+				$("#precio").attr('placeholder',$error);
 			}
-			
-			if ($("#precio_unit").val() == "") {
-				$error = "Es obligatorio el campo Precio Unit.";
-				$("#precio_unit").addClass("alert-danger");
-				$("#precio_unit").attr('placeholder',$error);
-			}
-			
-			if ($("#stock").val() == "") {
-				$error = "Es obligatorio el campo stock.";
-				$("#stock").addClass("alert-danger");
-				$("#stock").attr('placeholder',$error);
-			}
-			
-			if ($("#stock_min").val() == "") {
-				$error = "Es obligatorio el campo stock min.";
-				$("#stock_min").addClass("alert-danger");
-				$("#stock_min").attr('placeholder',$error);
-			}
-
+		
 
 			return $error;
     }
@@ -601,7 +262,7 @@ $(document).ready(function(){
 			var message = "";
 			//hacemos la petición ajax  
 			$.ajax({
-				url: '../../ajax/ajax_clientes.php',  
+				url: '../../ajax/ajax.php',  
 				type: 'POST',
 				// Form data
 				//datos del formulario
@@ -617,11 +278,11 @@ $(document).ready(function(){
 				//una vez finalizado correctamente
 				success: function(data){
 
-					if (data != '') {
+					if (data == '') {
                                             $(".alert").removeClass("alert-danger");
 											$(".alert").removeClass("alert-info");
                                             $(".alert").addClass("alert-success");
-                                            $(".alert").html('<strong>Ok!</strong> Se modifico exitosamente el <strong>Cliente</strong>. ');
+                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Tipo de Venta</strong>. ');
 											$(".alert").delay(3000).queue(function(){
 												/*aca lo que quiero hacer 
 												  después de los 2 segundos de retraso*/
@@ -629,7 +290,7 @@ $(document).ready(function(){
 												
 											});
 											$("#load").html('');
-											url = "modificar.php?id="+$('#id').val();
+											url = "modificar.php?id=<?php echo $id; ?>";
 											$(location).attr('href',url);
                                             
 											

@@ -7,16 +7,16 @@ if (!isset($_SESSION['usua_se']))
 	header('Location: /lacalderadeldiablo/vistas/');
 } else {
 
-
 date_default_timezone_set('America/Buenos_Aires');
 
 require '../../includes/funcionesHTML.php';
+$serviciosHTML = new ServiciosHTML();
+$resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Fiestas',$_SESSION['rol_se']);
+
+
 require '../../includes/funcionesFiestas.php';
 
 $serviciosFiestas = new ServiciosFiestas();
-$serviciosHTML = new ServiciosHTML();
-
-$resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Fiestas');
 
 $id = $_GET['id'];
 
