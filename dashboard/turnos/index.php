@@ -815,7 +815,7 @@ $(document).ready(function(){
 							});
 							$("#load").html('');
 							url = "index.php";
-							$(location).attr('href',url);
+							//$(location).attr('href',url);
 						} else {
 							$(".alert").removeClass("alert-danger");
 							$(".alert").removeClass("alert-info");

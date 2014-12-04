@@ -11,10 +11,14 @@ if (!isset($_SESSION['usua_se']))
 require '../includes/funcionesProductos.php';
 require '../includes/funcionesClientes.php';
 require '../includes/funcionesTurnos.php';
+require '../includes/funcionesFiestas.php';
+require '../includes/funcionesVentas.php';
 
 $serviciosProductos = new ServiciosProductos();
 $serviciosClientes = new ServiciosClientes();
 $serviciosTurnos = new ServiciosTurnos();
+$serviciosVentas = new ServiciosVentas();
+$serviciosFiestas = new ServiciosFiestas();
 
 $resProductos = $serviciosProductos->traerProductosLimite(5);
 
@@ -36,6 +40,9 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
 
 $resTurnosAgrup = $serviciosTurnos->traerTurnosPorDiaAgrupado($fecha);
 
+$cantFiestas = mysql_num_rows($serviciosFiestas->traerFiestasPost($fecha));
+
+$resFiestas = $serviciosFiestas->traerFiestasPost($fecha);
 
 ?>
 
@@ -319,7 +326,7 @@ $resTurnosAgrup = $serviciosTurnos->traerTurnosPorDiaAgrupado($fecha);
             </td>
         	<td style="border:1px dashed #666; padding:10px;" width="150" align="center">
             	<img src="../imagenes/iconmenu/five.png" width="50" height="50" style="float:left;">
-                <p style="color: #090; font-size:18px; height:16px;">3</p>
+                <p style="color: #090; font-size:18px; height:16px;"><?php echo $cantFiestas; ?></p>
                 <p style="height:16px;">Fiestas</p>
             </td>
         </tr>
@@ -440,7 +447,66 @@ $resTurnosAgrup = $serviciosTurnos->traerTurnosPorDiaAgrupado($fecha);
   <span class="glyphicon glyphicon-plus-sign"><span style="padding-left:3px;">Nuevo</span></button></p>
         </div>
     	<div class="cuerpoBox">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Día</th>
+                        <th>Hora Desde</th>
+                        <th>Hora Hasta</th>
+                        <th>Con Catering</th>
+                        <th style="padding-left:9%;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                     <?php if (mysql_num_rows($resFiestas)>0) {
 
+                        while ($row = mysql_fetch_array($resFiestas)) {
+                     ?>
+                     <tr>
+                        <td><?php echo utf8_encode($row['nombre']); ?></td>
+                        <td><?php echo $row['dia']; ?></td>
+                        <td><?php echo $row['horadesde']; ?></td>
+                        <td><?php echo $row['horahasta']; ?></td>
+                        <td><?php if ($row['concatering'] == 1)
+                                    echo 'Con catering';
+                                    else
+                                    echo 'Sin Catering'; ?></td>
+                        <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-success" type="button">Acciones</button>
+                                        
+                                        <button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        
+                                        <ul class="dropdown-menu" role="menu">
+                                            <li>
+                                            <a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idfiesta']; ?>">Modificar</a>
+                                            </li>
+
+                                            <li>
+                                            <a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idfiesta']; ?>">Borrar</a>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                             </td>
+                        </tr>
+                     <?php  } ?>
+                        
+                     <?php
+                     } else {
+                     ?>
+                        <td colspan="6">
+                            <h3>No hay fiestas cargadas.</h3>
+                        </td>
+                     <?php  
+                     }
+                     ?>
+                </tbody>
+            </table>
     	</div>
     </div>
 

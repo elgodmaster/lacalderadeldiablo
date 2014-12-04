@@ -80,12 +80,7 @@ function menu($usuario,$titulo) {
 					</ul>
 				</nav>
 				
-				<div id="infoMenu">
-					<p>Información del Menu</p>
-				</div>
-				<div id="infoDescrMenu">
-					<p>La descripción breve de cada item sera detallada aqui, deslizando el mouse por encima de cada menu.</p>
-				</div>
+				
 			 </div>
 			 <div class="menuHober">
 				<ul class="ulHober">

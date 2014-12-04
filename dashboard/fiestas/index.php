@@ -16,6 +16,7 @@ $serviciosFiestas = new ServiciosFiestas();
 $serviciosHTML = new ServiciosHTML();
 
 $resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Fiestas');
+$resFiestas = $serviciosFiestas->traerFiestas();
 
 $fecha = date('Y-m-d');
 
@@ -142,7 +143,8 @@ $fecha = date('Y-m-d');
                         <div class="input-group col-md-12">
                         	<select class="form-control" id="horadesde" name="horadesde">
                             	<?php for($i=0;$i<24;$i++) { ?>
-                                	<option value="<?php echo $i; ?>"><?php echo $i.':00'; ?></option>
+                                	<option value="<?php echo $i.':00:00'; ?>"><?php echo $i.':00'; ?></option>
+                                	<option value="<?php echo $i.':30:00'; ?>"><?php echo $i.':30'; ?></option>
                                 <?php } ?>
                             </select>
                         </div>
@@ -154,7 +156,8 @@ $fecha = date('Y-m-d');
                         <div class="input-group col-md-12">
                         	<select class="form-control" id="horahasta" name="horahasta">
                             	<?php for($i=0;$i<24;$i++) { ?>
-                                	<option value="<?php echo $i; ?>"><?php echo $i.':00'; ?></option>
+                                	<option value="<?php echo $i.':00:00'; ?>"><?php echo $i.':00'; ?></option>
+                                	<option value="<?php echo $i.':30:00'; ?>"><?php echo $i.':30'; ?></option>
                                 <?php } ?>
                             </select>
                         </div>
@@ -205,15 +208,61 @@ $fecha = date('Y-m-d');
         	<table class="table table-striped">
             	<thead>
                 	<tr>
-                    	<th>Horario</th>
-                        <th>Cancha 1</th>
-                        <th>Cancha 2</th>
-                        <th>Cancha 3</th>
+                    	<th>Nombre</th>
+                        <th>Día</th>
+                        <th>Hora Desde</th>
+                        <th>Hora Hasta</th>
+                        <th>Con Catering</th>
                         <th style="padding-left:9%;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-					
+					 <?php if (mysql_num_rows($resFiestas)>0) {
+
+					 	while ($row = mysql_fetch_array($resFiestas)) {
+					 ?>
+					 <tr>
+					 	<td><?php echo utf8_encode($row['nombre']); ?></td>
+                        <td><?php echo $row['dia']; ?></td>
+                        <td><?php echo $row['horadesde']; ?></td>
+                        <td><?php echo $row['horahasta']; ?></td>
+                        <td><?php if ($row['concatering'] == 1)
+                        			echo 'Con catering';
+                        			else
+                        			echo 'Sin Catering'; ?></td>
+                        <td>
+                            		<div class="btn-group">
+										<button class="btn btn-success" type="button">Acciones</button>
+										
+										<button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+										<span class="caret"></span>
+										<span class="sr-only">Toggle Dropdown</span>
+										</button>
+										
+										<ul class="dropdown-menu" role="menu">
+											<li>
+											<a href="javascript:void(0)" class="varmodificar" id="<?php echo $row['idfiesta']; ?>">Modificar</a>
+											</li>
+
+											<li>
+											<a href="javascript:void(0)" class="varborrar" id="<?php echo $row['idfiesta']; ?>">Borrar</a>
+											</li>
+
+										</ul>
+									</div>
+                             </td>
+                        </tr>
+					 <?php	} ?>
+					 	
+					 <?php
+					 } else {
+					 ?>
+					 	<td colspan="6">
+					 		<h3>No hay fiestas cargadas.</h3>
+					 	</td>
+					 <?php	
+					 }
+					 ?>
                 </tbody>
             </table>
             <div style="height:50px;">
@@ -225,69 +274,16 @@ $fecha = date('Y-m-d');
 
 </div>
 
-<div id="dialog2" title="Eliminar Turno">
+<div id="dialog2" title="Eliminar Fiesta">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
             ¿Esta seguro que desea eliminar al Turno?.<span id="proveedorEli"></span>
         </p>
-        <p><strong>Importante: </strong>El turno se eliminara definitivamente.</p>
+        <p><strong>Importante: </strong>La Fiesta se eliminara definitivamente.</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
 
-<div id="dialogCliente" title="Crear Cliente">
-    	<div class="row"> 
-        <div class="col-sm-12 col-md-12">
-    <div class="form-group col-md-6">
-                    	<label for="nombre" class="control-label" style="text-align:left">Nombre</label>
-                        <div class="input-group col-md-12">
-                        	<input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el Nombre..." required>
-                        </div>
-                    </div>
-                    
 
-                    
-                    <div class="form-group col-md-6">
-                    	<label for="nrocliente" class="control-label" style="text-align:left">NroCliente</label>
-                        <div class="input-group col-md-12">
-                            <p class="form-control">El Nro de Cliente se generara automaticamente</p>
-                        </div>
-                    </div>
-
-
-                    <div class="form-group col-md-6">
-                    	<label for="email" class="control-label" style="text-align:left">E-Mail</label>
-                        <div class="input-group col-md-12">
-                        	<input type="text" class="form-control" id="email" name="email" placeholder="Ingrese el E-Mail..." required>
-                        </div>
-                    </div>
-
-
-                    <div class="form-group col-md-6">
-                    	<label for="telefono" class="control-label" style="text-align:left">Telefono</label>
-                        <div class="input-group col-md-12">
-                        	<input type="text" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el Precio Telefono..." required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group col-md-6">
-                    	<label for="nrodocumento" class="control-label" style="text-align:left">NroDocumento</label>
-                        <div class="input-group col-md-12">
-                            <input type="text" class="form-control" id="nrodocumento" name="nrodocumento" placeholder="Ingrese el NroDocumento..." required>
-                        </div>
-                    </div>
-
-
-                    </div>
-                    </div>
-               
-                    <div id="load">
-                    
-                    </div>
-                    <div id="error" class="alert alert-info">
-                		<p><strong>Importante!:</strong> El campo nombre es obligatorios</p>
-                    </div>
-                    
-</div>
     
     
     
@@ -295,12 +291,6 @@ $fecha = date('Y-m-d');
     
 <script type="text/javascript">
 $(document).ready(function(){
-	
-	
-	
-	$('#crearcliente').click(function(event){
-            $("#dialogCliente").dialog("open");
-	});//fin del boton eliminar
         
         
 	$('.ver').live("click",function(event){
@@ -330,53 +320,7 @@ $(document).ready(function(){
 		  }
 	});//fin del boton modificar
 	
-	$( "#dialogCliente" ).dialog({
-		 	
-			    autoOpen: false,
-			 	resizable: false,
-				width:800,
-				height:540,
-				modal: true,
-				buttons: {
-				    "Cargar": function() {
-                                            if ($('#nombre').val() != '') {
-						$.ajax({
-									data:  {nombre: $('#nombre').val(),
-											email: $('#email').val(),
-											nrodocumento: $('#nrodocumento').val(),
-											telefono: $('#telefono').val(),
-											accion: 'insertarCliente'},
-									url:   '../../ajax/ajax_clientes.php',
-									type:  'post',
-									beforeSend: function () {
-											
-									},
-									success:  function (response) {
-											url = "index.php";
-											$(location).attr('href',url);
-											
-									}
-							});
-                                                        
-                                                        $( this ).dialog( "close" );
-                                                        $( this ).dialog( "close" );
-                                                                $('html, body').animate({
-                                                                scrollTop: '1000px'
-                                                        },
-                                                        1500);
-                                                    } else {
-                                                        alert("El campo Nombre es obligatorio.");
-                                                        
-                                                    }
-						
-				    },
-				    Cancelar: function() {
-						$( this ).dialog( "close" );
-				    }
-				}
-		 
-		 
-	 		}); //fin del dialogo para crear cliente
+	
 	
 	
 	$( "#dialog2" ).dialog({
@@ -390,7 +334,7 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarTurno'},
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarFiesta'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
@@ -457,18 +401,29 @@ $(document).ready(function(){
 			$error = "";
 			
 			
-			if ($("#refcliente").chosen().val() == "") {
-				$error = "Es obligatorio el campo cliente.";
+			if ($("#nombre").val() == "") {
+				$error = "Es obligatorio el campo Nombre.";
 
 				alert($error);
 			}
 			
-			if ($("#fechautilizacion").val() == "") {
-				$error = "Es obligatorio el campo fecha utilización.";
+			if ($("#dia").val() == "") {
+				$error = "Es obligatorio el campo día.";
 
 				alert($error);
 			}
 
+			if ($("#horadesde").val() == $("#horahasta").val()) {
+				$error = "Es las fechas no pueden ser iguales.";
+
+				alert($error);
+			}
+
+			if (parseInt($("#horadesde").val().replace(":", "")) > parseInt($("#horahasta").val().replace(":", ""))) {
+				$error = "La hora desde no puede ser mayor que la hasta.";
+
+				alert($error);
+			}
 
 			return $error;
     }
@@ -490,52 +445,60 @@ $(document).ready(function(){
 	});
 	
 	//al enviar el formulario
-    $('#cargar').click(function(e){
-		e.preventDefault();
+    $('#cargar').click(function(){
 		
-		
-		if (validador() == "") 
+		if (validador() == "")
         {
+			//información del formulario
+			var formData = new FormData($(".formulario")[0]);
+			var message = "";
+			//hacemos la petición ajax  
+			$.ajax({
+				url: '../../ajax/ajax.php',  
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: formData,
+				//necesario para subir archivos via ajax
+				cache: false,
+				contentType: false,
+				processData: false,
+				//mientras enviamos el archivo
+				beforeSend: function(){
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+				},
+				//una vez finalizado correctamente
+				success: function(data){
 
-				$.ajax({
-					data:  {nombre: $('#nombre').val(),
-							refcliente: $("#refcliente").chosen().val(),
-							refcancha: $('#refcancha').val(),
-							horautilizacion: $('#horautilizacion').val(),
-							fechautilizacion: $('#fechautilizacion').val(),
-							usuacrea:	<?php echo "'".$_SESSION['nombre_se']."'"; ?>,
-							accion: 'insertarTurno'},
-					url:   '../../ajax/ajax.php',
-					type:  'post',
-					beforeSend: function () {
-							$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />'); 
-					},
-					success:  function (response) {
-						
-						if (response == '') {
-							$(".alert").removeClass("alert-danger");
-							$(".alert").removeClass("alert-info");
-							$(".alert").addClass("alert-success");
-							$(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Turno</strong>. ');
-							$(".alert").delay(3000).queue(function(){
-								/*aca lo que quiero hacer 
-								  después de los 2 segundos de retraso*/
-								$(this).dequeue(); //continúo con el siguiente ítem en la cola
-								
-							});
-							$("#load").html('');
-							url = "index.php";
-							$(location).attr('href',url);
-						} else {
-							$(".alert").removeClass("alert-danger");
-							$(".alert").removeClass("alert-info");
-							$(".alert").removeClass("alert-success");
-							$(".alert").addClass("alert-danger");
-							$(".alert").html('<strong>Error!</strong>'+response);
-							$("#load").html('');
-						}
-					}
-				});
+					if (data == '') {
+                                            $(".alert").removeClass("alert-danger");
+											$(".alert").removeClass("alert-info");
+                                            $(".alert").addClass("alert-success");
+                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Cliente</strong>. ');
+											$(".alert").delay(3000).queue(function(){
+												/*aca lo que quiero hacer 
+												  después de los 2 segundos de retraso*/
+												$(this).dequeue(); //continúo con el siguiente ítem en la cola
+												
+											});
+											$("#load").html('');
+											url = "index.php";
+											$(location).attr('href',url);
+                                            
+											
+                                        } else {
+                                        	$(".alert").removeClass("alert-danger");
+                                            $(".alert").addClass("alert-danger");
+                                            $(".alert").html('<strong>Error!</strong> '+data);
+                                            $("#load").html('');
+                                        }
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+                    $("#load").html('');
+				}
+			});
 		}
     });
 
