@@ -44,7 +44,8 @@ if (mysql_num_rows($respusu) > 0) {
 	if ($error == '') {
 		session_start();
 		$_SESSION['usua_se'] = $usuario;
-		$_SESSION['nombre_se'] = mysql_result($resppass,0,5);	
+		$_SESSION['nombre_se'] = mysql_result($resppass,0,5);
+		$_SESSION['rol_se'] = mysql_result($resppass,0,3);	
 	}
 	
 }	else {

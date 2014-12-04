@@ -35,8 +35,9 @@ function enviarMail($nombre,$mensaje,$email)
 
 }
 
-function menu($usuario,$titulo) {
-	$sql = "select idmenu,url,icono, nombre from lcdd_menu order by orden";
+function menu($usuario,$titulo,$rol) {
+	
+	$sql = "select idmenu,url,icono, nombre, permiso from lcdd_menu order by orden";
 	$res = $this->query($sql,0);
 	
 	$cadmenu = "";
@@ -49,18 +50,20 @@ function menu($usuario,$titulo) {
 			$row['url'] = "index.php";	
 		}
 		
-		if ($row['idmenu'] == 1) {
-			$cadmenu = $cadmenu.'<li class="arriba"><div class="'.$row['icono'].'"></div><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';
-			$cadhover = $cadhover.' <li class="arriba">
-										<div class="'.$row['icono'].'2" id="tooltip'.$cant.'"></div>
-										<div class="tooltip-dash">'.$row['nombre'].'</div>
-									</li>';	
-		} else {
-			$cadmenu = $cadmenu.'<li><div class="'.$row['icono'].'"></div><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';
-			$cadhover = $cadhover.'  <li>
-										<div class="'.$row['icono'].'2" id="tooltip'.$cant.'"></div>
-										<div class="tooltip-con">'.$row['nombre'].'</div>
-									</li>';
+		if (strpos($row['permiso'],$rol) !== false) {
+			if ($row['idmenu'] == 1) {
+				$cadmenu = $cadmenu.'<li class="arriba"><div class="'.$row['icono'].'"></div><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';
+				$cadhover = $cadhover.' <li class="arriba">
+											<div class="'.$row['icono'].'2" id="tooltip'.$cant.'"></div>
+											<div class="tooltip-dash">'.$row['nombre'].'</div>
+										</li>';	
+			} else {
+				$cadmenu = $cadmenu.'<li><div class="'.$row['icono'].'"></div><a href="'.$row['url'].'">'.$row['nombre'].'</a></li>';
+				$cadhover = $cadhover.'  <li>
+											<div class="'.$row['icono'].'2" id="tooltip'.$cant.'"></div>
+											<div class="tooltip-con">'.$row['nombre'].'</div>
+										</li>';
+			}
 		}
 		$cant+=1;
 	}
