@@ -98,7 +98,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProductoPorId($id);
                     <div class="form-group col-md-6">
                             <label for="tipoproducto" class="control-label" style="text-align:left">Estado</label>
                             <div class="input-group col-md-12">
-                                <select class="form-control" id="reftipoproducto" name="reftipoproducto">
+                                <select class="form-control" id="activo" name="activo">
 									<?php if (mysql_result($resTipoProducto,0,'activo') == 1) { ?>
                                     <option value="1" selected>Activo</option>
                                     <option value="0">Inactivo</option>

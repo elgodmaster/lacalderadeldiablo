@@ -93,7 +93,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                         <div class="form-group col-md-6">
                             <label for="tipoproducto" class="control-label" style="text-align:left">Estado</label>
                             <div class="input-group col-md-12">
-                                <select class="form-control" id="reftipoproducto" name="reftipoproducto">
+                                <select class="form-control" id="activo" name="activo">
 									<option value="1">Activo</option>
                                     <option value="0">Inactivo</option>
                            		</select>
@@ -104,7 +104,9 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                             <li>
                                 <button type="button" class="btn btn-primary" id="cargar" style="margin-left:0px;">Crear</button>
                             </li>
-                            
+                            <li>
+                                <button type="button" class="btn btn-success" id="productos" style="margin-left:0px;">Volver a Productos</button>
+                            </li>
        
                         </ul>
                         <div id="load">
@@ -220,7 +222,14 @@ $(document).ready(function(){
 	$('.ver').click(function(event){
 			url = "ver.php";
 			$(location).attr('href',url);
-	});//fin del boton eliminar
+	});//fin del boton ver
+	
+	
+	$('#productos').click(function(event){
+			url = "../productos/";
+			$(location).attr('href',url);
+	});//fin del boton para volver a productos
+	
 	
 	$('.varborrar').click(function(event){
 		  usersid =  $(this).attr("id");
@@ -331,7 +340,7 @@ $(document).ready(function(){
 	
 	//al enviar el formulario
     $('#cargar').click(function(){
-		existeCodigo($( this ).val());
+
 		if (validador() == "")
         {
 			//información del formulario

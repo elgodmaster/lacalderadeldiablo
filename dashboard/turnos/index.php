@@ -15,9 +15,11 @@ $resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Turnos',$_SESSION['rol_se'
 date_default_timezone_set('America/Buenos_Aires');
 require '../../includes/funcionesProductos.php';
 require '../../includes/funcionesTurnos.php';
+require '../../includes/funcionesConfiguraciones.php';
 
 $serviciosProductos = new ServiciosProductos();
 $serviciosTurnos	= new ServiciosTurnos();
+$serviciosConfiguraciones = new ServiciosConfiguraciones();
 
 $resCanchas = $serviciosTurnos->traerCanchas();
 $resClientes= $serviciosTurnos->traerClientes();
@@ -26,6 +28,8 @@ $resTurnos = $serviciosTurnos->traerTurnos();
 $fecha = date('Y-m-d');
 
 $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
+
+$resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
 
 ?>
 
@@ -183,7 +187,20 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
                         	<button type="button" class="btn btn-success" id="crearcliente" style="margin-left:0px;">Nuevo Cliente</button>
                         </div>
                     </div>
-                
+                	
+                    <div class="form-group">
+                    	<label for="tipoventa" class="control-label col-lg-3" style="text-align:left">Tipo Venta</label>
+                        <div class="col-lg-6">
+                        	<select class="form-control" id="tipoventa" name="tipoventa" tabindex="5">
+                                <?php while ($rowTV = mysql_fetch_array($resTipoVenta)) { ?>
+                                	<option value="<?php echo $rowTV[0]; ?>"><?php echo utf8_encode($rowTV[1]); ?></option>
+                                <?php } ?>
+                                
+                            </select>
+							
+                        </div>
+                    </div>
+                    
                     
                     
                     <ul class="list-inline" style="padding-top:15px;">
@@ -585,6 +602,7 @@ $(document).ready(function(){
 							horautilizacion: $('#horautilizacion').val(),
 							fechautilizacion: $('#fechautilizacion').val(),
 							usuacrea:	<?php echo "'".$_SESSION['nombre_se']."'"; ?>,
+							tipoventa: $('#tipoventa').val(),
 							accion: 'insertarTurno'},
 					url:   '../../ajax/ajax.php',
 					type:  'post',
@@ -606,7 +624,7 @@ $(document).ready(function(){
 							});
 							$("#load").html('');
 							url = "index.php";
-							//$(location).attr('href',url);
+							$(location).attr('href',url);
 						} else {
 							$(".alert").removeClass("alert-danger");
 							$(".alert").removeClass("alert-info");

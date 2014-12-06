@@ -15,13 +15,16 @@ $resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Fiestas',$_SESSION['rol_se
 
 
 require '../../includes/funcionesFiestas.php';
+require '../../includes/funcionesConfiguraciones.php';
 
 $serviciosFiestas = new ServiciosFiestas();
+$serviciosConfiguraciones = new ServiciosConfiguraciones();
 
 $resFiestas = $serviciosFiestas->traerFiestas();
 
 $fecha = date('Y-m-d');
 
+$resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Fiestas");
 ?>
 
 <!DOCTYPE HTML>
@@ -175,8 +178,24 @@ $fecha = date('Y-m-d');
                         </div>
                     </div>
                  </div>
-
+				 
+                 <div class="row">
+                 <div class="form-group col-md-6">
+                    	<label for="tipoventa" class="control-label" style="text-align:left">Tipo Venta</label>
+                        <div class="input-group col-md-12">
+                        	<select class="form-control" id="tipoventa" name="tipoventa" tabindex="5">
+                                <?php while ($rowTV = mysql_fetch_array($resTipoVenta)) { ?>
+                                	<option value="<?php echo $rowTV[0]; ?>"><?php echo utf8_encode($rowTV[1]); ?></option>
+                                <?php } ?>
+                                
+                            </select>
+							
+                        </div>
+                    </div>
+                  </div>
                 	<input type="hidden" id="accion" name="accion" value="insertarFiesta"/>
+                    <input type="hidden" id="usuacrea" name="usuacrea" value="<?php echo $_SESSION['usua_se']; ?>"/>
+                    
                     
                     
                     <ul class="list-inline" style="padding-top:15px;">

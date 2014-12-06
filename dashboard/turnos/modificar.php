@@ -15,9 +15,14 @@ $resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Turnos',$_SESSION['rol_se'
 date_default_timezone_set('America/Buenos_Aires');
 require '../../includes/funcionesProductos.php';
 require '../../includes/funcionesTurnos.php';
+require '../../includes/funcionesConfiguraciones.php';
+require '../../includes/funcionesVentas.php';
+
 
 $serviciosProductos = new ServiciosProductos();
 $serviciosTurnos    = new ServiciosTurnos();
+$serviciosConfiguraciones = new ServiciosConfiguraciones();
+$serviciosVentas = new ServiciosVentas();
 
 $id = $_GET['id'];
 
@@ -29,6 +34,10 @@ $fecha = date('Y-m-d');
 
 $resTurno = $serviciosTurnos->traerTurnosPorId($id);
 
+$resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
+
+$mov		= $serviciosVentas->traerIdVenta($id,'Canchas');
+$idtipoventa	= mysql_result($mov,0,1);
 ?>
 
 <!DOCTYPE HTML>
@@ -190,7 +199,23 @@ $resTurno = $serviciosTurnos->traerTurnosPorId($id);
                         	<button type="button" class="btn btn-success" id="crearcliente" style="margin-left:0px;">Nuevo Cliente</button>
                         </div>
                     </div>
-                
+                	
+                    <div class="form-group">
+                    	<label for="tipoventa" class="control-label col-lg-3" style="text-align:left">Tipo Venta</label>
+                        <div class="col-lg-6">
+                        	<select class="form-control" id="tipoventa" name="tipoventa" tabindex="5">
+                                <?php while ($rowTV = mysql_fetch_array($resTipoVenta)) { 
+										if ($rowTV[0] == $idtipoventa) { ?>
+                                			<option value="<?php echo $rowTV[0]; ?>" selected><?php echo utf8_encode($rowTV[1]); ?></option>
+                                        <?php } else { ?>
+                                			<option value="<?php echo $rowTV[0]; ?>"><?php echo utf8_encode($rowTV[1]); ?></option>
+                                        <?php } ?>            
+                                <?php } ?>
+                                
+                            </select>
+							
+                        </div>
+                    </div>
                     
                     
                     <ul class="list-inline" style="padding-top:15px;">
@@ -198,7 +223,12 @@ $resTurno = $serviciosTurnos->traerTurnosPorId($id);
                     		<button type="button" class="btn btn-primary" id="modificar" style="margin-left:0px;">Modificar</button>
                             
                         </li>
-                        
+                        <li>
+                        	<button type="button" class="btn btn-danger varborrar" id="<?php echo $id; ?>" style="margin-left:0px;">Eliminar</button>
+                        </li>
+                        <li>
+ 							<button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>                       
+                        </li>
    
                     </ul>
                     <div id="load">
@@ -368,7 +398,9 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: <?php echo $id; ?>, accion: 'eliminarTurno'},
+									data:  {id: <?php echo $id; ?>, 
+											usuacrea: '<?php $_SESSION['usua_se']; ?>',
+											accion: 'eliminarTurno'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
@@ -441,6 +473,7 @@ $(document).ready(function(){
 						horautilizacion: $('#horautilizacion').val(),
 						fechautilizacion: $('#fechautilizacion').val(),
 						usuacrea:	<?php echo "'".$_SESSION['nombre_se']."'"; ?>,
+						tipoventa: $('#tipoventa').val(),
 						accion: 'modificarTurno'},
 					url:   '../../ajax/ajax.php',
 					type:  'post',

@@ -92,7 +92,7 @@ function insertarVenta($refproducto,$reftipoventa,$importe,$fechacreacion,$cance
 	if ($res == false) {
 		return 'Error al insertar datos';
 	} else {
-		return 'Se cargo exitosamente el Tipo de Venta';
+		return $res;
 	}
 }
 
@@ -120,6 +120,24 @@ function eliminarVenta($id) {
 	}
 }
 
+function traerIdVenta($refid,$valor) {
+	$sql = "select
+			m.refventa,tv.idtipoventa,m.idmovimiento
+			from		lcdd_movimientos m
+			inner
+			join		lcdd_tipoventa tv
+			on			m.reftipoventa = tv.idtipoventa
+			inner
+			join		lcdd_valores v
+			on			v.descripcion = '".$valor."'
+			where		m.refid = ".$refid;	
+	$res 	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		return $res;
+	}
+}
 
 function traerVenta() {
 	$sql	=	"SELECT 

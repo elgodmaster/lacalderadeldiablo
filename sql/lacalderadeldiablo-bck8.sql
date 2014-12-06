@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 06-12-2014 a las 00:02:59
+-- Tiempo de generación: 04-12-2014 a las 23:43:21
 -- Versión del servidor: 5.1.36-community-log
 -- Versión de PHP: 5.4.3
 
@@ -105,14 +105,14 @@ CREATE TABLE IF NOT EXISTS `lcdd_fiestas` (
   `dia` date NOT NULL,
   `concatering` bit(1) DEFAULT NULL,
   PRIMARY KEY (`idfiesta`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=2 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_fiestas`
 --
 
 INSERT INTO `lcdd_fiestas` (`idfiesta`, `nombre`, `horadesde`, `horahasta`, `dia`, `concatering`) VALUES
-(4, 'cristian spazzarini', '08:00:00', '12:00:00', '2014-12-06', b'0');
+(1, 'NUEVO CUPS', '12:30:00', '18:30:00', '2014-12-06', b'1');
 
 -- --------------------------------------------------------
 
@@ -155,26 +155,13 @@ INSERT INTO `lcdd_menu` (`idmenu`, `url`, `icono`, `nombre`, `Orden`, `hover`, `
 
 CREATE TABLE IF NOT EXISTS `lcdd_movimientos` (
   `idmovimiento` int(11) NOT NULL AUTO_INCREMENT,
-  `reftipoventa` int(11) NOT NULL,
+  `refcuenta` int(11) NOT NULL,
   `refventa` int(11) NOT NULL,
   `monto` decimal(10,0) NOT NULL,
   `fechacreacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `usuacrea` varchar(20) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `refid` int(11) NOT NULL,
-  `observacion` varchar(300) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`idmovimiento`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=13 ;
-
---
--- Volcado de datos para la tabla `lcdd_movimientos`
---
-
-INSERT INTO `lcdd_movimientos` (`idmovimiento`, `reftipoventa`, `refventa`, `monto`, `fechacreacion`, `usuacrea`, `refid`, `observacion`) VALUES
-(4, 2, 7, '0', '2014-12-05 23:22:17', 'Saupurein Marcos', 15, 'Alquiler de '),
-(5, 2, 7, '0', '2014-12-05 23:28:24', '', 15, 'Alquiler de '),
-(6, 2, 8, '260', '2014-12-05 23:32:07', 'Saupurein Marcos', 16, 'Alquiler de Cancha 3'),
-(11, 2, 11, '260', '2014-12-05 23:39:54', 'Saupurein Marcos', 17, 'Alquiler de Cancha 2'),
-(12, 3, 14, '330', '2014-12-06 00:02:15', 'msredhotero@msn.com', 4, 'Alquiler de Fiesta');
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -194,7 +181,6 @@ CREATE TABLE IF NOT EXISTS `lcdd_productos` (
   `codigo` varchar(10) COLLATE utf8_spanish_ci NOT NULL,
   `codigobarra` bigint(15) DEFAULT NULL,
   `caracteristicas` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `egresa` bit(1) DEFAULT NULL,
   PRIMARY KEY (`idproducto`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=8 ;
 
@@ -202,13 +188,13 @@ CREATE TABLE IF NOT EXISTS `lcdd_productos` (
 -- Volcado de datos para la tabla `lcdd_productos`
 --
 
-INSERT INTO `lcdd_productos` (`idproducto`, `nombre`, `precio_unit`, `precio_venta`, `stock`, `stock_min`, `reftipoproducto`, `refproveedor`, `codigo`, `codigobarra`, `caracteristicas`, `egresa`) VALUES
-(2, 'Palermo', '6.00', '16.00', 30, 8, 1, 2, 'cer0001', 8710103584506, '1 litro', b'0'),
-(3, 'Gaseosa 7up', '12.50', '25.00', 0, 0, 0, 0, '', 0, '', b'0'),
-(4, 'Gaseosa 7up', '12.00', '25.00', 0, 0, 0, 0, '', 0, '', b'0'),
-(5, 'Gaseosa 7up', '12.90', '25.00', 62, 10, 3, 4, 'GAS0004', 7795373011366, '2.25 ltrs', b'0'),
-(6, 'Cerveza Leffe', '16.00', '40.00', 20, 4, 1, 2, 'ce0003', 0, '', b'0'),
-(7, 'Cerveza Quilmes', '8.00', '25.00', 62, 10, 1, 2, 'ge0004', 7790520981974, '1 litro', b'0');
+INSERT INTO `lcdd_productos` (`idproducto`, `nombre`, `precio_unit`, `precio_venta`, `stock`, `stock_min`, `reftipoproducto`, `refproveedor`, `codigo`, `codigobarra`, `caracteristicas`) VALUES
+(2, 'Palermo', '6.00', '16.00', 30, 8, 1, 2, 'cer0001', 8710103584506, '1 litro'),
+(3, 'Gaseosa 7up', '12.50', '25.00', 0, 0, 0, 0, '', 0, ''),
+(4, 'Gaseosa 7up', '12.00', '25.00', 0, 0, 0, 0, '', 0, ''),
+(5, 'Gaseosa 7up', '12.90', '25.00', 62, 10, 3, 4, 'GAS0004', 7795373011366, '2.25 ltrs'),
+(6, 'Cerveza Leffe', '16.00', '40.00', 20, 4, 1, 2, 'ce0003', 0, ''),
+(7, 'Cerveza Quilmes', '8.00', '25.00', 62, 10, 1, 2, 'ge0004', 7790520981974, '1 litro');
 
 -- --------------------------------------------------------
 
@@ -249,7 +235,7 @@ CREATE TABLE IF NOT EXISTS `lcdd_tipoproducto` (
   `tipoproducto` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
   `activo` bit(1) DEFAULT NULL,
   PRIMARY KEY (`idtipoproducto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=4 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_tipoproducto`
@@ -258,10 +244,7 @@ CREATE TABLE IF NOT EXISTS `lcdd_tipoproducto` (
 INSERT INTO `lcdd_tipoproducto` (`idtipoproducto`, `tipoproducto`, `activo`) VALUES
 (1, 'Cervezas', b'1'),
 (2, 'Aguas', b'1'),
-(3, 'Gaseosas', b'1'),
-(4, 'Egresos', b'1'),
-(5, 'Incontingencias', b'1'),
-(6, 'Comidas', b'1');
+(3, 'Gaseosas', b'1');
 
 -- --------------------------------------------------------
 
@@ -274,22 +257,18 @@ CREATE TABLE IF NOT EXISTS `lcdd_tipoventa` (
   `tipoventa` varchar(100) COLLATE utf8_spanish_ci NOT NULL,
   `precio` decimal(10,0) NOT NULL,
   `detalle` varchar(500) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `refvalores` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`idtipoventa`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=9 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=6 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_tipoventa`
 --
 
-INSERT INTO `lcdd_tipoventa` (`idtipoventa`, `tipoventa`, `precio`, `detalle`, `refvalores`) VALUES
-(1, 'Venta Productos', '0', 'Venta de los productos de las heladeras', 1),
-(2, 'Alquiler de canchas de día', '260', 'Alquiler de cancha de día antes de las 18:00 hs', 2),
-(3, 'Alquiler para cumpleaños', '330', 'Alquiler para cumpleaños', 3),
-(5, 'Alquiler de canchas de noche', '300', 'Alquiler de canchas de noche despues de las 18:00', 2),
-(6, 'Alquiler para cumpleaños con catering', '450', 'Alquiler para cumpleaños con catering', 3),
-(7, 'Alquiler de canchas mes entero', '260', 'Alquiler de canchas mes entero', NULL),
-(8, 'Alquiler de canchas mes entero', '260', 'Alquiler de canchas mes entero', 2);
+INSERT INTO `lcdd_tipoventa` (`idtipoventa`, `tipoventa`, `precio`, `detalle`) VALUES
+(1, 'Venta Productos', '0', 'Venta de los productos de las heladeras'),
+(2, 'Alquiler de canchas de día', '260', 'Alquiler de cancha de día antes de las 18:00 hs'),
+(3, 'Alquiler para cumpleaños', '330', 'Alquiler para cumpleaños'),
+(5, 'Alquiler de canchas de noche', '300', 'Alquiler de canchas de noche despues de las 18:00');
 
 -- --------------------------------------------------------
 
@@ -307,36 +286,21 @@ CREATE TABLE IF NOT EXISTS `lcdd_turnos` (
   `usuacrea` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL,
   `activo` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`idturno`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=18 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=13 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_turnos`
 --
 
 INSERT INTO `lcdd_turnos` (`idturno`, `refcancha`, `fechautilizacion`, `horautilizacion`, `refcliente`, `fechacreacion`, `usuacrea`, `activo`) VALUES
-(16, 3, '2014-12-06', '12:00:00', 3, '2014-12-05 23:32:07', 'Saupurein ', b'1'),
-(17, 2, '2014-12-05', '15:00:00', 3, '2014-12-05 23:33:16', 'Saupurein ', b'1');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `lcdd_valores`
---
-
-CREATE TABLE IF NOT EXISTS `lcdd_valores` (
-  `idvalor` int(11) NOT NULL AUTO_INCREMENT,
-  `descripcion` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
-  PRIMARY KEY (`idvalor`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=4 ;
-
---
--- Volcado de datos para la tabla `lcdd_valores`
---
-
-INSERT INTO `lcdd_valores` (`idvalor`, `descripcion`) VALUES
-(1, 'Productos'),
-(2, 'Canchas'),
-(3, 'Fiestas');
+(1, 2, '2014-11-09', '17:00:00', 10, '2014-11-09 20:43:51', 'Saupurein ', b'0'),
+(2, 2, '2014-11-09', '12:00:00', 3, '2014-11-09 20:44:59', 'Saupurein ', b'1'),
+(7, 3, '2014-11-10', '17:00:00', 7, '2014-11-10 16:36:23', 'Saupurein ', b'0'),
+(8, 2, '2014-11-13', '17:00:00', 1, '2014-11-13 15:38:23', 'Saupurein ', b'1'),
+(9, 2, '2014-12-03', '17:00:00', 1, '2014-12-03 09:31:09', 'Saupurein ', b'1'),
+(10, 2, '2014-12-03', '13:00:00', 3, '2014-12-03 09:32:31', 'Saupurein ', b'1'),
+(11, 3, '2014-12-03', '20:00:00', 1, '2014-12-03 09:42:00', 'Saupurein ', b'1'),
+(12, 3, '2014-12-03', '23:00:00', 1, '2014-12-03 09:42:35', 'Saupurein ', b'1');
 
 -- --------------------------------------------------------
 
@@ -357,17 +321,16 @@ CREATE TABLE IF NOT EXISTS `lcdd_ventas` (
   `concepto` varchar(80) COLLATE utf8_spanish_ci DEFAULT NULL,
   `observaciones` varchar(150) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`idventa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=6 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_ventas`
 --
 
 INSERT INTO `lcdd_ventas` (`idventa`, `refproducto`, `reftipoventa`, `importe`, `fechacreacion`, `cancelado`, `usuacrea`, `fechamodificacion`, `usuamodi`, `concepto`, `observaciones`) VALUES
-(7, NULL, 5, '300.00', '2014-12-05 23:21:45', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de canchas de noche despues de las 18:00', 'Alquiler de Cancha 1'),
-(8, NULL, 2, '260.00', '2014-12-05 23:32:07', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de cancha de d?a antes de las 18:00 hs', 'Alquiler de Cancha 3'),
-(11, NULL, 2, '260.00', '2014-12-05 23:39:54', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de cancha de d?a antes de las 18:00 hs', 'Alquiler de Cancha 2'),
-(14, NULL, 3, '330.00', '2014-12-06 00:02:15', b'0', 'msredhotero@msn.com', NULL, '', 'Alquiler para cumplea?os', 'Alquiler de Fiesta');
+(3, 7, 1, '25.00', '2014-12-03 09:14:03', b'0', 'msredhotero@msn.com', NULL, '', 'Cerveza Quilmes 1 litro', 'Venta de Productos'),
+(4, NULL, 2, '120.00', '2014-12-03 09:36:38', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de cancha', 'Alquiler de Cancha 1'),
+(5, NULL, 2, '120.00', '2014-12-03 09:41:59', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de cancha', 'Alquiler de Cancha 3');
 
 -- --------------------------------------------------------
 
