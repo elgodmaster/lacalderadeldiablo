@@ -24,6 +24,8 @@ $fecha = date('Y-m-d');
 
 $resFiestas = $serviciosFiestas->traerFiestasId($id);
 
+$mov		= $serviciosVentas->traerIdVenta($id,'Fiestas');
+$idtipoventa	= mysql_result($mov,0,1);
 ?>
 
 <!DOCTYPE HTML>
@@ -204,7 +206,28 @@ $resFiestas = $serviciosFiestas->traerFiestasId($id);
                         </div>
                     </div>
                  </div>
-
+				
+                
+                <div class="form-group col-md-6">
+                    <label for="tipoventa" class="control-label" style="text-align:left">Tipo Venta</label>
+                    <div class=" col-md-12">
+                        <select class="form-control" id="tipoventa" name="tipoventa" tabindex="5">
+                            <?php while ($rowTV = mysql_fetch_array($resTipoVenta)) { 
+                                    if ($rowTV[0] == $idtipoventa) { ?>
+                                        <option value="<?php echo $rowTV[0]; ?>" selected><?php echo utf8_encode($rowTV[1]); ?></option>
+                                    <?php } else { ?>
+                                        <option value="<?php echo $rowTV[0]; ?>"><?php echo utf8_encode($rowTV[1]); ?></option>
+                                    <?php } ?>            
+                            <?php } ?>
+                            
+                        </select>
+                        
+                    </div>
+                </div>
+                    
+                
+                
+                	<input type="hidden" id="usuacrea" name="usuacrea" value="<?php echo $_SESSION['usua_se']; ?>"/>
                 	<input type="hidden" id="accion" name="accion" value="modificarFiesta"/>
                     <input type="hidden" id="id" name="id" value="<?php echo mysql_result($resFiestas,0,0); ?>"/>
                     

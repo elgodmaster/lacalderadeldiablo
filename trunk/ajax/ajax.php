@@ -8,6 +8,8 @@ include ('../includes/funcionesTurnos.php');
 include ('../includes/funcionesConfiguraciones.php');
 include ('../includes/funcionesVentas.php');
 include ('../includes/funcionesFiestas.php');
+include ('../includes/funcionesMovimientos.php');
+
 
 $ServiciosFunciones = new ServiciosHTML();
 $serviciosTurnos	= new ServiciosTurnos();
@@ -16,6 +18,8 @@ $serviciosProductos  = new ServiciosProductos();
 $serviciosConfiguraciones = new ServiciosConfiguraciones();
 $serviciosVentas = new ServiciosVentas();
 $serviciosFiestas = new ServiciosFiestas();
+
+$serviciosMovimientos = new ServiciosMovimientos();
 
 $accion = $_POST['accion'];
 
@@ -67,9 +71,6 @@ switch ($accion) {
 	case 'existeCodigoMod':
 		existeCodigoMod($serviciosProductos);
 		break;
-	case 'insertarTurno':
-		insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones);
-		break;
 	case 'hayTurnos':
 		hayTurnos($serviciosTurnos);
 		break;
@@ -78,12 +79,6 @@ switch ($accion) {
 		break;
 	case 'crearTablaTurnos':
 		crearTablaTurnos($serviciosTurnos);
-		break;
-	case 'modificarTurno':
-		modificarTurno($serviciosTurnos);
-		break;
-	case 'eliminarTurno':
-		eliminarTurno($serviciosTurnos);
 		break;
 	case 'insertarTipoVenta':
 		insertarTipoVenta($serviciosConfiguraciones);
@@ -100,21 +95,177 @@ switch ($accion) {
 	case 'traerProductoVentaBarra':
 		traerProductoVentaBarra($serviciosProductos);
 		break;
+	case 'insertarTipoProducto':
+		insertarTipoProducto($serviciosProductos,$serviciosMovimientos);
+		break;
+	case 'modificarTipoProducto':
+		modificarTipoProducto($serviciosProductos,$serviciosMovimientos);
+		break;
+	case 'eliminarTipoProducto':
+		eliminarTipoProducto($serviciosProductos,$serviciosMovimientos);
+		break;
+	
+	case 'insertarTurno':
+		insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos);
+		break;
+	case 'modificarTurno':
+		modificarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos);
+		break;
+	case 'eliminarTurno':
+		eliminarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos);
+		break;
 	case 'insertarDetalle':
-		insertarDetalle($serviciosVentas);
+		insertarDetalle($serviciosVentas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos);
 		break;
 	case 'insertarFiesta':
-		insertarFiesta($serviciosFiestas);
+		insertarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos);
 		break;
 	case 'eliminarFiesta':
-		eliminarFiesta($serviciosFiestas);
+		eliminarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos);
 		break;
 	case 'modificarFiesta':
-		modificarFiesta($serviciosFiestas);
+		modificarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos);
 		break;
 }
 
-function modificarFiesta($serviciosFiestas) {
+
+/* functiones que trabajan con ventas y movimientos */
+
+function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
+	$refcancha			=	$_POST['refcancha'];
+	$fechautilizacion	=	$_POST['fechautilizacion'];
+	$horautilizacion	=	$_POST['horautilizacion'];
+	$refcliente			=	$_POST['refcliente'];
+	$fechacreacion		=	'';
+	$usuacrea			=	$_POST['usuacrea'];
+	$tipoventa			=	$_POST['tipoventa'];
+
+	$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea);
+
+	if ((integer)$res > 0) {
+		$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
+		$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+		$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+
+		$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha);
+		$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha);
+		
+		$res = '';
+	}
+
+	echo $res;
+}
+
+function eliminarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
+	$id 	=	$_POST['id'];
+	$usuacrea			=	$_POST['usuacrea'];
+	
+	$res = $serviciosTurnos->eliminarTurno($id);
+	
+	if ($res == '') {
+		$cancha 	= mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
+		$monto 		= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+		$producto 	= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+		
+		$mov		= $serviciosVentas->traerIdVenta($id,'Canchas');
+		
+		$idventa 		= mysql_result($mov,0,0);
+		$tipoventa	= mysql_result($mov,0,1);
+		
+		$serviciosVentas->modificarVenta($refid,1,'Se cancelo el turno de la cancha: '.$cancha);
+		$serviciosMovimientos->insertarMovimiento($tipoventa,$idventa,0,'',$usuacrea,$id,'Alquiler de '.$cancha);
+	}
+	
+	echo $res;
+}
+
+
+function modificarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
+	$id 				=	$_POST['id'];
+	$refcancha			=	$_POST['refcancha'];
+	$fechautilizacion	=	$_POST['fechautilizacion'];
+	$horautilizacion	=	$_POST['horautilizacion'];
+	$refcliente			=	$_POST['refcliente'];
+	$fechacreacion		=	'';
+	$usuacrea			=	$_POST['usuacrea'];
+	$tipoventa			=	$_POST['tipoventa'];
+	
+	$res = $serviciosTurnos->modificarTurno($id,$refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea);	
+	
+	if ($res == '') {
+		$cancha 	= mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
+		$monto 		= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+		$producto 	= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+		
+		$mov		= $serviciosVentas->traerIdVenta($id,'Canchas');
+		
+		$idmov		= mysql_result($mov,0,2);
+		$idventa 	= mysql_result($mov,0,0);
+		
+		$serviciosVentas->eliminarVenta($idventa);
+		$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha);
+		
+		$serviciosMovimientos->eliminarMovimiento($idmov);
+		
+		$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,'',$usuacrea,$id,'Alquiler de '.$cancha);
+	}
+	
+	echo $res;
+}
+
+
+
+function insertarDetalle($serviciosVentas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
+	$id  		= $_POST['id'];
+	$producto 	= $_POST['producto'];
+	$cantidad 	= $_POST['cantidad'];
+	$monto 		= $_POST['monto'];
+	$tipoventa  = $_POST['tipoventa'];
+	$usuacrea	= $_POST['usuacrea'];
+	$tipoventa	=	$_POST['tipoventa'];
+	
+	$res = $serviciosVentas->insertarVenta($id,$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Venta de Productos');
+	
+	if ((integer)$res > 0) {
+		$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+		$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+
+		$serviciosMovimientos->insertarMovimiento($tipoventa,$res,$monto,'',$usuacrea,$producto,'Venta de las heladeras');
+		
+		$res = '';
+	}
+	
+	
+	echo $res;
+}
+
+
+function insertarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
+	$nombre		=	$_POST['nombre'];
+	$dia 		=	$_POST['dia'];
+	$horadesde  =	$_POST['horadesde'];
+	$horahasta  =	$_POST['horahasta'];
+	$concatering=	$_POST['concatering'];
+	$tipoventa	=	$_POST['tipoventa'];
+	$usuacrea 	=	$_POST['usuacrea'];
+	
+	$res = $serviciosFiestas->insertarFiesta($nombre,$horadesde,$horahasta,$dia,$concatering);
+	
+	if ((integer)$res > 0) {
+		$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+		$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+
+		$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de Fiesta');
+		$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,'',$usuacrea,$res,'Alquiler de Fiesta');
+		
+		$res = '';
+	}
+	
+	echo $res;
+}
+
+
+function modificarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
 	$id 		=	$_POST['id'];
 	$nombre		=	$_POST['nombre'];
 	$horadesde	=	$_POST['horadesde'];
@@ -125,32 +276,42 @@ function modificarFiesta($serviciosFiestas) {
 	echo $serviciosFiestas->modificarFiesta($id,$nombre,$horadesde,$horahasta,$dia,$concatering);
 }
 
-function eliminarFiesta($serviciosFiestas) {
+function eliminarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
 	$id 	=	$_POST['id'];
 	echo $serviciosFiestas->eliminarFiesta($id);
 }
+/* fin de las funciones que trabajan con los movimientos */
 
-function insertarFiesta($serviciosFiestas) {
-	$nombre		=	$_POST['nombre'];
-	$dia 		=	$_POST['dia'];
-	$horadesde  =	$_POST['horadesde'];
-	$horahasta  =	$_POST['horahasta'];
-	$concatering=	$_POST['concatering'];
 
-	echo $serviciosFiestas->insertarFiesta($nombre,$horadesde,$horahasta,$dia,$concatering);
+
+
+
+
+function insertarTipoProducto($serviciosProductos,$serviciosMovimientos) {
+	$tipoproducto	=	$_POST['tipoproducto'];
+	$activo			=	$_POST['activo'];
+	
+	echo $serviciosProductos->insertarTipoProducto($tipoproducto,$activo);
+	
+	
 }
 
 
-
-function insertarDetalle($serviciosVentas) {
-	$id  		= $_POST['id'];
-	$producto 	= $_POST['producto'];
-	$cantidad 	= $_POST['cantidad'];
-	$monto 		= $_POST['monto'];
-	$tipoventa  = $_POST['tipoventa'];
-	$usuacrea	= $_POST['usuacrea'];
-	echo $serviciosVentas->insertarVenta($id,1,$monto,'',0,$usuacrea,'','',$producto,'Venta de Productos');
+function modificarTipoProducto($serviciosProductos,$serviciosMovimientos) {
+	$tipoproducto	=	$_POST['tipoproducto'];
+	$activo			=	$_POST['activo'];
+	$id 			=	$_POST['id'];
+	
+	echo $serviciosProductos->modificarTipoProducto($id,$tipoproducto,$activo);
 }
+
+function eliminarTipoProducto($serviciosProductos,$serviciosMovimientos) {
+	$id 	=	$_POST['id'];
+	
+	echo $serviciosProductos->eliminarTipoProducto($id);
+}
+
+
 
 function traerProductoVentaBarra($serviciosProductos) {
 	$id 	=	$_POST['idproducto'];
@@ -188,37 +349,21 @@ function insertarTipoVenta($serviciosConfiguraciones) {
 	$tipoventa 		=	$_POST['tipoventa'];
 	$precio 		=	$_POST['precio'];
 	$detalle 		=	$_POST['detalle'];
-
-	echo $serviciosConfiguraciones->insertarTipoVenta($tipoventa,$precio,$detalle);
+	$refvalores		=	$_POST['refvalores'];
+	
+	echo $serviciosConfiguraciones->insertarTipoVenta($tipoventa,$precio,$detalle,$refvalores);
 }
 
 function modificarTipoVenta($serviciosConfiguraciones) {
 	$tipoventa 		=	$_POST['tipoventa'];
 	$precio 		=	$_POST['precio'];
 	$detalle 		=	$_POST['detalle'];
+	$refvalores		=	$_POST['refvalores'];
 	$id				=	$_POST['id'];
 	
-	echo $serviciosConfiguraciones->modificarTipoVenta($id,$tipoventa,$precio,$detalle);
+	echo $serviciosConfiguraciones->modificarTipoVenta($id,$tipoventa,$precio,$detalle,$refvalores);
 }
 
-
-
-function eliminarTurno($serviciosTurnos) {
-	$id 	=	$_POST['id'];
-	echo $serviciosTurnos->eliminarTurno($id);
-}
-
-
-function modificarTurno($serviciosTurnos) {
-	$id 				=	$_POST['id'];
-	$refcancha			=	$_POST['refcancha'];
-	$fechautilizacion	=	$_POST['fechautilizacion'];
-	$horautilizacion	=	$_POST['horautilizacion'];
-	$refcliente			=	$_POST['refcliente'];
-	$fechacreacion		=	'';
-	$usuacrea			=	$_POST['usuacrea'];
-	echo $serviciosTurnos->modificarTurno($id,$refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea);	
-}
 
 
 function crearTablaTurnos($serviciosTurnos) {
@@ -333,27 +478,6 @@ function hayTurnos($serviciosTurnos) {
 }
 
 
-function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones) {
-	$refcancha			=	$_POST['refcancha'];
-	$fechautilizacion	=	$_POST['fechautilizacion'];
-	$horautilizacion	=	$_POST['horautilizacion'];
-	$refcliente			=	$_POST['refcliente'];
-	$fechacreacion		=	'';
-	$usuacrea			=	$_POST['usuacrea'];
-
-
-	$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea);
-
-	if ($res == '') {
-		$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
-		$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId(2), 0,2);
-		$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId(2), 0,3);
-
-		$serviciosVentas->insertarVenta('',2,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha);
-	}
-
-	echo $res;
-}
 
 
 function existeCodigoMod($serviciosProductos) {

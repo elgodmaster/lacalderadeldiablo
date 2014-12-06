@@ -33,7 +33,7 @@ function insertarTipoProducto($tipoproducto,$activo) {
 				('',
 				'".utf8_decode(trim($tipoproducto))."',
 				".$activo.")";
-	$res	=	$this->query($sql,0);
+	$res	=	$this->query($sql,1);
 	if ($res == false) {
 		return 'Error al insertar datos';
 	} else {

@@ -86,7 +86,7 @@ function insertarFiesta($nombre,$horadesde,$horahasta,$dia,$concatering) {
 	if ($res == false) {
 		return 'Error al insertar datos';
 	} else {
-		return '';
+		return $res;
 	}
 }
 

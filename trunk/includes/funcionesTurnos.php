@@ -175,7 +175,7 @@ function insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente
 	} else {
 		return 'Ya existe un turno';	
 	}
-	return '';
+	return $res;
 }
 
 function modificarTurno($id,$refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea) {
@@ -198,7 +198,7 @@ function modificarTurno($id,$refcancha,$fechautilizacion,$horautilizacion,$refcl
 function eliminarTurno($i) {
 	$sql		=	"delete from lcdd_turnos where idturno =".$i;
 	$res 		=	$this->query($sql,0);
-	echo $res;
+	echo '';
 }
 
 /* fin */

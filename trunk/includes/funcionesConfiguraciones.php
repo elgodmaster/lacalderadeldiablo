@@ -36,24 +36,64 @@ function camposTabla($accion) {
 					
 					';
 				} else {
-					if ($row[0] == "tipoventa") {
-						$label = "Tipo Venta";
-						$campo = $row[0];
-					} else {
-						$label = ucwords($row[0]);
-						$campo = $row[0];
+					$formTabla = "";
+					$formReferencia = "";
+					switch ($row[0]) {
+						case "tipoventa":
+							$label = "Tipo Venta";
+							$campo = $row[0];
+							
+							$formTabla = '
+								<div class="form-group col-md-6">
+									<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+									<div class="input-group col-md-12">
+										<input type="text" class="form-control" id="'.$campo.'" name="'.$campo.'" placeholder="Ingrese el '.$label.'..." required>
+									</div>
+								</div>
+								
+								';
+							
+							break;
+						case "refvalores":
+							$label = "Aplica Sobre";
+							$campo = $row[0];
+							
+							$sqlRef = "select idvalor,descripcion from lcdd_valores";
+							$resRef = $this->query($sqlRef,0);
+							
+							$formRefDivUno = '<div class="form-group col-md-6">
+										<label for="'.$row[0].'" class="control-label" style="text-align:left">'.$label.'</label>
+										<div class="input-group col-md-12">
+											<select class="form-control" id="'.$campo.'" name="'.$campo.'" >';
+							$formRefDivDos = "</select></div></div>";
+							$formOption = "";
+							
+							while ($rowRef = mysql_fetch_array($resRef)) {
+								$formOption = $formOption."<option value='".$rowRef[0]."'>".$rowRef[1]."</option>";
+							}
+							
+							$formReferencia = $formRefDivUno.$formOption.$formRefDivDos;
+							
+							break;
+						default:
+							$label = ucwords($row[0]);
+							$campo = $row[0];
+							
+							$formTabla = '
+								<div class="form-group col-md-6">
+									<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+									<div class="input-group col-md-12">
+										<input type="text" class="form-control" id="'.$campo.'" name="'.$campo.'" placeholder="Ingrese el '.$label.'..." required>
+									</div>
+								</div>
+								
+								';
+								
+							break;
 					}
 					
-					$form	=	$form.'
-						
-						<div class="form-group col-md-6">
-							<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
-							<div class="input-group col-md-12">
-								<input type="text" class="form-control" id="'.$campo.'" name="'.$campo.'" placeholder="Ingrese el '.$label.'..." required>
-							</div>
-						</div>
-						
-						';
+					
+					$form	=	$form.$formReferencia.$formTabla;
 				}
 			} else {
 				$camposEscondido = '<input type="hidden" id="id" name="id" value="'.$row[0].'"/>';
@@ -97,24 +137,70 @@ function camposTablaMod($accion,$id) {
 					
 					';
 				} else {
-					if ($row[0] == "tipoventa") {
-						$label = "Tipo Venta";
-						$campo = $row[0];
-					} else {
-						$label = ucwords($row[0]);
-						$campo = $row[0];
-					}
 					
-					$form	=	$form.'
-						
-						<div class="form-group col-md-6">
-							<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
-							<div class="input-group col-md-12">
-								<input type="text" class="form-control" id="'.$campo.'" value="'.utf8_encode(mysql_result($resTipoVenta,0,$campo)).'" name="'.$campo.'" placeholder="Ingrese el '.$label.'..." required>
-							</div>
-						</div>
-						
-						';
+					$formTabla = "";
+					$formReferencia = "";
+					switch ($row[0]) {
+						case "tipoventa":
+							$label = "Tipo Venta";
+							$campo = $row[0];
+							
+							$formTabla = '
+								<div class="form-group col-md-6">
+									<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+									<div class="input-group col-md-12">
+										<input type="text" class="form-control" id="'.$campo.'" name="'.$campo.'" value="'.utf8_encode(mysql_result($resTipoVenta,0,$campo)).'" placeholder="Ingrese el '.$label.'..." required>
+									</div>
+								</div>
+								
+								';
+							
+							break;
+						case "refvalores":
+							$label = "Aplica Sobre";
+							$campo = $row[0];
+							
+							$sqlRef = "select idvalor,descripcion from lcdd_valores";
+							$resRef = $this->query($sqlRef,0);
+							
+							$formRefDivUno = '<div class="form-group col-md-6">
+										<label for="'.$row[0].'" class="control-label" style="text-align:left">'.$label.'</label>
+										<div class="input-group col-md-12">
+											<select class="form-control" id="'.$campo.'" name="'.$campo.'" >';
+							$formRefDivDos = "</select></div></div>";
+							$formOption = "";
+							
+							while ($rowRef = mysql_fetch_array($resRef)) {
+								if (mysql_result($resTipoVenta,0,$campo) == $rowRef[0]) {
+									$formOption = $formOption."<option value='".$rowRef[0]."' selected>".$rowRef[1]."</option>";
+								} else {
+									$formOption = $formOption."<option value='".$rowRef[0]."'>".$rowRef[1]."</option>";
+								}
+							}
+							
+							$formReferencia = $formRefDivUno.$formOption.$formRefDivDos;
+							
+							break;
+						default:
+							$label = ucwords($row[0]);
+							$campo = $row[0];
+							
+							$formTabla = '
+								<div class="form-group col-md-6">
+									<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
+									<div class="input-group col-md-12">
+										<input type="text" class="form-control" value="'.utf8_encode(mysql_result($resTipoVenta,0,$campo)).'" id="'.$campo.'" name="'.$campo.'" placeholder="Ingrese el '.$label.'..." required>
+									</div>
+								</div>
+								
+								';
+								
+							break;
+						}
+					
+					
+					
+					$form	=	$form.$formReferencia.$formTabla;
 				}
 			} else {
 				$camposEscondido = '<input type="hidden" id="id" name="id" value="'.$id.'"/>';
@@ -131,13 +217,14 @@ function camposTablaMod($accion,$id) {
 
 //$idtipoventa,$tipoventa,$precio,$detalle
 
-function insertarTipoVenta($tipoventa,$precio,$detalle) {
-	$sql	=	"insert into lcdd_tipoventa(idtipoventa,tipoventa,precio,detalle)
+function insertarTipoVenta($tipoventa,$precio,$detalle,$refvalores) {
+	$sql	=	"insert into lcdd_tipoventa(idtipoventa,tipoventa,precio,detalle,refvalores)
 				 values
 				 ('',
 				 '".utf8_decode($tipoventa)."',
 				 ".$precio.",
-				 '".utf8_decode($detalle)."')";
+				 '".utf8_decode($detalle)."',
+				 ".$refvalores.")";
 	//return $sql;
 	$res 	=	$this->query($sql,1);
 	if ($res == false) {
@@ -147,12 +234,13 @@ function insertarTipoVenta($tipoventa,$precio,$detalle) {
 	}
 }
 
-function modificarTipoVenta($id,$tipoventa,$precio,$detalle) {
+function modificarTipoVenta($id,$tipoventa,$precio,$detalle,$refvalores) {
 	$sql	=	"update lcdd_tipoventa
 				SET 
 					tipoventa = '".utf8_decode($tipoventa)."',
 					precio = ".$precio.",
-					detalle = '".utf8_decode($detalle)."'
+					detalle = '".utf8_decode($detalle)."',
+					refvalores = ".$refvalores."
 				where 	idtipoventa = ".$id;
 	$res  	=	$this->query($sql,0);
 	if ($res == false) {
@@ -174,7 +262,26 @@ function eliminarTipoVenta($id) {
 
 
 function traerTipoVenta() {
-	$sql	=	"select idtipoventa, tipoventa, precio, detalle from lcdd_tipoventa order by tipoventa";
+	$sql	=	"select idtipoventa, tipoventa, precio, detalle, v.descripcion
+				from lcdd_tipoventa tv 
+				inner join lcdd_valores v
+				on	tv.refvalores = v.idvalor
+				order by tipoventa";
+	$res 	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		return $res;
+	}
+}
+
+function traerTipoVentaValor($valor) {
+	$sql	=	"select idtipoventa, tipoventa, precio, detalle, v.descripcion
+				from lcdd_tipoventa tv 
+				inner join lcdd_valores v
+				on	tv.refvalores = v.idvalor
+				where v.descripcion ='".$valor."'
+				order by tipoventa";
 	$res 	=	$this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';
@@ -184,7 +291,7 @@ function traerTipoVenta() {
 }
 
 function traerTipoVentaId($id) {
-	$sql	=	"select idtipoventa, tipoventa, precio, detalle from lcdd_tipoventa where idtipoventa =".$id;
+	$sql	=	"select idtipoventa, tipoventa, precio, detalle, refvalores from lcdd_tipoventa where idtipoventa =".$id;
 	$res 	=	$this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';

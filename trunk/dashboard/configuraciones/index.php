@@ -125,6 +125,7 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVenta();
                     	<th>Tipo Venta</th>
                         <th>Precio</th>
                         <th>Detalle</th>
+                        <th>Aplica Sobre</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -143,6 +144,8 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVenta();
                         	<td><?php echo utf8_encode($row['tipoventa']); ?></td>
                             <td><?php echo $row['precio']; ?></td>
                             <td><?php echo utf8_encode($row['detalle']); ?></td>
+                            <td><?php echo utf8_encode($row['descripcion']); ?></td>
+                            
                             <td>
                             		<div class="btn-group">
 										<button class="btn btn-success" type="button">Acciones</button>

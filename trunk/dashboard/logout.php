@@ -52,22 +52,22 @@ session_destroy();
 
 
 
-		<link rel="stylesheet" type="text/css" href="css/estilo.css"/>
+		<link rel="stylesheet" type="text/css" href="../css/estilo.css"/>
 
-<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../js/jquery-1.8.3.min.js"></script>
 
-         <link rel="stylesheet" href="css/jquery-ui.css">
+         <link rel="stylesheet" href="../css/jquery-ui.css">
 
-    <script src="js/jquery-ui.js"></script>
+    <script src="../js/jquery-ui.js"></script>
 
         <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
 
         <!-- Optional theme -->
-        <link rel="stylesheet" href="bootstrap/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="../bootstrap/css/bootstrap-theme.min.css">
 
         <!-- Latest compiled and minified JavaScript -->
-        <script src="bootstrap/js/bootstrap.min.js"></script>
+        <script src="../bootstrap/js/bootstrap.min.js"></script>
         
         
         
@@ -80,12 +80,12 @@ session_destroy();
 
 
 
-<div class="logueo" align="center">
+<div align="center">
 <br>
 <br>
 <br>
 <h2>Acaba de salir del sistema. Debe registrarse para volver a entrar!!!</h2>
-	<a href='index.php'>Registrese</a>
+	<a href="../index.php">Registrese</a>
 </div>
 
 </body>

@@ -14,11 +14,16 @@ $resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Ventas',$_SESSION['rol_se'
 require '../../includes/funcionesProductos.php';
 require '../../includes/funcionesVentas.php';
 require '../../includes/funcionesClientes.php';
+require '../../includes/funcionesConfiguraciones.php';
 
 $serviciosProductos = new ServiciosProductos();
+$serviciosConfiguraciones = new ServiciosConfiguraciones();
+
 $resProveedores = $serviciosProductos->traerProveedores();
 
 $resProductos = $serviciosProductos->traerProductos();
+
+$resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Productos");
 ?>
 
 <!DOCTYPE HTML>
@@ -193,6 +198,19 @@ $resProductos = $serviciosProductos->traerProductos();
                             </tr>
                         </tfoot>
                 	</table>
+                    
+                    <div class="form-group" style="display:none;">
+                    	<label for="tipoventa" class="control-label col-lg-3" style="text-align:left">Tipo Venta</label>
+                        <div class="col-lg-6">
+                        	<select class="form-control" id="tipoventa" name="tipoventa" tabindex="5">
+                                <?php while ($rowTV = mysql_fetch_array($resTipoVenta)) { ?>
+                                	<option value="<?php echo $rowTV[0]; ?>"><?php echo utf8_encode($rowTV[1]); ?></option>
+                                <?php } ?>
+                                
+                            </select>
+							
+                        </div>
+                    </div>
                     
                     <ul class="list-inline">
                     	<li>
