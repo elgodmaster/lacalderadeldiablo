@@ -63,6 +63,7 @@ function query($sql,$accion) {
 		
 		$hostname = "localhost";
 		$database = "lacalderadeldiablo";
+		             
 		$username = "root";
 		$password = "";
 		
