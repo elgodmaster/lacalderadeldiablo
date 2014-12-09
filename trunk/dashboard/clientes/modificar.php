@@ -13,11 +13,14 @@ $resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Clientes",$_SESSION['rol
 $id = $_GET['id'];
 
 require '../../includes/funcionesClientes.php';
-
+require '../../includes/funcionesMovimientos.php';
 
 $serviciosClientes = new ServiciosClientes();
+$serviciosMovimientos = new ServiciosMovimientos();
 
 $resCliente = $serviciosClientes->traerClientePorId($id);
+
+$resMovimientos = $serviciosMovimientos->traerMovimienosClientes($id);
 
 ?>
 
@@ -82,6 +85,7 @@ $resCliente = $serviciosClientes->traerClientePorId($id);
     	<div class="cuerpoBox">
         <div class="row"> 
         <div class="col-sm-12 col-md-12">
+        <?php if ($id != '') { ?>
         <form class="form-inline formulario" role="form">
                 	
 <!--idcliente,nombre,nrocliente,email,telefono,nrodocumento-->
@@ -178,14 +182,64 @@ $resCliente = $serviciosClientes->traerClientePorId($id);
                 <div class="form-group col-md-12">
                     	<label for="movimientos" class="control-label" style="text-align:left">Movimientos</label>
                         <div class="input-group col-md-8">
-                        	
+                        	<table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Monto</th>
+                                        <th>Observación</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                <!--idcliente,nombre,nrocliente,email,telefono,nrodocumento-->
+                                    <?php
+                                        if (mysql_num_rows($resMovimientos)>0) {
+                                            $cant = 0;
+                                            while ($row = mysql_fetch_array($resMovimientos)) {
+                                                $cant+=1;
+                                                if ($cant == 11) {
+                                                    break;	
+                                                }
+                                    ?>
+                                        <tr>
+                                            <td><?php echo utf8_encode($row['fechacreacion']); ?></td>
+                                            <td><?php echo $row['precio']; ?></td>
+                                            <td><?php echo $row['observacion']; ?></td>
+                                            <td>
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-success" type="button">Acciones</button>
+                                                        
+                                                        <button class="btn btn-success dropdown-toggle" data-toggle="dropdown" type="button">
+                                                        <span class="caret"></span>
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                        </button>
+                                                        
+                                                        <ul class="dropdown-menu" role="menu">
+                                                            <li>
+                                                            <a href="javascript:void(0)" class="vardetalle" id="<?php echo $row['idmovimiento']; ?>">Ver Detalle</a>
+                                                            </li>
+                
+                                                        </ul>
+                                                    </div>
+                                             </td>
+                                        </tr>
+                                    <?php } ?>
+                                    <?php } else { ?>
+                                        <h3>No hay movimientos cargados.</h3>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
                         </div>
                 </div>
                 
                 
                 </div>
                 </div>
-                
+                <?php } else { ?>
+                <h1>No existe el cliente.</h1>
+                <button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button> 
+                <?php } ?>
         </div>
     </div>
 
@@ -203,13 +257,58 @@ $resCliente = $serviciosClientes->traerClientePorId($id);
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
 
+
+<div id="dialogDetalle" title="Detalle del Movimiento">
+    <div>
+    	<table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tipo Venta</th>
+                    <th>Fecha Utilizacion</th>
+                    <th>Hora</th>
+                    <th>Usuario</th>
+                </tr>
+            </thead>
+            <tbody id="detalleMov">
+            
+            </tbody>
+            
+		</table>
+        <input type="hidden" value="" id="idMovimiento" name="idMovimiento">
+    </div>
+</div>
     
 
     
 <script type="text/javascript">
 $(document).ready(function(){
 	
-        
+	$('.vardetalle').click(function(event){
+			  usersid =  $(this).attr("id");
+			  if (!isNaN(usersid)) {
+				$("#detalleMov").html('');
+				$.ajax({
+									data:  {idcliente: <?php echo $id; ?>,
+											idmovimiento: usersid, 
+											accion: 'traerMovimienosClientesMovimientos'},
+									url:   '../../ajax/ajax.php',
+									type:  'post',
+									beforeSend: function () {
+											
+									},
+									success:  function (response) {
+											$("#detalleMov").html(response);
+											
+									}
+							});
+				$("#idMovimiento").val(usersid);
+				$("#dialogDetalle").dialog("open");
+				
+			  } else {
+				alert("Error, vuelva a realizar la acción.");	
+			  }
+	});
+    
         
 	$('.varborrar').click(function(event){
 			  usersid =  $(this).attr("id");
@@ -227,7 +326,35 @@ $(document).ready(function(){
 				$(location).attr('href',url);
 	});//fin del boton eliminar
         
-        
+    
+	
+	$( "#dialogDetalle" ).dialog({
+		 	
+			    autoOpen: false,
+			 	resizable: false,
+				width:700,
+				height:240,
+				modal: true,
+				buttons: {
+				    "Ok": function() {
+	
+						
+						$( this ).dialog( "close" );
+						$( this ).dialog( "close" );
+							$('html, body').animate({
+	           					scrollTop: '1000px'
+	       					},
+	       					1500);
+				    },
+				    Cancelar: function() {
+						$( this ).dialog( "close" );
+				    }
+				}
+		 
+		 
+	 		}); //fin del dialogo para ver el detalle
+			
+			
         
         
 	$( "#dialog2" ).dialog({

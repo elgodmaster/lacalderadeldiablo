@@ -77,7 +77,19 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
         "use strict";
         $('#navigation').perfectScrollbar();
 		
-
+		$('#refcancha').change(function() {
+			$("#fechautilizacion").val('');
+			$("#fechautilizacion2").val('');
+			$("#fechautilizacion3").val('');
+			$("#fechautilizacion4").val('');			
+		});
+		
+		$('#horautilizacion').change(function() {
+			$("#fechautilizacion").val('');
+			$("#fechautilizacion2").val('');
+			$("#fechautilizacion3").val('');
+			$("#fechautilizacion4").val('');			
+		});
 		
 		$('#mesentero').change(function() {
 			if($(this).is(":checked")) {
@@ -156,20 +168,7 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
 		      numberOfMonths: 2,
 		      onSelect: function(textoFecha, objDatepicker){
 				 $('#fechaCambio').html(textoFecha);
-		         $.ajax({
-					data:  {fecha: textoFecha,
-							accion: 'crearTablaTurnos'},
-					url:   '../../ajax/ajax.php',
-					type:  'post',
-					beforeSend: function () {
-							$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />'); 
-					},
-					success:  function (response) {
-						
-						$('#datos').html(response);
-						$("#load").html('');
-					}
-				});
+		         validaDisponibilidadCancha($('#refcancha').val(),textoFecha,$('#horautilizacion').val(),$("#fechautilizacion2"),$('.fech2'));
 		      }
 		 });
 		 
@@ -182,20 +181,7 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
 		      numberOfMonths: 2,
 		      onSelect: function(textoFecha, objDatepicker){
 				 $('#fechaCambio').html(textoFecha);
-		         $.ajax({
-					data:  {fecha: textoFecha,
-							accion: 'crearTablaTurnos'},
-					url:   '../../ajax/ajax.php',
-					type:  'post',
-					beforeSend: function () {
-							$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />'); 
-					},
-					success:  function (response) {
-						
-						$('#datos').html(response);
-						$("#load").html('');
-					}
-				});
+		         validaDisponibilidadCancha($('#refcancha').val(),textoFecha,$('#horautilizacion').val(),$("#fechautilizacion3"),$('.fech3'));
 		      }
 		 });
 		 
@@ -251,7 +237,31 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
         <form class="form-horizontal formulario" role="form">
                 	
                 <!--refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea -->
-                
+                	
+                    <div class="form-group">
+                    	<label for="refcancha" class="control-label col-lg-3" style="text-align:left">Cancha</label>
+                        <div class="col-lg-5">
+                        	<select class="form-control" id="refcancha" name="refcancha">
+                            	<?php while ($rowTP = mysql_fetch_array($resCanchas)) { ?>
+                                	<option value="<?php echo $rowTP[0]; ?>"><?php echo $rowTP[1]; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="form-group">
+                    	<label for="horautilizacion" class="control-label col-lg-3" style="text-align:left">Hora Utilización</label>
+                        <div class="col-lg-2">
+                        	<select class="form-control" id="horautilizacion" name="horautilizacion">
+                            	<?php for($i=0;$i<24;$i++) { ?>
+                                	<option value="<?php echo $i; ?>"><?php echo $i.':00'; ?></option>
+                                <?php } ?>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    
                 	<div class="form-group">
                     	<label for="fechautilizacion" class="control-label col-lg-3" style="text-align:left">Fecha Utilización</label>
                         <div class="col-lg-2">
@@ -294,30 +304,7 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
                         	
                         </div>
                     </div>
-                    
-                    
-                    <div class="form-group">
-                    	<label for="refcancha" class="control-label col-lg-3" style="text-align:left">Cancha</label>
-                        <div class="col-lg-5">
-                        	<select class="form-control" id="refcancha" name="refcancha">
-                            	<?php while ($rowTP = mysql_fetch_array($resCanchas)) { ?>
-                                	<option value="<?php echo $rowTP[0]; ?>"><?php echo $rowTP[1]; ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    
-                    <div class="form-group">
-                    	<label for="horautilizacion" class="control-label col-lg-3" style="text-align:left">Hora Utilización</label>
-                        <div class="col-lg-2">
-                        	<select class="form-control" id="horautilizacion" name="horautilizacion">
-                            	<?php for($i=0;$i<24;$i++) { ?>
-                                	<option value="<?php echo $i; ?>"><?php echo $i.':00'; ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                    </div>
+
                     
                     <div class="form-group">
                     	<label for="refcliente" class="control-label col-lg-3" style="text-align:left">Cliente</label>
@@ -559,7 +546,11 @@ $(document).ready(function(){
 	$('#crearcliente').click(function(event){
             $("#dialogCliente").dialog("open");
 	});//fin del boton eliminar
-        
+    
+	$('.imprimir').live("click",function(event){
+			url = "../../reportes/rptturnos.php?fecha="+$('#fechautilizacion').val();
+			$(location).attr('href',url).attr('target','_blank');
+	});
         
 	$('.ver').live("click",function(event){
 			url = "ver.php";
@@ -678,12 +669,12 @@ $(document).ready(function(){
 	$("#fechautilizacion").click(function(event) {
 		$("#fechautilizacion").removeClass("alert-danger");
 		$("#fechautilizacion").attr('value','');
-		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilizacin...');
+		$("#fechautilizacion").attr('placeholder','');
     });
 
 	$("#fechautilizacion").change(function(event) {
 		$("#fechautilizacion").removeClass("alert-danger");
-		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilizacin');
+		$("#fechautilizacion").attr('placeholder','');
 	});
 	
 	

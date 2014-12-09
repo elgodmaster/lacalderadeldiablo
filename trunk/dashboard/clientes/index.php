@@ -12,6 +12,8 @@ $serviciosHTML = new ServiciosHTML();
 $resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Clientes",$_SESSION['rol_se']);
 
 require '../../includes/funcionesClientes.php';
+require '../../includes/funcionesMovimientos.php';
+require '../../includes/funcionesVentas.php';
 
 $serviciosClientes = new ServiciosClientes();
 

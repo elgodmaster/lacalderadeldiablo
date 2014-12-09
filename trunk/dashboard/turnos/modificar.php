@@ -143,13 +143,6 @@ $idtipoventa	= mysql_result($mov,0,1);
                 <!--refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea -->
                 
                 	<div class="form-group">
-                    	<label for="fechautilizacion" class="control-label col-lg-3" style="text-align:left">Fecha Utilización</label>
-                        <div class="col-lg-2">
-                            <input type="text" class="form-control" id="fechautilizacion" name="fechautilizacion" value="<?php echo mysql_result($resTurno,0,2); ?>" >
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
                     	<label for="refcancha" class="control-label col-lg-3" style="text-align:left">Cancha</label>
                         <div class="col-lg-5">
                         	<select class="form-control" id="refcancha" name="refcancha">
@@ -180,6 +173,16 @@ $idtipoventa	= mysql_result($mov,0,1);
                             </select>
                         </div>
                     </div>
+                    
+                
+                	<div class="form-group">
+                    	<label for="fechautilizacion" class="control-label col-lg-3" style="text-align:left">Fecha Utilización</label>
+                        <div class="col-lg-2">
+                            <input type="text" class="form-control" id="fechautilizacion" name="fechautilizacion" value="<?php echo mysql_result($resTurno,0,2); ?>" >
+                        </div>
+                    </div>
+                    
+                    
                     
                     <div class="form-group">
                     	<label for="refcliente" class="control-label col-lg-3" style="text-align:left">Cliente</label>
@@ -217,6 +220,13 @@ $idtipoventa	= mysql_result($mov,0,1);
                         </div>
                     </div>
                     
+                    <div class="form-group">
+                    	<label for="nocliente" class="control-label col-lg-3" style="text-align:left"><?php if (mysql_result($resTurno,0,4)!=0) { echo 'Cliente'; }else{ echo 'No es Cliente';} ?></label>
+                        <div class="col-lg-6">
+                        	<input type="text" class="form-control" id="nocliente" value="<?php echo mysql_result($resTurno,0,7); ?>" name="nocliente" placeholder="Ingrese el cliente...">
+							
+                        </div>
+                    </div>
                     
                     <ul class="list-inline" style="padding-top:15px;">
                     	<li>

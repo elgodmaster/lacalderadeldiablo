@@ -55,6 +55,77 @@ function eliminarMovimiento($id) {
 }
 
 
+function traerMovimienosClientes($idcliente) {
+	$sql = "select 
+				m.fechacreacion,
+				tv.precio,
+				m.observacion,
+				tv.idtipoventa,
+				tv.tipoventa,
+				c.idcliente,
+				t.cliente,
+				t.fechautilizacion,
+				t.horautilizacion,
+				t.usuacrea,
+				m.idmovimiento
+			from
+				lcdd_tipoventa tv
+					inner join
+				lcdd_valores v ON tv.refvalores = v.idvalor
+					inner join
+				lcdd_movimientos m ON m.reftipoventa = tv.idtipoventa
+					inner join
+				lcdd_turnos t ON t.idturno = m.refid
+					inner join
+				lcdd_clientes c ON c.idcliente = t.refcliente
+			where
+				v.descripcion in ('Canchas') and c.idcliente = ".$idcliente."
+			order by t.fechautilizacion,
+				t.horautilizacion";
+	$res 	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		return $res;
+	}
+}
+
+function traerMovimienosClientesMovimientos($idcliente,$idmovimiento) {
+	$sql = "select 
+				m.fechacreacion,
+				tv.precio,
+				m.observacion,
+				tv.idtipoventa,
+				tv.tipoventa,
+				c.idcliente,
+				t.cliente,
+				t.fechautilizacion,
+				t.horautilizacion,
+				t.usuacrea,
+				m.idmovimiento
+			from
+				lcdd_tipoventa tv
+					inner join
+				lcdd_valores v ON tv.refvalores = v.idvalor
+					inner join
+				lcdd_movimientos m ON m.reftipoventa = tv.idtipoventa
+					inner join
+				lcdd_turnos t ON t.idturno = m.refid
+					inner join
+				lcdd_clientes c ON c.idcliente = t.refcliente
+			where
+				v.descripcion in ('Canchas') and c.idcliente = ".$idcliente." and m.idmovimiento = ".$idmovimiento."
+			order by t.fechautilizacion,
+				t.horautilizacion";
+	//return $sql;
+	$res 	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		return $res;
+	}
+}
+
 
 /* fin */
 
