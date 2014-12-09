@@ -91,7 +91,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
 <!--cancha, bar, sueldo, gastos varios, mercaderia, gas, luz, T.E , agua, inmobiliario, imp. varios, autonomos, ingresos brutos, aportes, municipal -->
                 	
 				              	
-                	<div class="form-group col-md-6">
+                	<div class="form-group col-md-3">
                     	<label for="cancha" class="control-label" style="text-align:left">Cancha</label>
                         <div class="input-group col-md-12">
                         	<span class="input-group-addon">$</span>
