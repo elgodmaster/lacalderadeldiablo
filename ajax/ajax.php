@@ -106,7 +106,10 @@ switch ($accion) {
 	case 'eliminarTipoProducto':
 		eliminarTipoProducto($serviciosProductos,$serviciosMovimientos);
 		break;
-	
+	case 'traerMovimienosClientesMovimientos':
+		traerMovimienosClientesMovimientos($serviciosMovimientos);
+		break;
+		
 	case 'insertarTurno':
 		insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes);
 		break;
@@ -348,7 +351,21 @@ function eliminarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraci
 /* fin de las funciones que trabajan con los movimientos */
 
 
-
+function traerMovimienosClientesMovimientos($serviciosMovimientos) {
+	$idcliente		= $_POST['idcliente'];
+	$idmovimiento	= $_POST['idmovimiento'];
+	
+	$res = $serviciosMovimientos->traerMovimienosClientesMovimientos($idcliente,$idmovimiento);
+	
+	$cad = "";
+	while ($row = mysql_fetch_array($res)) {
+		$cad = "<tr>";
+		$cad = $cad."<td>".utf8_encode($row[4])."</td>"."<td>".$row[7]."</td>"."<td>".$row[8]."</td>"."<td>".$row[9]."</td>";
+	}
+	
+	echo $cad;
+	//echo $res;
+}
 
 
 
@@ -523,7 +540,8 @@ function crearTablaTurnos($serviciosTurnos) {
                 $sql=$sql.'</tbody></table><div style="height:50px;">
             
             </div>
-            <button type="button" class="btn btn-default ver" style="margin-left:0px;">Ver Todos</button>';	
+            <button type="button" class="btn btn-default ver" style="margin-left:0px;">Ver Todos</button>
+			<button type="button" class="btn btn-success imprimir" style="margin-left:0px;">Imprimir</button>';	
 				
 		echo $sql;
 }
