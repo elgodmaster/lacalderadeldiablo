@@ -56,18 +56,18 @@ function traerTurnos() {
 }
 
 function traerTurnosPorId($id) {
-	$sql = "select t.idturno,t.refcancha,t.fechautilizacion,t.horautilizacion,t.refcliente,t.fechacreacion,t.usuacrea,c.nombre
+	$sql = "select t.idturno,t.refcancha,t.fechautilizacion,t.horautilizacion,t.refcliente,t.fechacreacion,t.usuacrea,t.cliente
 			from lcdd_turnos t
-			inner join lcdd_clientes c on t.refcliente = c.idcliente
+			left join lcdd_clientes c on t.refcliente = c.idcliente
 			where activo = 1 and idturno = ".$id;
 	$res = $this->query($sql,0);
 	return $res;
 }
 
 function traerTurnosPorDia($fecha) {
-	$sql = "select t.idturno,t.refcancha,t.fechautilizacion,t.horautilizacion,t.refcliente,t.fechacreacion,t.usuacrea,c.nombre
+	$sql = "select t.idturno,t.refcancha,t.fechautilizacion,t.horautilizacion,t.refcliente,t.fechacreacion,t.usuacrea,t.cliente
 			from lcdd_turnos t
-			inner join lcdd_clientes c on t.refcliente = c.idcliente 
+			left join lcdd_clientes c on t.refcliente = c.idcliente 
 			where activo = 1 and t.fechautilizacion = '".$fecha."' order by t.horautilizacion";
 	$res = $this->query($sql,0);
 	return $res;
@@ -76,15 +76,15 @@ function traerTurnosPorDia($fecha) {
 function traerTurnosPorDiaAgrupado($fecha) {
 	$sql = "select 
 			    max(case
-			        when t.refcancha = 1 then c.nombre
+			        when t.refcancha = 1 then t.cliente
 			        else ''
 			    end) as Cancha1,
 			    max(case
-			        when t.refcancha = 2 then c.nombre
+			        when t.refcancha = 2 then t.cliente
 			        else ''
 			    end) as Cancha2,
 			    max(case
-			        when t.refcancha = 3 then c.nombre
+			        when t.refcancha = 3 then t.cliente
 			        else ''
 			    end) as Cancha3,
 				max(case
@@ -103,7 +103,7 @@ function traerTurnosPorDiaAgrupado($fecha) {
 			    t.horautilizacion
 			from
 			    lcdd_turnos t
-			        inner join
+			        left join
 			    lcdd_clientes c ON t.refcliente = c.idcliente
 			where
 			    t.fechautilizacion = '".$fecha."' and t.activo = 1
@@ -114,9 +114,9 @@ function traerTurnosPorDiaAgrupado($fecha) {
 }
 
 function traerTurnosPorDiaCanchaFecha($fecha,$horario,$refcancha) {
-	$sql = "select c.nombre,t.idturno,c.idcliente
+	$sql = "select t.cliente,t.idturno,c.idcliente
 			from lcdd_turnos t 
-			inner join lcdd_clientes c on t.refcliente = c.idcliente
+			left join lcdd_clientes c on t.refcliente = c.idcliente
 			where t.activo = 1 and t.fechautilizacion = '".$fecha."' and hour(t.horautilizacion) = '".$horario."' and t.refcancha =".$refcancha;
 	$res = $this->query($sql,0);
 
@@ -158,8 +158,8 @@ function traerPrimerUltimoTurno($fecha) {
 	return $res;
 }
 
-function insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea) {
-	$sql		=	"insert into lcdd_turnos(idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea,activo)
+function insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$cliente) {
+	$sql		=	"insert into lcdd_turnos(idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea,activo,cliente)
 					values
 						('',
 						".$refcancha.",
@@ -168,7 +168,8 @@ function insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente
 						".$refcliente.",
 						null,
 						'".utf8_decode($usuacrea)."',
-						1)";
+						1,
+						'".utf8_decode($cliente)."')";
 
 	if ($this->hayTurnos($fechautilizacion,$horautilizacion,$refcancha) == '') {
 		$res		=	$this->query($sql,1);

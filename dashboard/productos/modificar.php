@@ -189,7 +189,14 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                             </select>
                         </div>
                     </div>
-                
+                	
+                    <div class="form-group col-md-6">
+                        <div class="checkbox">
+                            <label>
+                              <input type="checkbox" id="egreso" name="egreso"> Egreso
+                            </label>
+                          </div>
+                    </div>
                 
                     </div>
                     </div>

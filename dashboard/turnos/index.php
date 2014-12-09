@@ -71,11 +71,56 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
       <script src="../../js/perfect-scrollbar.js"></script>
+
       <script>
       jQuery(document).ready(function ($) {
         "use strict";
         $('#navigation').perfectScrollbar();
 		
+
+		
+		$('#mesentero').change(function() {
+			if($(this).is(":checked")) {
+
+				$('#fec2').show();
+				$('#fec3').show();
+				$('#fec4').show();
+			} else {
+				$('#fec2').hide();
+				$('#fec3').hide();
+				$('#fec4').hide();
+			}
+       
+		});
+		
+		function validaDisponibilidadCancha(cancha,fecha,hora,dtp,lblerror) {
+
+		$.ajax({
+			data:  {fecha: fecha , 
+					horario: hora ,
+					refcancha: cancha ,
+					accion: 'hayTurnos'},
+			url:   '../../ajax/ajax.php',
+			type:  'post',
+			beforeSend: function () {
+					
+			},
+			success:  function (response) {
+				
+
+       			if (response != '') {
+					dtp.val('');
+					dtp.addClass("alert alert-danger");
+					lblerror.html(response);
+				} else {
+					dtp.removeClass("alert alert-danger");
+					lblerror.html('');
+				}
+			}
+		});
+
+	}
+	
 		$("#fechautilizacion").datepicker({
 		      showOn: 'both',
 			  dateFormat: 'yy-mm-dd',
@@ -99,6 +144,72 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
 						$("#load").html('');
 					}
 				});
+		      }
+		 });
+		 
+		 $("#fechautilizacion2").datepicker({
+		      showOn: 'both',
+			  dateFormat: 'yy-mm-dd',
+		      buttonImage: 'calendar.png',
+		      buttonImageOnly: true,
+		      changeYear: true,
+		      numberOfMonths: 2,
+		      onSelect: function(textoFecha, objDatepicker){
+				 $('#fechaCambio').html(textoFecha);
+		         $.ajax({
+					data:  {fecha: textoFecha,
+							accion: 'crearTablaTurnos'},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />'); 
+					},
+					success:  function (response) {
+						
+						$('#datos').html(response);
+						$("#load").html('');
+					}
+				});
+		      }
+		 });
+		 
+		 $("#fechautilizacion3").datepicker({
+		      showOn: 'both',
+			  dateFormat: 'yy-mm-dd',
+		      buttonImage: 'calendar.png',
+		      buttonImageOnly: true,
+		      changeYear: true,
+		      numberOfMonths: 2,
+		      onSelect: function(textoFecha, objDatepicker){
+				 $('#fechaCambio').html(textoFecha);
+		         $.ajax({
+					data:  {fecha: textoFecha,
+							accion: 'crearTablaTurnos'},
+					url:   '../../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />'); 
+					},
+					success:  function (response) {
+						
+						$('#datos').html(response);
+						$("#load").html('');
+					}
+				});
+		      }
+		 });
+		 
+		 $("#fechautilizacion4").datepicker({
+		      showOn: 'both',
+			  dateFormat: 'yy-mm-dd',
+		      buttonImage: 'calendar.png',
+		      buttonImageOnly: true,
+		      changeYear: true,
+		      numberOfMonths: 2,
+		      onSelect: function(textoFecha, objDatepicker){
+				 $('#fechaCambio').html(textoFecha);
+		         validaDisponibilidadCancha($('#refcancha').val(),textoFecha,$('#horautilizacion').val(),$("#fechautilizacion4"),$('.fech4'));
+				 
 		      }
 		 });
       });
@@ -146,7 +257,44 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
                         <div class="col-lg-2">
                         	<input type="text" class="form-control" id="fechautilizacion" name="fechautilizacion" >
                         </div>
+                        <div class="col-lg-5">
+                        	<label>
+                        	<input type="checkbox" style="width:20px;" class="form-control" id="mesentero" name="mesentero" value="Mes entero">
+                            Esta es una opción para cargar el mes entero.
+  							</label>
+                        </div>
                     </div>
+                    
+                    <div class="form-group" style="display:none;" id="fec2">
+                    	<label for="fechautilizacion" class="control-label col-lg-3" style="text-align:left">Fecha Utilización</label>
+                        <div class="col-lg-2">
+                        	<input type="text" class="form-control" id="fechautilizacion2" name="fechautilizacion2" >
+                        </div>
+                        <div class="col-lg-3 fech2">
+                        	
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="display:none;" id="fec3">
+                    	<label for="fechautilizacion" class="control-label col-lg-3" style="text-align:left">Fecha Utilización</label>
+                        <div class="col-lg-2">
+                        	<input type="text" class="form-control" id="fechautilizacion3" name="fechautilizacion3" >
+                        </div>
+                        <div class="col-lg-3 fech3">
+                        	
+                        </div>
+                    </div>
+                    
+                    <div class="form-group" style="display:none;" id="fec4">
+                    	<label for="fechautilizacion" class="control-label col-lg-3" style="text-align:left">Fecha Utilización</label>
+                        <div class="col-lg-2">
+                        	<input type="text" class="form-control" id="fechautilizacion4" name="fechautilizacion4" >
+                        </div>
+                        <div class="col-lg-3 fech4">
+                        	
+                        </div>
+                    </div>
+                    
                     
                     <div class="form-group">
                     	<label for="refcancha" class="control-label col-lg-3" style="text-align:left">Cancha</label>
@@ -187,6 +335,17 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
                         	<button type="button" class="btn btn-success" id="crearcliente" style="margin-left:0px;">Nuevo Cliente</button>
                         </div>
                     </div>
+                    
+                    
+                    <div class="form-group">
+                    	<label for="nocliente" class="control-label col-lg-3" style="text-align:left">No es Cliente</label>
+                        <div class="col-lg-6">
+                        	<input type="text" class="form-control" id="nocliente" name="nocliente" placeholder="Ingrese el cliente...">
+							
+                        </div>
+                    </div>
+                    
+                    
                 	
                     <div class="form-group">
                     	<label for="tipoventa" class="control-label col-lg-3" style="text-align:left">Tipo Venta</label>
@@ -318,6 +477,7 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
             
             </div>
             <button type="button" class="btn btn-default ver" style="margin-left:0px;">Ver Todos</button>
+            <button type="button" class="btn btn-success imprimir" style="margin-left:0px;">Imprimir</button>
         </div>
     </div>
 
@@ -526,40 +686,12 @@ $(document).ready(function(){
 		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilizacin');
 	});
 	
-	function validaDisponibilidadCancha(cancha,fecha,hora,e) {
-
-		$.ajax({
-			data:  {fecha: fecha , 
-					horario: hora ,
-					refcancha: cancha ,
-					accion: 'hayTurnos'},
-			url:   '../../ajax/ajax.php',
-			type:  'post',
-			beforeSend: function () {
-					
-			},
-			success:  function (response) {
-				
-
-                if (response!='') {
-					$('#fechautilizacion').val('');
-					e.stopPropagation();
-				}
-					
-			}
-		});
-
-	}
+	
 	function validador(){
 
 			$error = "";
 			
-			
-			if ($("#refcliente").chosen().val() == "") {
-				$error = "Es obligatorio el campo cliente.";
 
-				alert($error);
-			}
 			
 			if ($("#fechautilizacion").val() == "") {
 				$error = "Es obligatorio el campo fecha utilización.";
@@ -601,6 +733,11 @@ $(document).ready(function(){
 							refcancha: $('#refcancha').val(),
 							horautilizacion: $('#horautilizacion').val(),
 							fechautilizacion: $('#fechautilizacion').val(),
+							fechautilizacion2: $('#fechautilizacion2').val(),
+							fechautilizacion3: $('#fechautilizacion3').val(),
+							fechautilizacion4: $('#fechautilizacion4').val(),
+							mesentero: $("#mesentero").is(':checked') ? 1 : 0,
+							nocliente: $('#nocliente').val(),
 							usuacrea:	<?php echo "'".$_SESSION['nombre_se']."'"; ?>,
 							tipoventa: $('#tipoventa').val(),
 							accion: 'insertarTurno'},

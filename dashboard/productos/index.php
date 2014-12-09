@@ -63,6 +63,9 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
       jQuery(document).ready(function ($) {
         "use strict";
         $('#navigation').perfectScrollbar();
+		
+		
+		
       });
     </script>
 </head>
@@ -180,7 +183,14 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                             </select>
                         </div>
                     </div>
-                
+                	
+                    <div class="form-group col-md-6">
+                        <div class="checkbox">
+                            <label>
+                              <input type="checkbox" id="egreso" name="egreso"> Egreso
+                            </label>
+                          </div>
+                    </div>
                 
                     </div>
                     </div>
@@ -285,6 +295,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
             
             </div>
             <button type="button" class="btn btn-default ver" style="margin-left:0px;">Ver Todos</button>
+            
         </div>
     </div>
 
@@ -301,6 +312,11 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
 
 <script type="text/javascript">
 $(document).ready(function(){
+	
+
+
+
+	
 	
 	$('.ver').click(function(event){
 			url = "ver.php";

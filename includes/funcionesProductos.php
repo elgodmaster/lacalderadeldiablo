@@ -117,7 +117,7 @@ function TraerCodigo($codigo) {
 }
 
 
-function modificarProducto($id,$nombre, $precio_unit, $precio_venta, $stock, $stock_min, $reftipoproducto, $refproveedor, $codigo, $codigobarra, $caracteristicas) {
+function modificarProducto($id,$nombre, $precio_unit, $precio_venta, $stock, $stock_min, $reftipoproducto, $refproveedor, $codigo, $codigobarra, $caracteristicas,$egreso) {
 	$sql = "update lcdd_productos 			
 			SET
 			nombre = '".utf8_decode($nombre)."',
@@ -129,7 +129,8 @@ function modificarProducto($id,$nombre, $precio_unit, $precio_venta, $stock, $st
 			refproveedor = ".$refproveedor.",
 			codigo = '".utf8_decode($codigo)."',
 			codigobarra = '".$codigobarra."',
-			caracteristicas = '".utf8_decode($caracteristicas)."'
+			caracteristicas = '".utf8_decode($caracteristicas)."',
+			egreso = ".$egreso."
 			WHERE idproducto = ".$id;
 	$res = $this->query($sql,0) or die ('Hubo un error');
 	return $res;
@@ -151,7 +152,8 @@ function traerProductoPorId($id) {
 					p.codigobarra,
 					p.caracteristicas,
 					tp.tipoproducto,
-					pr.proveedor
+					pr.proveedor,
+					p.egreso
 					from		lcdd_productos p
 
 					inner
@@ -182,7 +184,8 @@ function traerProductosLimite($limite) {
 					p.codigobarra,
 					p.caracteristicas,
 					tp.tipoproducto,
-					pr.proveedor
+					pr.proveedor,
+					p.egreso
 					from		lcdd_productos p
 
 					inner
@@ -213,7 +216,8 @@ function traerProductos() {
 					p.codigobarra,
 					p.caracteristicas,
 					tp.tipoproducto,
-					pr.proveedor
+					pr.proveedor,
+					p.egreso
 					from		lcdd_productos p
 
 					inner
@@ -244,7 +248,8 @@ function traerProductoPorCodigo($codigo) {
 					p.codigobarra,
 					p.caracteristicas,
 					tp.tipoproducto,
-					pr.proveedor
+					pr.proveedor,
+					p.egreso
 					from		lcdd_productos p
 
 					inner
@@ -274,7 +279,8 @@ function traerProductoPorCodigoBarra($codigobarra) {
 					p.codigobarra,
 					p.caracteristicas,
 					tp.tipoproducto,
-					pr.proveedor
+					pr.proveedor,
+					p.egreso
 					from		lcdd_productos p
 
 					inner
@@ -290,7 +296,7 @@ function traerProductoPorCodigoBarra($codigobarra) {
 	return $res;
 }
 
-function insertarProducto($nombre, $precio_unit, $precio_venta, $stock, $stock_min, $reftipoproducto, $refproveedor, $codigo, $codigobarra, $caracteristicas ) {
+function insertarProducto($nombre, $precio_unit, $precio_venta, $stock, $stock_min, $reftipoproducto, $refproveedor, $codigo, $codigobarra, $caracteristicas, $egreso ) {
 	$sql = "INSERT INTO lcdd_productos
 						(idproducto,
 						nombre,
@@ -302,7 +308,8 @@ function insertarProducto($nombre, $precio_unit, $precio_venta, $stock, $stock_m
 						refproveedor,
 						codigo,
 						codigobarra,
-						caracteristicas)
+						caracteristicas,
+						egreso)
 					VALUES
 						('',
 							'".$nombre."',
@@ -314,7 +321,8 @@ function insertarProducto($nombre, $precio_unit, $precio_venta, $stock, $stock_m
 							'".$refproveedor."',
 							'".$codigo."',
 							'".$codigobarra."',
-							'".$caracteristicas."')";
+							'".$caracteristicas."',
+							".$egreso.")";
 	$res = $this->query($sql,1);
 	return $res;					
 }

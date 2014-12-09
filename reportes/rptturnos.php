@@ -15,12 +15,12 @@ $resTurnos = $serviciosTurnos->traerTurnos();
 
 $fecha = date('Y-m-d');
 
-$data = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
+$resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
 
 
 require('fpdf.php');
 
-$header = array("Hora", "Cancha 1", "Cancha 2", "Cancha 3");
+//$header = array("Hora", "Cancha 1", "Cancha 2", "Cancha 3");
 
 class PDF extends FPDF
 {
@@ -28,7 +28,7 @@ class PDF extends FPDF
 
 
 // Tabla coloreada
-function FancyTable($header, $data)
+function FancyTable($header, $data, $serviciosTurnos, $fecha)
 {
     // Colores, ancho de línea y fuente en negrita
     $this->SetFillColor(255,0,0);
@@ -37,7 +37,7 @@ function FancyTable($header, $data)
     $this->SetLineWidth(.3);
     $this->SetFont('','B');
     // Cabecera
-    $w = array(40, 35, 45, 40);
+    $w = array(25, 50, 50, 50);
     for($i=0;$i<count($header);$i++)
         $this->Cell($w[$i],7,$header[$i],1,0,'C',true);
     $this->Ln();
@@ -47,12 +47,27 @@ function FancyTable($header, $data)
     $this->SetFont('');
     // Datos
     $fill = false;
-    foreach($data as $row)
+    for($i=mysql_result($data,0,0);$i<=mysql_result($data,0,1);$i++)
     {
-        $this->Cell($w[0],6,$row[0],'LR',0,'L',$fill);
-        $this->Cell($w[1],6,$row[1],'LR',0,'L',$fill);
-        $this->Cell($w[2],6,number_format($row[2]),'LR',0,'R',$fill);
-        $this->Cell($w[3],6,number_format($row[3]),'LR',0,'R',$fill);
+		$turno1 = "";
+		$turno2 = "";
+		$turno3 = "";
+		$cancha1 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,1);
+		$cancha2 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,2);
+		$cancha3 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,3);
+		if (mysql_num_rows($cancha1)>0) {
+			$turno1 = mysql_result($cancha1,0,0);
+		}
+		if (mysql_num_rows($cancha2)>0) {
+			$turno2 = mysql_result($cancha2,0,0);
+		}
+		if (mysql_num_rows($cancha3)>0) {
+			$turno3 = mysql_result($cancha3,0,0);
+		}
+        $this->Cell($w[0],6,$i.":00",'LR',0,'C',$fill);
+        $this->Cell($w[1],6,$turno1,'LR',0,'L',$fill);
+        $this->Cell($w[2],6,$turno2,'LR',0,'L',$fill);
+        $this->Cell($w[3],6,$turno3,'LR',0,'L',$fill);
         $this->Ln();
         $fill = !$fill;
     }
@@ -63,16 +78,13 @@ function FancyTable($header, $data)
 
 $pdf = new PDF();
 // Títulos de las columnas
-$header = array('País', 'Capital', 'Superficie (km2)', 'Pobl. (en miles)');
+$header = array("Hora", "Cancha 1", "Cancha 2", "Cancha 3");
 // Carga de datos
-$data = $pdf->LoadData('paises.txt');
+$data = $resPrimerUltimoTurno;
 $pdf->SetFont('Arial','',14);
+
 $pdf->AddPage();
-$pdf->BasicTable($header,$data);
-$pdf->AddPage();
-$pdf->ImprovedTable($header,$data);
-$pdf->AddPage();
-$pdf->FancyTable($header,$data);
+$pdf->FancyTable($header,$data,$serviciosTurnos, $fecha);
 $pdf->Output();
 
 
