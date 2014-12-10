@@ -355,7 +355,9 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarFiesta'},
+									data:  {id: $('#idEliminar').val(), 
+											usuacrea: '<?php echo $_SESSION['nombre_se']; ?>',
+											accion: 'eliminarFiesta'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
