@@ -208,10 +208,10 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                     </div>
                 
                     <div class="form-group col-md-6">
-                        <label for="ingresos brutos" class="control-label" style="text-align:left">Ingresos Brutos</label>
+                        <label for="ingresosBrutos" class="control-label" style="text-align:left">Ingresos Brutos</label>
                         <div class="input-group col-md-12">
                            <span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="ingresos brutos" name="ingresos brutos" placeholder="Ingrese un monto..." required>
+                            <input type="text" class="form-control" id="ingresosBrutos" name="ingresosBrutos" placeholder="Ingrese un monto..." required>
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
