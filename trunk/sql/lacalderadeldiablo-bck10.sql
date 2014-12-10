@@ -3,8 +3,8 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 10-12-2014 a las 23:03:20
--- Versión del servidor: 5.1.36-community-log
+-- Tiempo de generación: 09-12-2014 a las 07:50:12
+-- Versión del servidor: 5.5.24-log
 -- Versión de PHP: 5.4.3
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
@@ -105,15 +105,14 @@ CREATE TABLE IF NOT EXISTS `lcdd_fiestas` (
   `dia` date NOT NULL,
   `concatering` bit(1) DEFAULT NULL,
   PRIMARY KEY (`idfiesta`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=5 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_fiestas`
 --
 
 INSERT INTO `lcdd_fiestas` (`idfiesta`, `nombre`, `horadesde`, `horahasta`, `dia`, `concatering`) VALUES
-(4, 'cristian spazzarini', '08:00:00', '12:00:00', '2014-12-06', b'0'),
-(6, 'NUEVO CUPS', '11:00:00', '15:30:00', '2014-12-10', b'1');
+(4, 'cristian spazzarini', '08:00:00', '12:00:00', '2014-12-06', b'0');
 
 -- --------------------------------------------------------
 
@@ -164,7 +163,7 @@ CREATE TABLE IF NOT EXISTS `lcdd_movimientos` (
   `refid` int(11) NOT NULL,
   `observacion` varchar(300) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`idmovimiento`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=19 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=18 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_movimientos`
@@ -180,8 +179,7 @@ INSERT INTO `lcdd_movimientos` (`idmovimiento`, `reftipoventa`, `refventa`, `mon
 (14, 2, 16, '260', '2014-12-09 05:51:52', 'Saupurein Marcos', 19, 'Alquiler de Cancha 1'),
 (15, 2, 17, '260', '2014-12-09 05:58:39', 'Saupurein Marcos', 20, 'Alquiler de Cancha 3'),
 (16, 5, 18, '300', '2014-12-09 06:00:02', 'Saupurein Marcos', 21, 'Alquiler de Cancha 2'),
-(17, 8, 19, '260', '2014-12-09 06:03:37', 'Saupurein Marcos', 25, 'Alquiler de Cancha 2'),
-(18, 6, 25, '450', '2014-12-10 23:01:00', 'Saupurein Marcos', 6, 'Alquiler de Fiesta');
+(17, 8, 19, '260', '2014-12-09 06:03:37', 'Saupurein Marcos', 25, 'Alquiler de Cancha 2');
 
 -- --------------------------------------------------------
 
@@ -203,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `lcdd_productos` (
   `caracteristicas` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
   `egreso` bit(1) DEFAULT NULL,
   PRIMARY KEY (`idproducto`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=8 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_productos`
@@ -215,9 +213,7 @@ INSERT INTO `lcdd_productos` (`idproducto`, `nombre`, `precio_unit`, `precio_ven
 (4, 'Gaseosa 7up', '12.00', '25.00', 0, 0, 0, 0, '', 0, '', b'0'),
 (5, 'Gaseosa 7up', '12.90', '25.00', 62, 10, 3, 4, 'GAS0004', 7795373011366, '2.25 ltrs', b'0'),
 (6, 'Cerveza Leffe', '16.00', '40.00', 20, 4, 1, 2, 'ce0003', 0, '', b'0'),
-(7, 'Cerveza Quilmes', '8.00', '25.00', 62, 10, 1, 2, 'ge0004', 7790520981974, '1 litro', b'0'),
-(8, 'Se rompio un vidrio', '400.00', '400.00', 1, 1, 4, 7, 'egreso', 0, '', b'1'),
-(9, 'Pizzas', '10.00', '50.00', 50, 10, 6, 7, 'pizzas', 0, 'Pizzas de muzzarella comun', b'0');
+(7, 'Cerveza Quilmes', '8.00', '25.00', 62, 10, 1, 2, 'ge0004', 7790520981974, '1 litro', b'0');
 
 -- --------------------------------------------------------
 
@@ -374,30 +370,23 @@ CREATE TABLE IF NOT EXISTS `lcdd_ventas` (
   `usuamodi` varchar(45) COLLATE utf8_spanish_ci DEFAULT NULL,
   `concepto` varchar(80) COLLATE utf8_spanish_ci DEFAULT NULL,
   `observaciones` varchar(150) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `cantidad` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`idventa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=26 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=20 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_ventas`
 --
 
-INSERT INTO `lcdd_ventas` (`idventa`, `refproducto`, `reftipoventa`, `importe`, `fechacreacion`, `cancelado`, `usuacrea`, `fechamodificacion`, `usuamodi`, `concepto`, `observaciones`, `cantidad`) VALUES
-(7, NULL, 5, '300.00', '2014-12-05 23:21:45', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de canchas de noche despues de las 18:00', 'Alquiler de Cancha 1', NULL),
-(8, NULL, 2, '260.00', '2014-12-05 23:32:07', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de cancha de d?a antes de las 18:00 hs', 'Alquiler de Cancha 3', NULL),
-(11, NULL, 2, '260.00', '2014-12-05 23:39:54', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de cancha de d?a antes de las 18:00 hs', 'Alquiler de Cancha 2', NULL),
-(14, NULL, 3, '330.00', '2014-12-06 00:02:15', b'0', 'msredhotero@msn.com', NULL, '', 'Alquiler para cumplea?os', 'Alquiler de Fiesta', NULL),
-(15, NULL, 2, '260.00', '2014-12-09 05:48:56', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de cancha de d?a antes de las 18:00 hs', 'Alquiler de Cancha 2', NULL),
-(16, NULL, 2, '260.00', '2014-12-09 05:51:52', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de cancha de d?a antes de las 18:00 hs', 'Alquiler de Cancha 1', NULL),
-(17, NULL, 2, '260.00', '2014-12-09 05:58:38', b'1', 'Saupurein Marcos', NULL, '', 'Alquiler de cancha de d?a antes de las 18:00 hs', 'Alquiler de Cancha 3', NULL),
-(18, NULL, 5, '300.00', '2014-12-09 06:00:02', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de canchas de noche despues de las 18:00', 'Alquiler de Cancha 2', NULL),
-(19, NULL, 8, '260.00', '2014-12-09 06:03:37', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de canchas mes entero', 'Alquiler de Cancha 2', NULL),
-(20, 2, 1, '16.00', '2014-12-10 22:07:12', b'0', 'msredhotero@msn.com', NULL, '', 'Palermo 1 litro', 'Venta de Productos', 1),
-(21, 7, 1, '25.00', '2014-12-10 22:07:12', b'0', 'msredhotero@msn.com', NULL, '', 'Cerveza Quilmes 1 litro', 'Venta de Productos', 1),
-(22, 9, 1, '100.00', '2014-12-10 22:30:22', b'0', 'msredhotero@msn.com', NULL, '', 'Pizzas Pizzas de muzzarella comun', 'Venta de Productos', 2),
-(23, 8, 1, '400.00', '2014-12-10 22:30:22', b'0', 'msredhotero@msn.com', NULL, '', 'Se rompio un vidrio ', 'Venta de Productos', 1),
-(24, 5, 1, '100.00', '2014-12-10 22:31:53', b'0', 'msredhotero@msn.com', NULL, '', 'Gaseosa 7up 2.25 ltrs', 'Venta de Productos', 4),
-(25, NULL, 6, '450.00', '2014-12-10 23:01:00', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler para cumplea?os con catering', 'Alquiler de Fiesta', 1);
+INSERT INTO `lcdd_ventas` (`idventa`, `refproducto`, `reftipoventa`, `importe`, `fechacreacion`, `cancelado`, `usuacrea`, `fechamodificacion`, `usuamodi`, `concepto`, `observaciones`) VALUES
+(7, NULL, 5, '300.00', '2014-12-05 23:21:45', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de canchas de noche despues de las 18:00', 'Alquiler de Cancha 1'),
+(8, NULL, 2, '260.00', '2014-12-05 23:32:07', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de cancha de d?a antes de las 18:00 hs', 'Alquiler de Cancha 3'),
+(11, NULL, 2, '260.00', '2014-12-05 23:39:54', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de cancha de d?a antes de las 18:00 hs', 'Alquiler de Cancha 2'),
+(14, NULL, 3, '330.00', '2014-12-06 00:02:15', b'0', 'msredhotero@msn.com', NULL, '', 'Alquiler para cumplea?os', 'Alquiler de Fiesta'),
+(15, NULL, 2, '260.00', '2014-12-09 05:48:56', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de cancha de d?a antes de las 18:00 hs', 'Alquiler de Cancha 2'),
+(16, NULL, 2, '260.00', '2014-12-09 05:51:52', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de cancha de d?a antes de las 18:00 hs', 'Alquiler de Cancha 1'),
+(17, NULL, 2, '260.00', '2014-12-09 05:58:38', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de cancha de d?a antes de las 18:00 hs', 'Alquiler de Cancha 3'),
+(18, NULL, 5, '300.00', '2014-12-09 06:00:02', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de canchas de noche despues de las 18:00', 'Alquiler de Cancha 2'),
+(19, NULL, 8, '260.00', '2014-12-09 06:03:37', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de canchas mes entero', 'Alquiler de Cancha 2');
 
 -- --------------------------------------------------------
 
