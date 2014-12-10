@@ -81,7 +81,7 @@ function insertarVenta($refproducto,$reftipoventa,$importe,$fechacreacion,$cance
 				 ".$reftipoventa.",
 				 ".$importe.",
 				 null,
-				 false,
+				 ".$cancelado.",
 				 '".utf8_decode($usuacrea)."',
 				 null,
 				 '',

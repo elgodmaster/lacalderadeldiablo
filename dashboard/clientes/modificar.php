@@ -163,6 +163,8 @@ $resMovimientos = $serviciosMovimientos->traerMovimienosClientes($id);
                     </div>
                     <input type="hidden" id="accion" name="accion" value="modificarCliente"/>
                     <input type="hidden" id="id" name="id" value="<?php echo $id; ?>"/>
+                    <input id="usuacrea" type="hidden" value="<?php echo $_SESSION['nombre_se']; ?>" name="usuacrea">
+                    <input type="hidden" value="<?php echo mysql_result($resCliente,0,'saldo'); ?>" class="form-control" id="saldoviejo" name="saldoviejo" readonly>
                 </form>
                 
                 <div id="error">
@@ -178,6 +180,8 @@ $resMovimientos = $serviciosMovimientos->traerMovimienosClientes($id);
                         	<input type="text" value="<?php echo mysql_result($resCliente,0,'saldo'); ?>" class="form-control" id="saldo" name="saldo" readonly>
                         </div>
                 </div>
+                
+                
                 
                 <div class="form-group col-md-12">
                     	<label for="movimientos" class="control-label" style="text-align:left">Movimientos</label>

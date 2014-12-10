@@ -520,7 +520,15 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
                             <input type="text" class="form-control" id="nrodocumento" name="nrodocumento" placeholder="Ingrese el NroDocumento..." required>
                         </div>
                     </div>
-
+					
+                    <div class="form-group col-md-6">
+                    	<label for="saldo" class="control-label" style="text-align:left">Saldo</label>
+                        <div class="input-group col-md-12">
+                        	<span class="input-group-addon">$</span>
+                            <input type="text" class="form-control" value="0" id="saldo" name="saldo" placeholder="Ingrese el Saldo..." required>
+                            <span class="input-group-addon">.00</span>
+                        </div>
+                    </div>
 
                     </div>
                     </div>
@@ -594,6 +602,8 @@ $(document).ready(function(){
 											email: $('#email').val(),
 											nrodocumento: $('#nrodocumento').val(),
 											telefono: $('#telefono').val(),
+											usuacrea:	<?php echo "'".$_SESSION['nombre_se']."'"; ?>,
+											saldo: $('#saldo').val(),
 											accion: 'insertarCliente'},
 									url:   '../../ajax/ajax_clientes.php',
 									type:  'post',

@@ -27,6 +27,8 @@ function generarNroCliente($nombre) {
 
 //el utf8_decode($cadena) este va en todos los campos que sean tipo string o cadena o varchar
 
+/* logica de negocio para los saldos, movimientos de los clientes */
+
 function insertarCliente($nombre,$nrocliente,$email,$nrodocumento,$telefono,$saldo) {
 	$sql	=	"insert into lcdd_clientes(idcliente,nombre,nrocliente,email,nrodocumento,telefono)
 					values
@@ -42,23 +44,8 @@ function insertarCliente($nombre,$nrocliente,$email,$nrodocumento,$telefono,$sal
 		return 'Error al insertar datos';
 	} else {
 		$this->insertarCuenta($res,$saldo);
-		return '';
+		return $res;
 	}
-}
-
-	
-
-	function eliminarCliente($id) {
-		$sqlTurnoDesactivar = "update lcdd_turnos set activo = 0 where refcliente =".$id;
-		$this->query($sqlTurnoDesactivar,0);
-		
-		$sql = "delete from lcdd_clientes where idcliente =".$id;
-		$res = $this->query($sql,0);
-		if ($res == false) {
-			return 'Error al eliminar datos';
-		} else {
-			return '';
-		}
 }
 
 
@@ -80,6 +67,23 @@ function modificarCliente($id,$nombre,$nrocliente,$email,$nrodocumento,$telefono
 	}
 
 }
+
+
+/* fin de la logica */
+
+	function eliminarCliente($id) {
+		$sqlTurnoDesactivar = "update lcdd_turnos set activo = 0 where refcliente =".$id;
+		$this->query($sqlTurnoDesactivar,0);
+		
+		$sql = "delete from lcdd_clientes where idcliente =".$id;
+		$res = $this->query($sql,0);
+		if ($res == false) {
+			return 'Error al eliminar datos';
+		} else {
+			return '';
+		}
+}
+
 
 function traerCantidadClientes() {
 	$sql = "select count(idcliente) from lcdd_clientes";
