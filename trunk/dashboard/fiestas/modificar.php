@@ -227,7 +227,7 @@ $idtipoventa	= mysql_result($mov,0,1);
                     
                 
                 
-                	<input type="hidden" id="usuacrea" name="usuacrea" value="<?php echo $_SESSION['usua_se']; ?>"/>
+                	<input type="hidden" id="usuacrea" name="usuacrea" value="<?php echo $_SESSION['nombre_se']; ?>"/>
                 	<input type="hidden" id="accion" name="accion" value="modificarFiesta"/>
                     <input type="hidden" id="id" name="id" value="<?php echo mysql_result($resFiestas,0,0); ?>"/>
                     

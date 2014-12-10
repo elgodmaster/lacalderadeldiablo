@@ -194,7 +194,7 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Fiestas");
                     </div>
                   </div>
                 	<input type="hidden" id="accion" name="accion" value="insertarFiesta"/>
-                    <input type="hidden" id="usuacrea" name="usuacrea" value="<?php echo $_SESSION['usua_se']; ?>"/>
+                    <input type="hidden" id="usuacrea" name="usuacrea" value="<?php echo $_SESSION['nombre_se']; ?>"/>
                     
                     
                     

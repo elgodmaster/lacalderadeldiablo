@@ -56,7 +56,20 @@ function eliminarMovimiento($id) {
 
 
 function traerMovimienosClientes($idcliente) {
-	$sql = "select 
+	$sql = "select
+r.fechacreacion,
+				r.precio,
+				r.observacion,
+				r.idtipoventa,
+				r.tipoventa,
+				r.idcliente,
+				r.cliente,
+				r.fechautilizacion,
+				r.horautilizacion,
+				r.usuacrea,
+				r.idmovimiento
+from (
+select 
 				m.fechacreacion,
 				tv.precio,
 				m.observacion,
@@ -79,9 +92,36 @@ function traerMovimienosClientes($idcliente) {
 					inner join
 				lcdd_clientes c ON c.idcliente = t.refcliente
 			where
-				v.descripcion in ('Canchas') and c.idcliente = ".$idcliente."
-			order by t.fechautilizacion,
-				t.horautilizacion";
+				v.descripcion in ('Canchas') and c.idcliente = 9
+                
+union all
+
+select 
+				m.fechacreacion,
+				m.monto as precio,
+				m.observacion,
+				tv.idtipoventa,
+				tv.tipoventa,
+				c.idcliente,
+				c.nombre as cliente,
+				'' as fechautilizacion,
+				'' as horautilizacion,
+				m.usuacrea,
+				m.idmovimiento
+			from
+				lcdd_tipoventa tv
+					inner join
+				lcdd_valores v ON tv.refvalores = v.idvalor
+					inner join
+				lcdd_movimientos m ON m.reftipoventa = tv.idtipoventa
+					inner join
+				lcdd_clientes c ON c.idcliente = m.refid
+			where
+				v.descripcion in ('Clientes') and c.idcliente = 9
+	) as r
+    
+    order by r.fechacreacion desc,r.fechautilizacion,
+				r.horautilizacion";
 	$res 	=	$this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';
@@ -91,7 +131,20 @@ function traerMovimienosClientes($idcliente) {
 }
 
 function traerMovimienosClientesMovimientos($idcliente,$idmovimiento) {
-	$sql = "select 
+	$sql = "select
+r.fechacreacion,
+				r.precio,
+				r.observacion,
+				r.idtipoventa,
+				r.tipoventa,
+				r.idcliente,
+				r.cliente,
+				r.fechautilizacion,
+				r.horautilizacion,
+				r.usuacrea,
+				r.idmovimiento
+from (
+select 
 				m.fechacreacion,
 				tv.precio,
 				m.observacion,
@@ -114,9 +167,36 @@ function traerMovimienosClientesMovimientos($idcliente,$idmovimiento) {
 					inner join
 				lcdd_clientes c ON c.idcliente = t.refcliente
 			where
-				v.descripcion in ('Canchas') and c.idcliente = ".$idcliente." and m.idmovimiento = ".$idmovimiento."
-			order by t.fechautilizacion,
-				t.horautilizacion";
+				v.descripcion in ('Canchas') and c.idcliente = 9 and m.idmovimiento = ".$idmovimiento."
+                
+union all
+
+select 
+				m.fechacreacion,
+				tv.precio,
+				m.observacion,
+				tv.idtipoventa,
+				tv.tipoventa,
+				c.idcliente,
+				c.nombre as cliente,
+				'' as fechautilizacion,
+				'' as horautilizacion,
+				m.usuacrea,
+				m.idmovimiento
+			from
+				lcdd_tipoventa tv
+					inner join
+				lcdd_valores v ON tv.refvalores = v.idvalor
+					inner join
+				lcdd_movimientos m ON m.reftipoventa = tv.idtipoventa
+					inner join
+				lcdd_clientes c ON c.idcliente = m.refid
+			where
+				v.descripcion in ('Clientes') and c.idcliente = 9 and m.idmovimiento = ".$idmovimiento."
+	) as r
+    
+    order by r.fechautilizacion,
+				r.horautilizacion";
 	//return $sql;
 	$res 	=	$this->query($sql,0);
 	if ($res == false) {

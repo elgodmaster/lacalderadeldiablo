@@ -155,6 +155,7 @@ $resClientes = $serviciosClientes->traerClientes();
                 		<p><strong>Importante!:</strong> El campo nombre es obligatorios</p>
                 	</div>
                     <input type="hidden" id="accion" name="accion" value="insertarCliente"/>
+                    <input id="usuacrea" type="hidden" value="<?php echo $_SESSION['nombre_se']; ?>" name="usuacrea">
                 </form>
                 
                 <br>
