@@ -309,7 +309,9 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: <?php echo $id; ?>, accion: 'eliminarFiesta'},
+									data:  {id: <?php echo $id; ?>, 
+											usuacrea: '<?php echo $_SESSION['nombre_se']; ?>',
+											accion: 'eliminarFiesta'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {

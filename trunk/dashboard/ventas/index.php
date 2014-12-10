@@ -301,7 +301,7 @@ $(document).ready(function(){
 					cantidad: cantidad,
 					monto: monto,
 					tipoventa: 1,
-					usuacrea: '<?php echo $_SESSION['usua_se']; ?>',
+					usuacrea: '<?php echo $_SESSION['nombre_se']; ?>',
 					accion: 'insertarDetalle'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
@@ -333,7 +333,7 @@ $(document).ready(function(){
 		});
 		$("#load").html('');
 		url = "index.php";
-		//$(location).attr('href',url);
+		$(location).attr('href',url);
 											
     });
 	

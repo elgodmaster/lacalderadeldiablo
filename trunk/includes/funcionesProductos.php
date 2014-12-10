@@ -323,6 +323,7 @@ function insertarProducto($nombre, $precio_unit, $precio_venta, $stock, $stock_m
 							'".$codigobarra."',
 							'".$caracteristicas."',
 							".$egreso.")";
+	//return $sql;
 	$res = $this->query($sql,1);
 	return $res;					
 }

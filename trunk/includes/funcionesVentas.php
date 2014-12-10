@@ -71,10 +71,10 @@ function camposTabla($accion) {
 
 //$idVenta,$Venta,$precio,$detalle
 
-function insertarVenta($refproducto,$reftipoventa,$importe,$fechacreacion,$cancelado,$usuacrea,$fechamodificacion,$usuamodi,$concepto,$observaciones) {
+function insertarVenta($refproducto,$reftipoventa,$importe,$fechacreacion,$cancelado,$usuacrea,$fechamodificacion,$usuamodi,$concepto,$observaciones,$cantidad) {
 	
 	$refproducto = $refproducto == '' ? 'null' : $refproducto;
-	$sql	=	"insert into lcdd_ventas(idventa,refproducto,reftipoventa,importe,fechacreacion,cancelado,usuacrea,fechamodificacion,usuamodi,concepto,observaciones)
+	$sql	=	"insert into lcdd_ventas(idventa,refproducto,reftipoventa,importe,fechacreacion,cancelado,usuacrea,fechamodificacion,usuamodi,concepto,observaciones,cantidad)
 				 values
 				 ('',
 				 ".$refproducto.",
@@ -86,7 +86,8 @@ function insertarVenta($refproducto,$reftipoventa,$importe,$fechacreacion,$cance
 				 null,
 				 '',
 				 '".utf8_decode($concepto)."',
-				 '".utf8_decode($observaciones)."')";
+				 '".utf8_decode($observaciones)."',
+				 ".$cantidad.")";
 	//return $sql;
 	$res 	=	$this->query($sql,1);
 	if ($res == false) {
