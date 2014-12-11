@@ -4,22 +4,18 @@ date_default_timezone_set('America/Buenos_Aires');
 require '../includes/funcionesProductos.php';
 require '../includes/funcionesTurnos.php';
 require '../includes/funcionesConfiguraciones.php';
+require '../includes/funcionesReportes.php';
 
 $serviciosProductos = new ServiciosProductos();
 $serviciosTurnos	= new ServiciosTurnos();
 $serviciosConfiguraciones = new ServiciosConfiguraciones();
+$serviciosReportes = new ServiciosReportes();
 
-$resCanchas = $serviciosTurnos->traerCanchas();
-$resClientes= $serviciosTurnos->traerClientes();
-$resTurnos = $serviciosTurnos->traerTurnos();
+$resIngresosCanchas = $serviciosReportes->ingresosCanchas(date('Y'),date('m'),date('d'));
+$resIngresosVentas = $serviciosReportes->ingresosVentas(date('Y'),date('m'),date('d'));
+$resIngresosFiestas = $serviciosReportes->ingresosFiestas(date('Y'),date('m'),date('d'));
 
-$fecha = $_GET['fecha'];
-
-if ($fecha == '') {
-	$fecha = date('Y-m-d');
-}
-
-
+$fecha = date('Y-m-d');
 
 require('fpdf.php');
 
@@ -31,21 +27,23 @@ class PDF extends FPDF
 
 
 // Tabla coloreada
-function ingresosCanchas($header, $data, $serviciosTurnos, $fecha)
+function ingresosCanchas($header, $data)
 {
-	
-	$this->Cell(60,7,'Fecha:'.$fecha,0,0,'C',false);
+	$this->SetFont('Arial','',12);
+	$this->Cell(60,7,'Fecha:'.date('Y-m-d'),0,0,'L',false);
 	$this->Ln();
-    // Colores, ancho de línea y fuente en negrita
+	$this->Cell(60,7,'Ingresos de Canchas',0,0,'L',false);
+    $this->SetFont('Arial','',10);
+	// Colores, ancho de línea y fuente en negrita
     $this->SetFillColor(255,0,0);
     $this->SetTextColor(255);
     $this->SetDrawColor(128,0,0);
     $this->SetLineWidth(.3);
-	
+	$this->Ln();
 	
 	
     // Cabecera
-    $w = array(25, 53, 53, 53);
+    $w = array(90, 20,25,25,25);
     for($i=0;$i<count($header);$i++)
         $this->Cell($w[$i],7,$header[$i],1,0,'C',true);
     $this->Ln();
@@ -55,52 +53,52 @@ function ingresosCanchas($header, $data, $serviciosTurnos, $fecha)
     $this->SetFont('');
     // Datos
     $fill = false;
-    for($i=mysql_result($data,0,0);$i<=mysql_result($data,0,1);$i++)
+	
+	$total = 0;
+	$totalcant = 0;
+    while ($row = mysql_fetch_array($data))
     {
-		$turno1 = "";
-		$turno2 = "";
-		$turno3 = "";
-		$cancha1 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,1);
-		$cancha2 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,2);
-		$cancha3 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,3);
-		if (mysql_num_rows($cancha1)>0) {
-			$turno1 = mysql_result($cancha1,0,0);
-		}
-		if (mysql_num_rows($cancha2)>0) {
-			$turno2 = mysql_result($cancha2,0,0);
-		}
-		if (mysql_num_rows($cancha3)>0) {
-			$turno3 = mysql_result($cancha3,0,0);
-		}
-
-        $this->Cell($w[0],6,$i.":00",'LR',0,'C',$fill);
-		$this->Cell($w[1],6,$turno1,'LR',0,'L',$fill);
-        $this->Cell($w[2],6,$turno2,'LR',0,'L',$fill);
-        $this->Cell($w[3],6,$turno3,'LR',0,'L',$fill);
+		$total = $total + $row[0];
+		$totalcant = $totalcant + $row[2];
+		
+        $this->Cell($w[0],6,$row[1],'LR',0,'L',$fill);
+		$this->Cell($w[1],6,$row[0],'LR',0,'R',$fill);
+        $this->Cell($w[2],6,$row[2],'LR',0,'C',$fill);
+        $this->Cell($w[3],6,$row[3],'LR',0,'C',$fill);
+		$this->Cell($w[4],6,$row[3],'LR',0,'C',$fill);
         $this->Ln();
         $fill = !$fill;
     }
+	
     // Línea de cierre
     $this->Cell(array_sum($w),0,'','T');
+	$this->SetFont('Arial','',12);
+	$this->Ln();
+	$this->Ln();
+	$this->Cell(60,7,'Cantidad de Alquileres:'.$totalcant,0,0,'L',false);
+	$this->Ln();
+	$this->Cell(60,7,'Total de Alquileres: $'.$total,0,0,'L',false);
 }
 
 
 // Tabla coloreada
-function ingresosVentas($header, $data, $serviciosTurnos, $fecha)
+function ingresosVentas($header, $data)
 {
-	
-	$this->Cell(60,7,'Fecha:'.$fecha,0,0,'C',false);
+	$this->SetFont('Arial','',12);
 	$this->Ln();
+	$this->Ln();
+	$this->Cell(60,7,'Ingresos de Ventas',0,0,'L',false);
+	$this->SetFont('Arial','',10);
     // Colores, ancho de línea y fuente en negrita
     $this->SetFillColor(255,0,0);
     $this->SetTextColor(255);
     $this->SetDrawColor(128,0,0);
     $this->SetLineWidth(.3);
-	
+	$this->Ln();
 	
 	
     // Cabecera
-    $w = array(25, 53, 53, 53);
+    $w = array(90, 30,30);
     for($i=0;$i<count($header);$i++)
         $this->Cell($w[$i],7,$header[$i],1,0,'C',true);
     $this->Ln();
@@ -110,52 +108,50 @@ function ingresosVentas($header, $data, $serviciosTurnos, $fecha)
     $this->SetFont('');
     // Datos
     $fill = false;
-    for($i=mysql_result($data,0,0);$i<=mysql_result($data,0,1);$i++)
+	
+	$total = 0;
+	$totalcant = 0;
+    while ($row = mysql_fetch_array($data))
     {
-		$turno1 = "";
-		$turno2 = "";
-		$turno3 = "";
-		$cancha1 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,1);
-		$cancha2 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,2);
-		$cancha3 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,3);
-		if (mysql_num_rows($cancha1)>0) {
-			$turno1 = mysql_result($cancha1,0,0);
-		}
-		if (mysql_num_rows($cancha2)>0) {
-			$turno2 = mysql_result($cancha2,0,0);
-		}
-		if (mysql_num_rows($cancha3)>0) {
-			$turno3 = mysql_result($cancha3,0,0);
-		}
-
-        $this->Cell($w[0],6,$i.":00",'LR',0,'C',$fill);
-		$this->Cell($w[1],6,$turno1,'LR',0,'L',$fill);
-        $this->Cell($w[2],6,$turno2,'LR',0,'L',$fill);
-        $this->Cell($w[3],6,$turno3,'LR',0,'L',$fill);
+		$total = $total + $row[0];
+		$totalcant = $totalcant + $row[2];
+		
+        $this->Cell($w[0],6,$row[1],'LR',0,'L',$fill);
+		$this->Cell($w[1],6,$row[0],'LR',0,'R',$fill);
+        $this->Cell($w[2],6,$row[2],'LR',0,'C',$fill);
         $this->Ln();
         $fill = !$fill;
     }
+	
     // Línea de cierre
     $this->Cell(array_sum($w),0,'','T');
+	$this->SetFont('Arial','',12);
+	$this->Ln();
+	$this->Ln();
+	$this->Cell(60,7,'Cantidad de Ventas:'.$totalcant,0,0,'L',false);
+	$this->Ln();
+	$this->Cell(60,7,'Total de Ventas: $'.$total,0,0,'L',false);
 }
 
 
 // Tabla coloreada
-function ingresosFiestas($header, $data, $serviciosTurnos, $fecha)
+function ingresosFiestas($header, $data)
 {
-	
-	$this->Cell(60,7,'Fecha:'.$fecha,0,0,'C',false);
+	$this->SetFont('Arial','',12);
 	$this->Ln();
+	$this->Ln();
+	$this->Cell(60,7,'Ingresos de Fiestas',0,0,'L',false);
+	$this->SetFont('Arial','',10);
     // Colores, ancho de línea y fuente en negrita
     $this->SetFillColor(255,0,0);
     $this->SetTextColor(255);
     $this->SetDrawColor(128,0,0);
     $this->SetLineWidth(.3);
-	
+	$this->Ln();
 	
 	
     // Cabecera
-    $w = array(25, 53, 53, 53);
+    $w = array(90, 20,25,25,25);
     for($i=0;$i<count($header);$i++)
         $this->Cell($w[$i],7,$header[$i],1,0,'C',true);
     $this->Ln();
@@ -165,33 +161,31 @@ function ingresosFiestas($header, $data, $serviciosTurnos, $fecha)
     $this->SetFont('');
     // Datos
     $fill = false;
-    for($i=mysql_result($data,0,0);$i<=mysql_result($data,0,1);$i++)
+	
+	$total = 0;
+	$totalcant = 0;
+    while ($row = mysql_fetch_array($data))
     {
-		$turno1 = "";
-		$turno2 = "";
-		$turno3 = "";
-		$cancha1 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,1);
-		$cancha2 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,2);
-		$cancha3 = $serviciosTurnos->traerTurnosPorDiaCanchaFecha($fecha,$i,3);
-		if (mysql_num_rows($cancha1)>0) {
-			$turno1 = mysql_result($cancha1,0,0);
-		}
-		if (mysql_num_rows($cancha2)>0) {
-			$turno2 = mysql_result($cancha2,0,0);
-		}
-		if (mysql_num_rows($cancha3)>0) {
-			$turno3 = mysql_result($cancha3,0,0);
-		}
-
-        $this->Cell($w[0],6,$i.":00",'LR',0,'C',$fill);
-		$this->Cell($w[1],6,$turno1,'LR',0,'L',$fill);
-        $this->Cell($w[2],6,$turno2,'LR',0,'L',$fill);
-        $this->Cell($w[3],6,$turno3,'LR',0,'L',$fill);
+		$total = $total + $row[0];
+		$totalcant = $totalcant + $row[2];
+		
+        $this->Cell($w[0],6,$row[1],'LR',0,'L',$fill);
+		$this->Cell($w[1],6,$row[0],'LR',0,'R',$fill);
+        $this->Cell($w[2],6,$row[2],'LR',0,'C',$fill);
+		$this->Cell($w[3],6,$row[3],'LR',0,'C',$fill);
+		$this->Cell($w[4],6,$row[3],'LR',0,'C',$fill);
         $this->Ln();
         $fill = !$fill;
     }
+	
     // Línea de cierre
     $this->Cell(array_sum($w),0,'','T');
+	$this->SetFont('Arial','',12);
+	$this->Ln();
+	$this->Ln();
+	$this->Cell(60,7,'Cantidad de Fiestas:'.$totalcant,0,0,'L',false);
+	$this->Ln();
+	$this->Cell(60,7,'Total de Fiestas: $'.$total,0,0,'L',false);
 }
 
 }
@@ -204,13 +198,21 @@ function ingresosFiestas($header, $data, $serviciosTurnos, $fecha)
 $pdf = new PDF();
 $pdf->SetFont('Arial','',10);
 // Títulos de las columnas
-$header = array("Hora", "Cancha 1( -15 min)", "Cancha 2( 0 min)", "Cancha 3( 15 min)");
+$header = array("Tipo Alquiler", "Importe", "Cant", "Completados","Cancelados");
+
+$headerVentas = array("Tipo Producto", "Importe", "Cant");
+
+$headerFiestas = array("Tipo Fiesta", "Importe", "Cant", "Completados","Cancelados");
 // Carga de datos
-$data = $resPrimerUltimoTurno;
+
 
 
 $pdf->AddPage();
-$pdf->FancyTable($header,$data,$serviciosTurnos, $fecha);
+$pdf->ingresosCanchas($header,$resIngresosCanchas);
+
+$pdf->ingresosVentas($headerVentas,$resIngresosVentas);
+
+$pdf->ingresosFiestas($headerFiestas,$resIngresosFiestas);
 
 $nombreTurno = "Turno-".$fecha.".pdf";
 
