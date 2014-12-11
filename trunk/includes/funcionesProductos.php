@@ -137,6 +137,16 @@ function modificarProducto($id,$nombre, $precio_unit, $precio_venta, $stock, $st
 
 }
 
+function descontarStock($id,$descuento) {
+	$sql = "update lcdd_productos 			
+			SET
+			stock = stock-".(integer)$descuento."
+			WHERE idproducto = ".$id;
+	$res = $this->query($sql,0) or die ('Hubo un error');
+	return $res;
+}
+
+
 //1, p.nombre
 function traerProductoPorId($id) {
 	$sql = "select

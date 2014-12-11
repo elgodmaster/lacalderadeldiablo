@@ -75,6 +75,9 @@ function modificarCliente($id,$nombre,$nrocliente,$email,$nrodocumento,$telefono
 		$sqlTurnoDesactivar = "update lcdd_turnos set activo = 0 where refcliente =".$id;
 		$this->query($sqlTurnoDesactivar,0);
 		
+		$sqlEliminaCuenta = "delete from lcdd_cuentas where refcliente =".$id;
+		$this->query($sqlEliminaCuenta,0);
+		
 		$sql = "delete from lcdd_clientes where idcliente =".$id;
 		$res = $this->query($sql,0);
 		if ($res == false) {
@@ -173,6 +176,29 @@ function insertarCuenta($idCliente,$saldo)
 		return '';
 	}			 
 }
+
+function descontarSaldo($idCliente,$descuento) {
+	$sql = "update lcdd_cuentas
+				 SET saldo = saldo-".(float)$descuento." where refcliente = ".$idCliente;	
+	$res	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al modificar datos';
+	} else {
+		return '';
+	}	
+}
+
+function cargarSaldo($idCliente,$carga) {
+	$sql = "update lcdd_cuentas
+				 SET saldo = saldo+".(float)$carga." where refcliente = ".$idCliente;	
+	$res	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al modificar datos';
+	} else {
+		return '';
+	}	
+}
+
 
 function modificarCuenta($idCliente,$saldo) {
 	$sql	=	"update lcdd_cuentas

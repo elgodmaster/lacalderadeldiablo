@@ -76,8 +76,10 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
         </div>
     	<div class="cuerpoBox">
      		
-            <ul>
-            	<li><a href="../../reportes/rptcajadiaria.php">Caja Diaria</a></li>
+            <ul style="margin-left:50px; font-size:22px; font-weight:bold;padding:10px;">
+            	<li style="padding-bottom:8px;"><span class="glyphicon glyphicon-floppy-save"> </span> <a href="../../reportes/rptcajadiaria.php">Caja Diaria</a></li>
+                <li style="padding-bottom:8px;"><span class="glyphicon glyphicon-floppy-save"> </span> <a href="../../reportes/rptmensual.php">Reporte Mensual</a></li>
+                <li style="padding-bottom:8px;"><span class="glyphicon glyphicon-floppy-save"> </span> <a href="../../reportes/rptanual.php">Reporte Anual</a></li>
             </ul>
             
             

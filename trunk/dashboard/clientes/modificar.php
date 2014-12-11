@@ -185,7 +185,7 @@ $resMovimientos = $serviciosMovimientos->traerMovimienosClientes($id);
                 
                 <div class="form-group col-md-12">
                     	<label for="movimientos" class="control-label" style="text-align:left">Movimientos</label>
-                        <div class="input-group col-md-8">
+                        <div class="input-group col-md-12">
                         	<table class="table table-striped">
                                 <thead>
                                     <tr>

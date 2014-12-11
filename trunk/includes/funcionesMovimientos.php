@@ -92,7 +92,7 @@ select
 					inner join
 				lcdd_clientes c ON c.idcliente = t.refcliente
 			where
-				v.descripcion in ('Canchas') and c.idcliente = 9
+				v.descripcion in ('Canchas') and c.idcliente = ".$idcliente."
                 
 union all
 
@@ -117,7 +117,7 @@ select
 					inner join
 				lcdd_clientes c ON c.idcliente = m.refid
 			where
-				v.descripcion in ('Clientes') and c.idcliente = 9
+				v.descripcion in ('Clientes') and c.idcliente = ".$idcliente."
 	) as r
     
     order by r.fechacreacion desc,r.fechautilizacion,
@@ -167,7 +167,7 @@ select
 					inner join
 				lcdd_clientes c ON c.idcliente = t.refcliente
 			where
-				v.descripcion in ('Canchas') and c.idcliente = 9 and m.idmovimiento = ".$idmovimiento."
+				v.descripcion in ('Canchas') and c.idcliente = ".$idcliente." and m.idmovimiento = ".$idmovimiento."
                 
 union all
 
@@ -192,7 +192,7 @@ select
 					inner join
 				lcdd_clientes c ON c.idcliente = m.refid
 			where
-				v.descripcion in ('Clientes') and c.idcliente = 9 and m.idmovimiento = ".$idmovimiento."
+				v.descripcion in ('Clientes') and c.idcliente = ".$idcliente." and m.idmovimiento = ".$idmovimiento."
 	) as r
     
     order by r.fechautilizacion,
