@@ -11,9 +11,7 @@ $serviciosTurnos	= new ServiciosTurnos();
 $serviciosConfiguraciones = new ServiciosConfiguraciones();
 $serviciosReportes = new ServiciosReportes();
 
-$where = " and year(v.fechacreacion) = ".date('Y')."
-					and month(v.fechacreacion) = ".date('m')."
-					and day(v.fechacreacion) = ".date('d')." ";
+$where = " and year(v.fechacreacion) = ".date('Y')." ";
 
 
 $resIngresosCanchas = $serviciosReportes->ingresosCanchas($where);
@@ -232,7 +230,7 @@ $headerFiestas = array("Tipo Fiesta", "Importe", "Cant", "Completados","Cancelad
 $pdf->AddPage();
 
 $pdf->SetFont('Arial','U',15);
-$pdf->Cell(180,7,'Reporte: Caja Diaria',0,0,'C',false);
+$pdf->Cell(180,7,'Reporte: Ingresos/Egresos Anuales',0,0,'C',false);
 $pdf->Ln();
 
 $pdf->SetFont('Arial','',10);
@@ -254,10 +252,9 @@ $pdf->Ln();
 $pdf->Cell(60,7,'Importe Egresos: $'.number_format($TotalEgresos, 2, '.', ','),0,0,'L',false);
 $pdf->Ln();
 $pdf->Cell(60,7,'Importe Total:'.number_format(($TotalIngresos + $TotalEgresos), 2, '.', ','),0,0,'L',false);
-$pdf->Ln();
-$pdf->Cell(60,7,'Caja: $'.number_format(($TotalIngresos - $TotalEgresos), 2, '.', ','),0,0,'L',false);
 
-$nombreTurno = "Caja-".$fecha.".pdf";
+
+$nombreTurno = "Anual-".$fecha.".pdf";
 
 $pdf->Output($nombreTurno,'D');
 

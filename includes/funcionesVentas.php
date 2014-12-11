@@ -123,7 +123,7 @@ function eliminarVenta($id) {
 
 function traerIdVenta($refid,$valor) {
 	$sql = "select
-			m.refventa,tv.idtipoventa,m.idmovimiento
+			m.refventa,tv.idtipoventa,m.idmovimiento,m.monto
 			from		lcdd_movimientos m
 			inner
 			join		lcdd_tipoventa tv

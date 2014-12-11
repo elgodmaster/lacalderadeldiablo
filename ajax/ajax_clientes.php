@@ -58,13 +58,15 @@ function insertarCliente($serviciosClientes,$serviciosMovimientos,$serviciosVent
 	if ((integer)$res > 0) {
 		if ($saldo > 0) {
 			$tipoventa = mysql_result($serviciosConfiguraciones->traerTipoVentaValor('Clientes'), 0,0);
-			$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,0,'',1,$usuacrea,'','','Idcliente:'.$res,'Carga de nuevo cliente');
-			$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$saldo,$fechacreacion,$usuacrea,$res,'Carga de nuevo cliente');
+			
+			$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,0,'',1,$usuacrea,'','','Idcliente:'.$res,'Carga de nuevo cliente',1);
+			$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$saldo,date('Y-m-d'),$usuacrea,$res,'Carga de nuevo cliente');
+
 		}
 		$res = '';			
 	}
 
-	echo $res;
+	echo $resVenta;
 }
 
 
@@ -83,8 +85,8 @@ function modificarCliente($serviciosClientes,$serviciosMovimientos,$serviciosVen
 	if ($res == '') {
 		if ($saldo != $saldoviejo) {
 			$tipoventa = mysql_result($serviciosConfiguraciones->traerTipoVentaValor('Clientes'), 0,0);
-			$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,0,'',1,$usuacrea,'','','Idcliente:'.$id,'Carga de saldo del cliente');
-			$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,($saldo - $saldoviejo),$fechacreacion,$usuacrea,$id,'Carga de saldo del cliente');
+			$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,0,'',1,$usuacrea,'','','Idcliente:'.$id,'Carga de saldo del cliente',1);
+			$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,($saldo - $saldoviejo),date('Y-m-d'),$usuacrea,$id,'Carga de saldo del cliente');
 		}
 		$res = '';			
 	}

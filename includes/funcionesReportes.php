@@ -9,7 +9,7 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosReportes {
 
-function ingresosCanchas($anio,$mes,$dia) {
+function ingresosCanchas($where) {
 	$sql = "select
 			sum(r.importe) as importe,
 			r.detalle,
@@ -34,10 +34,7 @@ function ingresosCanchas($anio,$mes,$dia) {
 							lcdd_valores vv ON vv.idvalor = tv.refvalores
 						where
 							vv.descripcion = 'Canchas'
-								and year(v.fechacreacion) = ".$anio."
-					and month(v.fechacreacion) = ".$mes."
-					
-			
+								".$where."
 						group by tv.detalle , v.reftipoventa, v.cancelado
 			) as r
 			group by r.detalle,r.reftipoventa
@@ -51,11 +48,12 @@ function ingresosCanchas($anio,$mes,$dia) {
 }
 
 
-function ingresosVentas($anio,$mes,$dia) {
+function ingresosVentas($where) {
 	$sql = "select 
 				sum(v.importe) as importe,
 				tp.tipoproducto,
-				sum(v.cantidad) as Cantidad
+				sum(v.cantidad) as Cantidad,
+				p.egreso
 			from
 				lcdd_ventas v
 					inner join
@@ -68,11 +66,9 @@ function ingresosVentas($anio,$mes,$dia) {
 				lcdd_tipoproducto tp on tp.idtipoproducto = p.reftipoproducto
 			where
 				vv.descripcion = 'Productos'
-					and year(v.fechacreacion) = ".$anio."
-					and month(v.fechacreacion) = ".$mes."
-					
+					".$where."
 					and tp.activo = 1
-			group by tp.tipoproducto
+			group by tp.tipoproducto,p.egreso
 		
 		order by tp.tipoproducto";	
 	$res = $this->query($sql,0);
@@ -83,7 +79,7 @@ function ingresosVentas($anio,$mes,$dia) {
 	}
 }
 
-function ingresosFiestas($anio,$mes,$dia) {
+function ingresosFiestas($where) {
 	$sql = "select
 				sum(r.importe) as importe,
 				r.detalle,
@@ -108,9 +104,7 @@ function ingresosFiestas($anio,$mes,$dia) {
 				lcdd_valores vv ON vv.idvalor = tv.refvalores
 			where
 				vv.descripcion = 'Fiestas'
-					and year(v.fechacreacion) = ".$anio."
-					and month(v.fechacreacion) = ".$mes."
-					
+				".$where."
 			group by tv.detalle , v.reftipoventa, v.cancelado
 		
 		) as r

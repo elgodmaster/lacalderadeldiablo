@@ -114,13 +114,13 @@ switch ($accion) {
 		insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes);
 		break;
 	case 'modificarTurno':
-		modificarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos);
+		modificarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes);
 		break;
 	case 'eliminarTurno':
-		eliminarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos);
+		eliminarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes);
 		break;
 	case 'insertarDetalle':
-		insertarDetalle($serviciosVentas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos);
+		insertarDetalle($serviciosVentas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosProductos);
 		break;
 	case 'insertarFiesta':
 		insertarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos);
@@ -171,7 +171,8 @@ function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracion
 
 				$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion2,1);
 				$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion2);
-				
+				//descuento el saldo del cliente
+				$serviciosClientes->descontarSaldo($refcliente,$monto);
 				$res = '';
 			}
 
@@ -186,7 +187,8 @@ function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracion
 
 				$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion3,1);
 				$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion3);
-				
+				//descuento el saldo del cliente
+				$serviciosClientes->descontarSaldo($refcliente,$monto);
 				$res = '';
 			}
 		}
@@ -200,7 +202,8 @@ function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracion
 
 				$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion4,1);
 				$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion4);
-				
+				//descuento el saldo del cliente
+				$serviciosClientes->descontarSaldo($refcliente,$monto);
 				$res = '';
 			}
 		}
@@ -217,16 +220,19 @@ function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracion
 
 		$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion,1);
 		$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion);
-		
+		//descuento el saldo del cliente
+		$serviciosClientes->descontarSaldo($refcliente,$monto);
 		$res = '';
 	}
 
 	echo $res;
 }
 
-function eliminarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
+function eliminarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes) {
 	$id 	=	$_POST['id'];
 	$usuacrea			=	$_POST['usuacrea'];
+	
+	$refcliente = mysql_result($serviciosTurnos->traerTurnosPorId($id),0,4);
 	
 	$res = $serviciosTurnos->eliminarTurno($id);
 	
@@ -242,13 +248,15 @@ function eliminarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracion
 		
 		$serviciosVentas->modificarVenta($refid,1,'Se cancelo el turno de la cancha: '.$cancha);
 		$serviciosMovimientos->insertarMovimiento($tipoventa,$idventa,0,'',$usuacrea,$id,'Alquiler de '.$cancha);
+		//descuento el saldo del cliente
+		$serviciosClientes->cargarSaldo($refcliente,$monto);
 	}
 	
 	echo $res;
 }
 
 
-function modificarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
+function modificarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes) {
 	$id 				=	$_POST['id'];
 	$refcancha			=	$_POST['refcancha'];
 	$fechautilizacion	=	$_POST['fechautilizacion'];
@@ -269,6 +277,7 @@ function modificarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracio
 		
 		$idmov		= mysql_result($mov,0,2);
 		$idventa 	= mysql_result($mov,0,0);
+		$montoSaldo = mysql_result($mov,0,3);
 		
 		$serviciosVentas->eliminarVenta($idventa);
 		$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha,1);
@@ -276,6 +285,11 @@ function modificarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracio
 		$serviciosMovimientos->eliminarMovimiento($idmov);
 		
 		$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,'',$usuacrea,$id,'Alquiler de '.$cancha);
+		
+		//devuelvo el saldo y descuento el saldo del cliente
+		$serviciosClientes->cargarSaldo($refcliente,$montoSaldo);
+		
+		$serviciosClientes->descontarSaldo($refcliente,$monto);
 	}
 	
 	echo $res;
@@ -283,7 +297,7 @@ function modificarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracio
 
 
 
-function insertarDetalle($serviciosVentas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
+function insertarDetalle($serviciosVentas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosProductos) {
 	$id  		= $_POST['id'];
 	$producto 	= $_POST['producto'];
 	$cantidad 	= $_POST['cantidad'];
@@ -298,8 +312,9 @@ function insertarDetalle($serviciosVentas,$serviciosVentas,$serviciosConfiguraci
 		$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
 		$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
 
-		$serviciosMovimientos->insertarMovimiento($tipoventa,$res,$monto,'',$usuacrea,$producto,'Venta de las heladeras');
+		$serviciosMovimientos->insertarMovimiento($tipoventa,$res,$monto,'',$usuacrea,$id,'Venta de las heladeras');
 		
+		$serviciosProductos->descontarStock($id,$cantidad);
 		$res = '';
 	}
 	
