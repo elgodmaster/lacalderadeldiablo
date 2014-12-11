@@ -10,27 +10,39 @@ date_default_timezone_set('America/Buenos_Aires');
 class ServiciosReportes {
 
 function ingresosCanchas($anio,$mes,$dia) {
-	$sql = "select 
-				sum(v.importe) as importe,
-				tv.detalle,
-				count(tv.detalle) as tipo,
-				(case when v.cancelado = 0 then count(v.cancelado) else 0 end) as completos,
-				(case when v.cancelado = 1 then count(v.cancelado) else 0 end) as cancelados,
-				v.reftipoventa
+	$sql = "select
+			sum(r.importe) as importe,
+			r.detalle,
+			sum(r.tipo) as tipo,
+			sum(r.completos) as completos,
+			sum(r.cancelados) as cancelados,
+			r.reftipoventa
 			from
-				lcdd_ventas v
-					inner join
-				lcdd_tipoventa tv ON v.reftipoventa = tv.idtipoventa
-					inner join
-				lcdd_valores vv ON vv.idvalor = tv.refvalores
-			where
-				vv.descripcion = 'Canchas'
-					and year(v.fechacreacion) = ".$anio."
+			(
+			select 
+							sum(v.importe) as importe,
+							tv.detalle,
+							count(tv.detalle) as tipo,
+							(case when v.cancelado = 0 then count(v.cancelado) else 0 end) as completos,
+							(case when v.cancelado = 1 then count(v.cancelado) else 0 end) as cancelados,
+							v.reftipoventa
+						from
+							lcdd_ventas v
+								inner join
+							lcdd_tipoventa tv ON v.reftipoventa = tv.idtipoventa
+								inner join
+							lcdd_valores vv ON vv.idvalor = tv.refvalores
+						where
+							vv.descripcion = 'Canchas'
+								and year(v.fechacreacion) = ".$anio."
 					and month(v.fechacreacion) = ".$mes."
-					and day(v.fechacreacion) = ".$dia."
-			group by tv.detalle , v.reftipoventa, v.cancelado
-		
-		order by v.reftipoventa";	
+					
+			
+						group by tv.detalle , v.reftipoventa, v.cancelado
+			) as r
+			group by r.detalle,r.reftipoventa
+					order by r.reftipoventa";	
+	$res = $this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';
 	} else {
@@ -58,11 +70,12 @@ function ingresosVentas($anio,$mes,$dia) {
 				vv.descripcion = 'Productos'
 					and year(v.fechacreacion) = ".$anio."
 					and month(v.fechacreacion) = ".$mes."
-					and day(v.fechacreacion) = ".$dia."
+					
 					and tp.activo = 1
 			group by tp.tipoproducto
 		
 		order by tp.tipoproducto";	
+	$res = $this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';
 	} else {
@@ -71,7 +84,16 @@ function ingresosVentas($anio,$mes,$dia) {
 }
 
 function ingresosFiestas($anio,$mes,$dia) {
-	$sql = "select 
+	$sql = "select
+				sum(r.importe) as importe,
+				r.detalle,
+				sum(r.tipo) as tipo,
+				sum(r.completos) as completos,
+				sum(r.cancelados) as cancelados,
+				r.reftipoventa
+				from
+				(
+				select 
 				sum(v.importe) as importe,
 				tv.detalle,
 				count(tv.detalle) as tipo,
@@ -88,17 +110,20 @@ function ingresosFiestas($anio,$mes,$dia) {
 				vv.descripcion = 'Fiestas'
 					and year(v.fechacreacion) = ".$anio."
 					and month(v.fechacreacion) = ".$mes."
-					and day(v.fechacreacion) = ".$dia."
+					
 			group by tv.detalle , v.reftipoventa, v.cancelado
 		
-		order by v.reftipoventa";	
+		) as r
+group by r.detalle,r.reftipoventa
+		order by r.reftipoventa";	
+	$res = $this->query($sql,0);
 	if ($res == false) {
 		return 'Error al traer datos';
 	} else {
 		return $res;
 	}
 }
-
+//and day(v.fechacreacion) = ".$dia."
 function query($sql,$accion) {
 		
 		
