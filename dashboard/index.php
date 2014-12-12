@@ -47,6 +47,12 @@ $cantFiestas = mysql_num_rows($serviciosFiestas->traerFiestasPost($fecha));
 
 $resFiestas = $serviciosFiestas->traerFiestasPost($fecha);
 
+$resVentas = $serviciosVentas->traerVenta();
+
+$cantVentas = mysql_num_rows($serviciosVentas->traerVenta());
+
+$stockminimo = $serviciosProductos->traerProductosStockMin();
+
 ?>
 
 <!DOCTYPE HTML>
@@ -95,6 +101,14 @@ $resFiestas = $serviciosFiestas->traerFiestasPost($fecha);
 
 <div id="ingoGral" style=" margin-left:240px; padding-top:20px;">
 
+<?php if (mysql_num_rows($stockminimo)>0) { ?>
+<div id="alertasstock">
+	<?php while ($rowStock = mysql_fetch_array($stockminimo)) { ?>
+    	<p>El producto <a href="productos/modificar.php?id=<? echo $rowStock['idproducto']; ?>"><? echo $rowStock['nombre']; ?></a> esta por debajo del stock minimo <? echo $rowStock['stock_min']; ?></p>
+	<?php } ?>
+</div>
+<?php } ?>
+
 <div align="center" style="margin-left:-240px;">
 	<table border="0" cellpadding="0" cellspacing="0" width="600">
     	<tr>
@@ -105,7 +119,7 @@ $resFiestas = $serviciosFiestas->traerFiestasPost($fecha);
             </td>
             <td style="border:1px dashed #666; padding:10px;" width="150" align="center">
             	<img src="../imagenes/iconmenu/shopping145.png" width="50" height="50" style="float:left;">
-                <p style="color:#0CF; font-size:18px; height:16px;">12</p>
+                <p style="color:#0CF; font-size:18px; height:16px;"><?php echo $cantVentas; ?></p>
                 <p style="height:16px;">Ventas</p>
             </td>
             <td style="border:1px dashed #666; padding:10px;" width="150" align="center">
@@ -169,11 +183,43 @@ $resFiestas = $serviciosFiestas->traerFiestasPost($fecha);
     </div>
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimas 5 Ventas  <button type="button" class="btn btn-default btn-xs nuevoVentas">
+        	<p style="color: #fff; font-size:18px; height:16px;">Ultimas 10 Ventas  <button type="button" class="btn btn-default btn-xs nuevoVentas">
   <span class="glyphicon glyphicon-plus-sign"><span style="padding-left:3px;">Nuevo</span></button></p>
         </div>
     	<div class="cuerpoBox">
+			<table class="table table-striped">
+            	<thead>
+                	<tr>
+                    	<th>Detalle</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Importe</th>
+                    </tr>
+                </thead>
+                <tbody>
+<!--idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas -->
+                	<?php
+						if (mysql_num_rows($resVentas)>0) {
+							$cant = 0;
+							while ($row = mysql_fetch_array($resVentas)) {
+								$cant+=1;
+								if ($cant == 11) {
+									break;	
+								}
+					?>
+                    	<tr>
+                        	<td><?php echo utf8_encode($row['detalle']); ?></td>
+							<td><?php echo utf8_encode($row['nombre']); ?></td>
+                            <td><?php echo $row['cantidad']; ?></td>
+                            <td><?php echo $row['importe']; ?></td>
 
+                        </tr>
+                    <?php } ?>
+                    <?php } else { ?>
+                    	<h3>No hay ventas cargados.</h3>
+                    <?php } ?>
+                </tbody>
+            </table>
     	</div>
     </div>
     <div class="boxInfo">

@@ -191,9 +191,17 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                     </div>
                 	
                     <div class="form-group col-md-6">
-                        <div class="checkbox">
+                         <div class="checkbox">
                             <label>
-                              <input type="checkbox" id="egreso" name="egreso"> Egreso
+                              <select class="form-control" id="egreso" name="egreso">
+                                	<?php if (mysql_result($resProductos,0,'egreso') == 0) { ?>
+                                    <option value="0" selected>No es egreso</option>
+                                    <option value="1">Es egreso</option>
+                                    <?php } else { ?>
+                                    <option value="0">No es egreso</option>
+									<option value="1" selected>Es egreso</option>
+                                    <?php } ?>
+                            </select>
                             </label>
                           </div>
                     </div>

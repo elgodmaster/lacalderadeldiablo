@@ -556,6 +556,34 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc3bc', end
  padding:6px; height:36px; border-bottom:1px solid #C40000;
 			}
   
+#alertasstock {
+	position:absolute; 
+	top:10; 
+	left:62%; 
+	width:420px; 
+	height:auto; 
+	background-color:#09F; 
+	opacity:0.2; 
+	border:1px solid #006; 
+	z-index:9999; 
+	padding:10px;
+	color:#000;
+	font-weight:bold;
+}
+
+#alertasstock p {
+	border-bottom:1px solid #003;
+}
+
+#alertasstock a {
+	color:#333;
+}
+
+#alertasstock:hover {
+	opacity:1;
+}
+  
+
 /* latin-ext */
 @font-face {
   font-family: 'Lato';
