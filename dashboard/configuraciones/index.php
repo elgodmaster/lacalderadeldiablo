@@ -2,7 +2,7 @@
 
 session_start();
 
-if (!isset($_SESSION['usua_se']))
+if ((!isset($_SESSION['usua_se'])) || ($_SESSION['rol_se']!= 'Administrador'))
 {
 	header('Location: /lacalderadeldiablo/vistas/');
 } else {
@@ -16,8 +16,6 @@ require '../../includes/funcionesConfiguraciones.php';
 $serviciosConfiguraciones = new ServiciosConfiguraciones();
 
 $resTipoVenta = $serviciosConfiguraciones->traerTipoVenta();
-
-
 
 
 
