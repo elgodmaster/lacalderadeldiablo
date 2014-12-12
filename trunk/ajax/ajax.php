@@ -10,6 +10,7 @@ include ('../includes/funcionesVentas.php');
 include ('../includes/funcionesFiestas.php');
 include ('../includes/funcionesMovimientos.php');
 include ('../includes/funcionesClientes.php');
+require ('../includes/funcionesAdministrativo.php');
 
 $serviciosClientes  = new ServiciosClientes();
 
@@ -20,6 +21,7 @@ $serviciosProductos  = new ServiciosProductos();
 $serviciosConfiguraciones = new ServiciosConfiguraciones();
 $serviciosVentas = new ServiciosVentas();
 $serviciosFiestas = new ServiciosFiestas();
+$serviciosAdministrativo = new ServiciosAdministrativo();
 
 $serviciosMovimientos = new ServiciosMovimientos();
 
@@ -109,6 +111,13 @@ switch ($accion) {
 	case 'traerMovimienosClientesMovimientos':
 		traerMovimienosClientesMovimientos($serviciosMovimientos);
 		break;
+	case 'insertarAdministrativo':
+		insertarAdministrativo($serviciosAdministrativo);
+		break;
+	case 'modificarAdministrativo':
+		modificarAdministrativo($serviciosAdministrativo);
+		break;
+		
 		
 	case 'insertarTurno':
 		insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes);
@@ -402,6 +411,54 @@ function eliminarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraci
 	echo $res;
 }
 /* fin de las funciones que trabajan con los movimientos */
+
+function insertarAdministrativo($serviciosAdministrativo) {
+	
+	$importecanchas			=	$_POST['importecanchas'];
+	$importebar				=	$_POST['importebar'];
+	$importesueldos			=	$_POST['importesueldos'];
+	$importegastosvarios	=	$_POST['importegastosvarios'];
+	$importemercaderia		=	$_POST['importemercaderia'];
+	$importegas				=	$_POST['importegas'];
+	$importeluz				=	$_POST['importeluz'];
+	$importetelefono		=	$_POST['importetelefono'];
+	$importeagua			=	$_POST['importeagua'];
+	$importeinmobiliario	=	$_POST['importeinmobiliario'];
+	$importeimpuestos		=	$_POST['importeimpuestos'];
+	$importeautonomos		=	$_POST['importeautonomos'];
+	$importeingresosbrutos	=	$_POST['importeingresosbrutos'];
+	$importeaportes			=	$_POST['importeaportes'];
+	$importesmunicipal		=	$_POST['importesmunicipal'];
+	$importefiestas			=	$_POST['importefiestas'];
+	$anio					=	$_POST['anio'];
+	$mes					=	$_POST['mes'];
+	
+	echo $serviciosAdministrativo->insertarAdministrativo($importecanchas,$importebar,$importesueldos,$importegastosvarios,$importemercaderia,$importegas,$importeluz,$importetelefono,$importeagua,$importeinmobiliario,$importeimpuestos,$importeautonomos,$importeingresosbrutos,$importeaportes,$importesmunicipal,$importefiestas,$anio,$mes);
+}
+
+function modificarAdministrativo($serviciosAdministrativo) {
+	$id						=	$_POST['id'];
+	$importecanchas			=	$_POST['importecanchas'];
+	$importebar				=	$_POST['importebar'];
+	$importesueldos			=	$_POST['importesueldos'];
+	$importegastosvarios	=	$_POST['importegastosvarios'];
+	$importemercaderia		=	$_POST['importemercaderia'];
+	$importegas				=	$_POST['importegas'];
+	$importeluz				=	$_POST['importeluz'];
+	$importetelefono		=	$_POST['importetelefono'];
+	$importeagua			=	$_POST['importeagua'];
+	$importeinmobiliario	=	$_POST['importeinmobiliario'];
+	$importeimpuestos		=	$_POST['importeimpuestos'];
+	$importeautonomos		=	$_POST['importeautonomos'];
+	$importeingresosbrutos	=	$_POST['importeingresosbrutos'];
+	$importeaportes			=	$_POST['importeaportes'];
+	$importesmunicipal		=	$_POST['importesmunicipal'];
+	$importefiestas			=	$_POST['importefiestas'];
+	$anio					=	$_POST['anio'];
+	$mes					=	$_POST['mes'];
+	
+	echo $serviciosAdministrativo->modificarAdministrativo($id,$importecanchas,$importebar,$importesueldos,$importegastosvarios,$importemercaderia,$importegas,$importeluz,$importetelefono,$importeagua,$importeinmobiliario,$importeimpuestos,$importeautonomos,$importeingresosbrutos,$importeaportes,$importesmunicipal,$importefiestas,$anio,$mes);
+}
 
 
 function traerMovimienosClientesMovimientos($serviciosMovimientos) {

@@ -2,27 +2,33 @@
 
 session_start();
 
-if (!isset($_SESSION['usua_se']))
+if ((!isset($_SESSION['usua_se'])) || ($_SESSION['rol_se']!= 'Administrador'))
 {
 	header('Location: /lacalderadeldiablo/vistas/');
 } else {
 
 require '../../includes/funcionesHTML.php';
 $serviciosHTML = new ServiciosHTML();
-$resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Productos',$_SESSION['rol_se']);
+$resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Administrativo',$_SESSION['rol_se']);
+
 
 require '../../includes/funcionesProductos.php';
+require '../../includes/funcionesAdministrativo.php';
 
 $serviciosProductos = new ServiciosProductos();
+$serviciosAdministrativo = new ServiciosAdministrativo();
 
 $id = $_GET['id'];
 
-$resProductos = $serviciosProductos->traerProductoPorId($id);
+$resProductos = $serviciosProductos->traerProductos();
 
 $resProveedores = $serviciosProductos->traerProveedores();
 
 $resTipoProducto = $serviciosProductos->traerTipoProducto();
 
+$resAdministrativos = $serviciosAdministrativo->traerAdministratoId($id);
+
+$importes = $serviciosAdministrativo->traerMontosAdministrativos(date('Y'),date('m'));
 ?>
 
 <!DOCTYPE HTML>
@@ -90,25 +96,103 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                 	
 <!--cancha, bar, sueldo, gastos varios, mercaderia, gas, luz, T.E , agua, inmobiliario, imp. varios, autonomos, ingresos brutos, aportes, municipal -->
                 	
-				              	
-                	<div class="form-group col-md-3">
+				    <div class="form-group col-md-6" align="right">
+                    	<label for="cancha" class="control-label" style=" padding-right:60px;">Año</label>
+                        <div class="input-group col-md-4">
+                        	<select class="form-control" id="anio" name="anio">
+                            	<?php for ($i=2010;$i<2018;$i++) { ?>
+                                	<?php if ($i == mysql_result($resAdministrativos,0,'anio')) { ?>
+                                	<option value="<?php echo $i; ?>" selected><?php echo $i; ?></option>
+                                    <?php }  ?>
+  
+                                <?php } ?>
+                            </select>
+                        </div>
+
+                    </div>
+                    
+                    <div class="form-group col-md-6" align="left">
+                    <label for="cancha" class="control-label" style="padding-left:60px;">Mes</label>
+                        <div class="input-group col-md-4">
+                            <select class="form-control" id="mes" name="mes">
+                            	<?php for ($i=1;$i<=12;$i++) { ?>
+                                	<?php if ($i == mysql_result($resAdministrativos,0,'mes')) { ?>
+                                	<option value="<?php echo $i; ?>" selected><?php
+											switch ($i) {
+												case 1:
+													echo 'Enero';
+													break;
+												case 2:
+													echo 'Febrero';
+													break;
+												case 3:
+													echo 'Marzo';
+													break;
+												case 4:
+													echo 'Abril';
+													break;
+												case 5:
+													echo 'Mayo';
+													break;
+												case 6:
+													echo 'Junio';
+													break;
+												case 7:
+													echo 'Julio';
+													break;
+												case 8:
+													echo 'Agosto';
+													break;
+												case 9:
+													echo 'Septiembre';
+													break;
+												case 10:
+													echo 'Octubre';
+													break;
+												case 11:
+													echo 'Noviembre';
+													break;
+												case 12:
+													echo 'Diciembre';
+													break;	
+											}
+										?></option>
+                                    <?php }  ?>
+                               
+										
+                                    
+                                <?php } ?>
+                            </select>
+                        </div>
+				    </div>
+                    
+                    
+                    
+                     	
+                	<div class="form-group col-md-6">
                     	<label for="cancha" class="control-label" style="text-align:left">Cancha</label>
                         <div class="input-group col-md-12">
                         	<span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="cancha" name="cancha" placeholder="Ingrese un monto..." required>
+                            <input type="text" class="form-control" id="importecanchas" name="importecanchas" value="<?php echo $importes[0]; ?>" placeholder="Ingrese un monto..." >
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
                     
-                    <div id="errorCodigo" class="col-md-3" style="margin-top:40px;">
-                            
+                    
+                    <div class="form-group col-md-6">
+                    	<label for="cancha" class="control-label" style="text-align:left">Fiestas</label>
+                        <div class="input-group col-md-12">
+                        	<span class="input-group-addon">$</span>
+                            <input type="text" class="form-control" id="importefiestas" name="importefiestas" value="<?php echo $importes[2]; ?>" placeholder="Ingrese un monto..." >
+                            <span class="input-group-addon">.00</span>
+                        </div>
                     </div>
                     
                     <div class="form-group col-md-6">
                     	<label for="bar" class="control-label" style="text-align:left">Bar</label>
                         <div class="input-group col-md-12">
                         	<span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="bar" name="bar" placeholder="Ingrese un monto..." required>
+                            <input type="text" class="form-control" id="importebar" name="importebar" value="<?php echo $importes[1]; ?>" placeholder="Ingrese un monto..." >
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
@@ -118,7 +202,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                     	<label for="sueldo" class="control-label" style="text-align:left">Sueldo</label>
                         <div class="input-group col-md-12">
                         	<span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="sueldo" name="sueldo" placeholder="Ingrese un monto..." required>
+                            <input type="text" class="form-control" id="importesueldos" value="<?php echo mysql_result($resAdministrativos,0,'importesueldos'); ?>" name="importesueldos" placeholder="Ingrese un monto..." >
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
@@ -127,7 +211,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                     	<label for="gastosVarios" class="control-label" style="text-align:left">Gastos Varios</label>
                         <div class="input-group col-md-12">
                         	<span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="gastosVarios" name="gastosVarios" placeholder="Ingrese un monto..." required>
+                            <input type="text" class="form-control" id="importegastosvarios"  value="<?php echo $importes[3]; ?>" name="importegastosvarios" placeholder="Ingrese un monto..." >
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
@@ -137,7 +221,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                     	<label for="mercaderia" class="control-label" style="text-align:left">Mercaderia</label>
                         <div class="input-group col-md-12">
                         	<span class="input-group-addon">$</span>
-                        	<input type="text" class="form-control" id="mercaderia" name="mercaderia" placeholder="Ingrese un monto..." required>
+                        	<input type="text" class="form-control" id="importemercaderia" name="importemercaderia" value="<?php echo mysql_result($resAdministrativos,0,'importemercaderia'); ?>" placeholder="Ingrese un monto..." >
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
@@ -146,7 +230,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                     	<label for="gas" class="control-label" style="text-align:left">Gas</label>
                         <div class="input-group col-md-12">
                         	<span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="gas" name="gas" placeholder="Ingrese un monto..." required>
+                            <input type="text" class="form-control" id="importegas" name="importegas" value="<?php echo mysql_result($resAdministrativos,0,'importegas'); ?>" placeholder="Ingrese un monto..." >
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
@@ -156,7 +240,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                     	<label for="luz" class="control-label" style="text-align:left">Luz</label>
                         <div class="input-group col-md-12">
                         	<span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="luz" name="luz" placeholder="Ingrese un monto..." required>
+                            <input type="text" class="form-control" id="importeluz" name="importeluz" value="<?php echo mysql_result($resAdministrativos,0,'importeluz'); ?>" placeholder="Ingrese un monto..." >
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
@@ -165,7 +249,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                     	<label for="T.E" class="control-label" style="text-align:left">T.E</label>
                         <div class="input-group col-md-12">
                         	<span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="T.E" name="T.E" placeholder="Ingrese un monto..." required>
+                            <input type="text" class="form-control" id="importetelefono" name="importetelefono" value="<?php echo mysql_result($resAdministrativos,0,'importetelefono'); ?>" placeholder="Ingrese un monto..." >
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
@@ -175,7 +259,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                     	<label for="agua" class="control-label" style="text-align:left">Agua</label>
                         <div class="input-group col-md-12">
                         	<span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="agua" name="agua" placeholder="Ingrese un monto..." required>
+                            <input type="text" class="form-control" id="importeagua" name="importeagua" value="<?php echo mysql_result($resAdministrativos,0,'importeagua'); ?>" placeholder="Ingrese un monto..." >
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
@@ -184,7 +268,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                     	<label for="inmobiliario" class="control-label" style="text-align:left">Inmobiliario</label>
                         <div class="input-group col-md-12">
                         	<span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="inmobiliario" name="inmobiliario" placeholder="Ingrese un monto..." required>
+                            <input type="text" class="form-control" id="importeinmobiliario" name="importeinmobiliario" value="<?php echo mysql_result($resAdministrativos,0,'importeinmobiliario'); ?>" placeholder="Ingrese un monto..." >
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
@@ -193,7 +277,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                         <label for="impVarios" class="control-label" style="text-align:left">Impuestos Varios</label>
                         <div class="input-group col-md-12">
                            <span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="impVarios" name="impVarios" placeholder="Ingrese un monto..." required>
+                            <input type="text" class="form-control" id="importeimpuestos" name="importeimpuestos" value="<?php echo mysql_result($resAdministrativos,0,'importeimpuestos'); ?>" placeholder="Ingrese un monto..." >
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
@@ -202,16 +286,16 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                         <label for="autonomos" class="control-label" style="text-align:left">Autonomos</label>
                         <div class="input-group col-md-12">
                             <span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="autonomos" name="autonomos" placeholder="Ingrese un monto..." required>
+                            <input type="text" class="form-control" id="importeautonomos" name="importeautonomos" value="<?php echo mysql_result($resAdministrativos,0,'importeautonomos'); ?>" placeholder="Ingrese un monto..." >
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
                 
                     <div class="form-group col-md-6">
-                        <label for="ingresos brutos" class="control-label" style="text-align:left">Ingresos Brutos</label>
+                        <label for="ingresosBrutos" class="control-label" style="text-align:left">Ingresos Brutos</label>
                         <div class="input-group col-md-12">
                            <span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="ingresos brutos" name="ingresos brutos" placeholder="Ingrese un monto..." required>
+                            <input type="text" class="form-control" id="importeingresosbrutos" name="importeingresosbrutos" value="<?php echo mysql_result($resAdministrativos,0,'importeingresosbrutos'); ?>" placeholder="Ingrese un monto..." >
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
@@ -220,7 +304,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                         <label for="aportes" class="control-label" style="text-align:left">Aportes</label>
                         <div class="input-group col-md-12">
                            <span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="aportes" name="aportes" placeholder="Ingrese un monto..." required>
+                            <input type="text" class="form-control" id="importeaportes" name="importeaportes" value="<?php echo mysql_result($resAdministrativos,0,'importeaportes'); ?>" placeholder="Ingrese un monto..." >
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
@@ -229,15 +313,14 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                         <label for="municipal" class="control-label" style="text-align:left">Municipal</label>
                         <div class="input-group col-md-12">
                             <span class="input-group-addon">$</span>
-                            <input type="text" class="form-control" id="municipal" name="municipal" placeholder="Ingrese un monto..." required>
+                            <input type="text" class="form-control" id="importesmunicipal" name="importesmunicipal" value="<?php echo mysql_result($resAdministrativos,0,'importesmunicipal'); ?>" placeholder="Ingrese un monto..." >
                             <span class="input-group-addon">.00</span>
                         </div>
                     </div>
                 
-                
-                
                     </div>
                     </div>
+
                     
                     <ul class="list-inline" style="padding-top:15px;">
                     	<li>
@@ -254,10 +337,10 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                     <div id="load">
                     
                     </div>
-                    <div class="alert">
-                    
-                    </div>
-                    <input type="hidden" id="accion" name="accion" value="modificarProducto"/>
+                    <div id="error" class="alert alert-info">
+                		<p><strong>Importante:</strong> Recuerde que los montos de Canchas, Fiestas, Bar y Gastos Varios se calculan solos.</p>
+                	</div>
+                    <input type="hidden" id="accion" name="accion" value="modificarAdministrativo"/>
                     <input type="hidden" id="id" name="id" value="<?php echo $id; ?>"/>
                 </form>
                 
@@ -273,7 +356,122 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
 
 </div>
 
+<script type="text/javascript">
+$(document).ready(function(){
 
+$('.varborrar').click(function(event){
+			  usersid =  $(this).attr("id");
+			  if (!isNaN(usersid)) {
+				$("#idEliminar").val(usersid);
+				$("#dialog2").dialog("open");
+				
+			  } else {
+				alert("Error, vuelva a realizar la acción.");	
+			  }
+	});//fin del boton eliminar
+	
+	$('.volver').click(function(event){
+				url = "index.php";
+				$(location).attr('href',url);
+	});//fin del boton eliminar
+
+	$( "#dialog2" ).dialog({
+		 	
+			    autoOpen: false,
+			 	resizable: false,
+				width:600,
+				height:240,
+				modal: true,
+				buttons: {
+				    "Eliminar": function() {
+	
+						$.ajax({
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarAdministrativo'},
+									url:   '../../ajax/ajax.php',
+									type:  'post',
+									beforeSend: function () {
+											
+									},
+									success:  function (response) {
+											url = "index.php";
+											$(location).attr('href',url);
+											
+									}
+							});
+						$( this ).dialog( "close" );
+						$( this ).dialog( "close" );
+							$('html, body').animate({
+	           					scrollTop: '1000px'
+	       					},
+	       					1500);
+				    },
+				    Cancelar: function() {
+						$( this ).dialog( "close" );
+				    }
+				}
+		 
+		 
+	 		}); //fin del dialogo para eliminar
+			
+			
+	//al enviar el formulario
+    $('#modificar').click(function(){
+
+			//información del formulario
+			var formData = new FormData($(".formulario")[0]);
+			var message = "";
+			//hacemos la petición ajax  
+			$.ajax({
+				url: '../../ajax/ajax.php',  
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: formData,
+				//necesario para subir archivos via ajax
+				cache: false,
+				contentType: false,
+				processData: false,
+				//mientras enviamos el archivo
+				beforeSend: function(){
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');       
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+
+					if (data != '') {
+                                            $(".alert").removeClass("alert-danger");
+											$(".alert").removeClass("alert-info");
+                                            $(".alert").addClass("alert-success");
+                                            $(".alert").html('<strong>Ok!</strong> Se cargo exitosamente el <strong>Producto</strong>. ');
+											$(".alert").delay(3000).queue(function(){
+												/*aca lo que quiero hacer 
+												  después de los 2 segundos de retraso*/
+												$(this).dequeue(); //continúo con el siguiente ítem en la cola
+												
+											});
+											$("#load").html('');
+											url = "modificar.php?id=<?php echo $id; ?>";
+											$(location).attr('href',url);
+                                            
+											
+                                        } else {
+                                        	$(".alert").removeClass("alert-danger");
+                                            $(".alert").addClass("alert-danger");
+                                            $(".alert").html('<strong>Error!</strong> '+data);
+                                            $("#load").html('');
+                                        }
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$(".alert").html('<strong>Error!</strong> Actualice la pagina');
+                    $("#load").html('');
+				}
+			});
+    });//fin del cargar
+	
+	
+	
+});
 </script>
 <?php } ?>
 </body>

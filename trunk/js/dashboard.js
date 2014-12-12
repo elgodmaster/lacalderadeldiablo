@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-			$('.icodashboard2, .icoventas2,.icotorta2, .icousuarios2,.icoconfiguracion2 , .icoturnos2, .icoproductos2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
+			$('.icodashboard2, .icoventas2,.icotorta2, .icoadministrativo2, .icousuarios2,.icoconfiguracion2 , .icoturnos2, .icoproductos2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
 				$('.menuHober').hide();
 				$('.todoMenu').show(100, function() {
 					$('#navigation').animate({'margin-left':'0px'}, {

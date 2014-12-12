@@ -33,7 +33,7 @@ function ingresosCanchas($where) {
 								inner join
 							lcdd_valores vv ON vv.idvalor = tv.refvalores
 						where
-							vv.descripcion = 'Canchas'
+							vv.descripcion = 'Canchas' and v.cancelado = 0 
 								".$where."
 						group by tv.detalle , v.reftipoventa, v.cancelado
 			) as r
@@ -65,7 +65,7 @@ function ingresosVentas($where) {
 					inner join
 				lcdd_tipoproducto tp on tp.idtipoproducto = p.reftipoproducto
 			where
-				vv.descripcion = 'Productos'
+				vv.descripcion = 'Productos' and v.cancelado = 0
 					".$where."
 					and tp.activo = 1
 			group by tp.tipoproducto,p.egreso
@@ -103,7 +103,7 @@ function ingresosFiestas($where) {
 					inner join
 				lcdd_valores vv ON vv.idvalor = tv.refvalores
 			where
-				vv.descripcion = 'Fiestas'
+				vv.descripcion = 'Fiestas' and v.cancelado = 0
 				".$where."
 			group by tv.detalle , v.reftipoventa, v.cancelado
 		
