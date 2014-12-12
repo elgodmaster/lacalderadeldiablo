@@ -156,13 +156,17 @@ function traerVenta() {
 				    p.nombre,
 				    p.codigo,
 				    p.precio_unit,
-				    tv.detalle
+				    tv.detalle,
+                    v.cantidad
 				FROM
 				    lcdd_ventas v
 				        INNER JOIN
 				    lcdd_tipoventa tv ON v.reftipoventa = tv.idtipoventa
 				        LEFT JOIN
 				    lcdd_productos p ON v.refproducto = p.idproducto
+				inner join
+					lcdd_valores vv on tv.refvalores = vv.idvalor
+				where vv.descripcion in ('Canchas','Fiestas','Productos')
 				ORDER BY v.fechacreacion DESC";
 				
 	$res 	=	$this->query($sql,0);

@@ -244,6 +244,38 @@ function traerProductos() {
 }
 
 
+function traerProductosStockMin() {
+	$sql = "select
+				p.idproducto,
+					p.nombre,
+					p.precio_unit,
+					p.precio_venta,
+					p.stock,
+					p.stock_min,
+					p.reftipoproducto,
+					p.refproveedor,
+					p.codigo,
+					p.codigobarra,
+					p.caracteristicas,
+					tp.tipoproducto,
+					pr.proveedor,
+					p.egreso
+					from		lcdd_productos p
+
+					inner
+					join		lcdd_tipoproducto tp
+					on			p.reftipoproducto = tp.idtipoproducto and tp.activo = 1
+
+					inner
+					join		lcdd_proveedores pr
+					on			pr.idproveedor = p.refproveedor
+					where p.stock <= p.stock_min and p.egreso = 0
+					order by p.nombre";
+	$res = $this->query($sql,0) or die ('Hubo un error');
+	return $res;
+}
+
+
 function traerProductoPorCodigo($codigo) {
 	$sql = "select
 				p.idproducto,
