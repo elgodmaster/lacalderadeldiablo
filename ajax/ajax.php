@@ -289,11 +289,11 @@ function modificarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracio
 		$montoSaldo = mysql_result($mov,0,3);
 		
 		$serviciosVentas->eliminarVenta($idventa);
-		$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha,1);
+		$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion,1);
 		
 		$serviciosMovimientos->eliminarMovimiento($idmov);
 		
-		$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,'',$usuacrea,$id,'Alquiler de '.$cancha);
+		$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,'',$usuacrea,$id,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion);
 		
 		//devuelvo el saldo y descuento el saldo del cliente
 		$serviciosClientes->cargarSaldo($refcliente,$montoSaldo);
