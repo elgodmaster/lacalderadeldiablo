@@ -31,6 +31,8 @@ $resPrimerUltimoTurno = $serviciosTurnos->traerPrimerUltimoTurno(date('Y-m-d'));
 
 $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
 
+$diasMes = cal_days_in_month(CAL_GREGORIAN,date('m'),date('Y')) - (integer)date('d');
+
 ?>
 
 <!DOCTYPE HTML>
@@ -66,6 +68,7 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
 		
 	</style>
     
+<script src="../../js/date.js"></script>
 <script src="../../js/dashboard.js"></script>
    	  <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
@@ -85,6 +88,17 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
 		});
 		
 		$('#horautilizacion').change(function() {
+
+			if($('#mesentero').is(":checked")) {
+				
+			} else {
+				if (parseInt($('#horautilizacion').val())>=18) {
+					$("#tipoventa option[value=5]").attr("selected",true);
+				} else {
+					$("#tipoventa option[value=2]").attr("selected",true);
+				}
+			}
+
 			$("#fechautilizacion").val('');
 			$("#fechautilizacion2").val('');
 			$("#fechautilizacion3").val('');
@@ -94,13 +108,31 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
 		$('#mesentero').change(function() {
 			if($(this).is(":checked")) {
 
-				$('#fec2').show();
-				$('#fec3').show();
-				$('#fec4').show();
+				$("#tipoventa option[value=8]").attr("selected",true);
+
+				var diasquequedan = Date.parse('t + <?php echo $diasMes; ?> d');
+
+				if (diasquequedan >= Date.parse('t + 7 d')) {
+					$('#fec2').show();	
+				}
+				
+				if (diasquequedan >= Date.parse('t + 14 d')) {
+					$('#fec3').show();	
+				}
+
+				if (diasquequedan >= Date.parse('t + 21 d')) {
+					$('#fec4').show();	
+				}
+
+				if (diasquequedan >= Date.parse('t + 28 d')) {
+					$('#fec5').show();	
+				}
+
 			} else {
 				$('#fec2').hide();
 				$('#fec3').hide();
 				$('#fec4').hide();
+				$('#fec5').hide();
 			}
        
 		});
@@ -185,7 +217,7 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
 		      }
 		 });
 		 
-		 $("#fechautilizacion4").datepicker({
+		$("#fechautilizacion4").datepicker({
 		      showOn: 'both',
 			  dateFormat: 'yy-mm-dd',
 		      buttonImage: 'calendar.png',
@@ -198,13 +230,28 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
 				 
 		      }
 		 });
+
+		$("#fechautilizacion5").datepicker({
+		      showOn: 'both',
+			  dateFormat: 'yy-mm-dd',
+		      buttonImage: 'calendar.png',
+		      buttonImageOnly: true,
+		      changeYear: true,
+		      numberOfMonths: 2,
+		      onSelect: function(textoFecha, objDatepicker){
+				 $('#fechaCambio').html(textoFecha);
+		         validaDisponibilidadCancha($('#refcancha').val(),textoFecha,$('#horautilizacion').val(),$("#fechautilizacion5"),$('.fech5'));
+				 
+		      }
+		 });
+
       });
 	  
 	
     </script>
     <style>
 			
-			$("#fechautilizacion").datepicker({
+		$("#fechautilizacion").datepicker({
 		   showOn: 'both',
 		   buttonImage: 'calendar.png',
 		   buttonImageOnly: true,
@@ -299,6 +346,16 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Canchas");
                     	<label for="fechautilizacion" class="control-label col-lg-3" style="text-align:left">Fecha Utilización</label>
                         <div class="col-lg-2">
                         	<input type="text" class="form-control" id="fechautilizacion4" name="fechautilizacion4" >
+                        </div>
+                        <div class="col-lg-3 fech4">
+                        	
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="display:none;" id="fec5">
+                    	<label for="fechautilizacion" class="control-label col-lg-3" style="text-align:left">Fecha Utilización</label>
+                        <div class="col-lg-2">
+                        	<input type="text" class="form-control" id="fechautilizacion5" name="fechautilizacion5" >
                         </div>
                         <div class="col-lg-3 fech4">
                         	
@@ -737,6 +794,7 @@ $(document).ready(function(){
 							fechautilizacion2: $('#fechautilizacion2').val(),
 							fechautilizacion3: $('#fechautilizacion3').val(),
 							fechautilizacion4: $('#fechautilizacion4').val(),
+							fechautilizacion5: $('#fechautilizacion5').val(),
 							mesentero: $("#mesentero").is(':checked') ? 1 : 0,
 							nocliente: $('#nocliente').val(),
 							usuacrea:	<?php echo "'".$_SESSION['nombre_se']."'"; ?>,
