@@ -156,7 +156,8 @@ function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracion
 	$fechacreacion		=	'';
 	$usuacrea			=	$_POST['usuacrea'];
 	$tipoventa			=	$_POST['tipoventa'];
-
+	$indefinido			=	$_POST['indefinido'];
+	
 	$nocliente			=	$_POST['nocliente'];
 	$mesentero 			=	$_POST['mesentero'];
 
@@ -272,6 +273,7 @@ function modificarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracio
 	$horautilizacion	=	$_POST['horautilizacion'];
 	$refcliente			=	$_POST['refcliente'];
 	$fechacreacion		=	'';
+	$indefinido			=	$_POST['indefinido'];
 	$usuacrea			=	$_POST['usuacrea'];
 	$tipoventa			=	$_POST['tipoventa'];
 	
