@@ -228,6 +228,16 @@ $idtipoventa	= mysql_result($mov,0,1);
                         </div>
                     </div>
                     
+                    
+                    <div class="form-group">
+                    	<label for="refcancha" class="control-label col-lg-3" style="text-align:left">Indeterminado</label>
+                        <div class="col-lg-1">
+                        	<input type="checkbox" class="form-control" id="activo" name="activo"/>
+                        </div>
+                    </div>
+                    
+                    
+                    
                     <ul class="list-inline" style="padding-top:15px;">
                     	<li>
                     		<button type="button" class="btn btn-primary" id="modificar" style="margin-left:0px;">Modificar</button>
@@ -484,6 +494,7 @@ $(document).ready(function(){
 						fechautilizacion: $('#fechautilizacion').val(),
 						usuacrea:	<?php echo "'".$_SESSION['nombre_se']."'"; ?>,
 						tipoventa: $('#tipoventa').val(),
+						indefinido: $("#activo").prop("checked") ? 1 : 0;
 						accion: 'modificarTurno'},
 					url:   '../../ajax/ajax.php',
 					type:  'post',

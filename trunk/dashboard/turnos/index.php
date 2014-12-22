@@ -404,6 +404,12 @@ $diasMes = cal_days_in_month(CAL_GREGORIAN,date('m'),date('Y')) - (integer)date(
                         </div>
                     </div>
                     
+                    <div class="form-group">
+                    	<label for="refcancha" class="control-label col-lg-3" style="text-align:left">Indeterminado</label>
+                        <div class="col-lg-1">
+                        	<input type="checkbox" class="form-control" id="activo" name="activo"/>
+                        </div>
+                    </div>
                     
                     
                     <ul class="list-inline" style="padding-top:15px;">
@@ -661,6 +667,7 @@ $(document).ready(function(){
 											telefono: $('#telefono').val(),
 											usuacrea:	<?php echo "'".$_SESSION['nombre_se']."'"; ?>,
 											saldo: $('#saldo').val(),
+											indefinido: $("#activo").prop("checked") ? 1 : 0,
 											accion: 'insertarCliente'},
 									url:   '../../ajax/ajax_clientes.php',
 									type:  'post',
