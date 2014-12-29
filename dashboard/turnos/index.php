@@ -659,7 +659,8 @@ $(document).ready(function(){
 				modal: true,
 				buttons: {
 				    "Cargar": function() {
-                                            if ($('#nombre').val() != '') {
+						
+                        if ($('#nombre').val() != '') {
 						$.ajax({
 									data:  {nombre: $('#nombre').val(),
 											email: $('#email').val(),
@@ -667,7 +668,6 @@ $(document).ready(function(){
 											telefono: $('#telefono').val(),
 											usuacrea:	<?php echo "'".$_SESSION['nombre_se']."'"; ?>,
 											saldo: $('#saldo').val(),
-											indefinido: $("#activo").prop("checked") ? 1 : 0,
 											accion: 'insertarCliente'},
 									url:   '../../ajax/ajax_clientes.php',
 									type:  'post',
@@ -806,6 +806,7 @@ $(document).ready(function(){
 							nocliente: $('#nocliente').val(),
 							usuacrea:	<?php echo "'".$_SESSION['nombre_se']."'"; ?>,
 							tipoventa: $('#tipoventa').val(),
+							indefinido : $("#activo").is(':checked') ? 1 : 0,
 							accion: 'insertarTurno'},
 					url:   '../../ajax/ajax.php',
 					type:  'post',

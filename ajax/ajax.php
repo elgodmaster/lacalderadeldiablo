@@ -119,6 +119,9 @@ switch ($accion) {
 		break;
 		
 		
+	case 'insertarTurnoVerificado':
+		insertarTurnoVerificado($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes);
+		break;
 	case 'insertarTurno':
 		insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes);
 		break;
@@ -144,6 +147,54 @@ switch ($accion) {
 
 
 /* functiones que trabajan con ventas y movimientos */
+
+
+function insertarTurnoVerificado($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes) {
+	$id			=	$_POST['idturno'];
+	$usuacrea	=	$_POST['usuacrea'];
+	
+	$resTraerTurrno = $serviciosTurnos->traerTurnosPorId($id);
+	
+	$refcancha			=	mysql_result($resTraerTurrno,0,'refcancha');
+	$fechautilizacion	=	date('Y-m-d');
+
+	
+	
+	$horautilizacion	=	mysql_result($resTraerTurrno,0,'horautilizacion');
+	$refcliente			=	mysql_result($resTraerTurrno,0,'refcliente');
+	$fechacreacion		=	mysql_result($resTraerTurrno,0,'fechacreacion');
+	$usuacrea			=	$_POST['usuacrea'];
+	//5 alquiler de canchas de noche - 2 alquiler de canchas de dia
+	if (mysql_result($resTraerTurrno,0,'horautilizacion') >= 18) {
+		$tipoventa			=	5;
+	} else {
+		$tipoventa			=	2;
+	}
+	$indefinido			=	1;
+	
+	$nocliente			=	mysql_result($resTraerTurrno,0,'cliente');
+
+	$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
+
+	if ((integer)$res > 0) {
+		$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
+		$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+		$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+
+		$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion,1);
+		$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion);
+		//descuento el saldo del cliente
+		$serviciosClientes->descontarSaldo($refcliente,$monto);
+		$res = '';
+	}
+
+	echo $res;
+}
+
+
+
+
+
 
 function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes) {
 	$refcancha			=	$_POST['refcancha'];
@@ -173,7 +224,7 @@ function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracion
 		$fechautilizacion4	=	$_POST['fechautilizacion4'];
 
 		if ($fechautilizacion2 != '0000-00-00') {
-			$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion2,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente);
+			$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion2,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
 			if ((integer)$res > 0) {
 				$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
 				$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
@@ -189,7 +240,7 @@ function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracion
 		}
 		
 		if ($fechautilizacion3 != '0000-00-00') {
-			$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion3,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente);
+			$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion3,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
 			if ((integer)$res > 0) {
 				$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
 				$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
@@ -204,7 +255,7 @@ function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracion
 		}
 
 		if ($fechautilizacion4 != '0000-00-00') {
-			$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion4,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente);
+			$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion4,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
 			if ((integer)$res > 0) {
 				$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
 				$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
@@ -221,7 +272,7 @@ function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracion
 		
 	}
 
-	$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente);
+	$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
 
 	if ((integer)$res > 0) {
 		$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);

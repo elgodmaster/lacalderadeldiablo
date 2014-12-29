@@ -78,6 +78,28 @@ $idtipoventa	= mysql_result($mov,0,1);
         "use strict";
         $('#navigation').perfectScrollbar();
       	
+		$('#refcancha').change(function() {
+			$("#fechautilizacion").val('');		
+		});
+		
+		$('#horautilizacion').change(function() {
+
+			if($('#mesentero').is(":checked")) {
+				
+			} else {
+				if (parseInt($('#horautilizacion').val())>=18) {
+					$("#tipoventa option[value=5]").attr("selected",true);
+				} else {
+					$("#tipoventa option[value=2]").attr("selected",true);
+				}
+			}
+
+			$("#fechautilizacion").val('');
+			$("#fechautilizacion2").val('');
+			$("#fechautilizacion3").val('');
+			$("#fechautilizacion4").val('');			
+		});
+		
 		$("#fechautilizacion").datepicker({
 		      showOn: 'both',
 			  dateFormat: 'yy-mm-dd',
@@ -371,10 +393,10 @@ $(document).ready(function(){
                                             if ($('#nombre').val() != '') {
 						$.ajax({
 									data:  {nombre: $('#nombre').val(),
-                                                                                email: $('#email').val(),
-                                                                                nrodocumento: $('#nrodocumento').val(),
-                                                                                telefono: $('#telefono').val(),
-                                                                                accion: 'insertarCliente'},
+											email: $('#email').val(),
+											nrodocumento: $('#nrodocumento').val(),
+											telefono: $('#telefono').val(),
+											accion: 'insertarCliente'},
 									url:   '../../ajax/ajax_clientes.php',
 									type:  'post',
 									beforeSend: function () {
@@ -494,7 +516,7 @@ $(document).ready(function(){
 						fechautilizacion: $('#fechautilizacion').val(),
 						usuacrea:	<?php echo "'".$_SESSION['nombre_se']."'"; ?>,
 						tipoventa: $('#tipoventa').val(),
-						indefinido: $("#activo").prop("checked") ? 1 : 0;
+						indefinido: $("#activo").is(':checked') ? 1 : 0,
 						accion: 'modificarTurno'},
 					url:   '../../ajax/ajax.php',
 					type:  'post',

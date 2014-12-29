@@ -166,10 +166,50 @@ $stockminimo = $serviciosProductos->traerProductosStockMin();
 					?>
                     	<tr>
                         	<td><?php echo $row['horautilizacion']; ?></td>
-                            <td><a href="turnos/modificar.php?id=<?php echo $row['turno1']; ?>"><?php echo $row['Cancha1']; ?></a></td>
-                            <td><a href="turnos/modificar.php?id=<?php echo $row['turno2']; ?>"><?php echo $row['Cancha2']; ?></a></td>
-                            <td><a href="turnos/modificar.php?id=<?php echo $row['turno3']; ?>"><?php echo $row['Cancha3']; ?></a></td>
-
+                            <td>
+                            	<?php if ($row['turno1'] != '') { ?>
+                                    <a href="turnos/modificar.php?id=<?php echo $row['turno1']; ?>"><?php echo $row['Cancha1']; ?></a>
+                                    <?php if (date('Y-m-d') == $row['fechautilizacion']) { ?>
+                                        <button type="button" class="btn btn-success btn-sm">
+                                          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Verificado
+                                        </button>
+                                    <?php } else { ?>
+                                        <button type="button" class="btn btn-info btn-sm verificar" id="<?php echo $row['turno1']; ?>">
+                                          <span class="glyphicon glyphicon-check" aria-hidden="true"></span> Verificar
+                                        </button>
+                                    <?php } ?>
+                                <?php } ?>
+                            </td>
+                            <td>
+                            	<?php if ($row['turno2'] != '') { ?>
+                                    <a href="turnos/modificar.php?id=<?php echo $row['turno2']; ?>"><?php echo $row['Cancha2']; ?></a>
+                                    <?php if (date('Y-m-d') == $row['fechautilizacion']) { ?>
+                                        <button type="button" class="btn btn-success btn-sm">
+                                          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Verificado
+                                        </button>
+                                    <?php } else { ?>
+                                        <button type="button" class="btn btn-info btn-sm verificar" id="<?php echo $row['turno2']; ?>">
+                                          <span class="glyphicon glyphicon-check" aria-hidden="true"></span> Verificar
+                                        </button>
+                                    <?php } ?>
+                                <?php } ?>
+                            
+                            </td>
+                            <td>
+                            	<?php if ($row['turno3'] != '') { ?>
+                                    <a href="turnos/modificar.php?id=<?php echo $row['turno3']; ?>"><?php echo $row['Cancha3']; ?></a>
+                                    <?php if (date('Y-m-d') == $row['fechautilizacion']) { ?>
+                                        <button type="button" class="btn btn-success btn-sm">
+                                          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Verificado
+                                        </button>
+                                    <?php } else { ?>
+                                        <button type="button" class="btn btn-info btn-sm verificar" id="<?php echo $row['turno3']; ?>">
+                                          <span class="glyphicon glyphicon-check" aria-hidden="true"></span> Verificar
+                                        </button>
+                                    <?php } ?>
+                                <?php } ?>
+                            
+                            </td>
 
                         </tr>
                     <?php } ?>
@@ -349,6 +389,31 @@ $stockminimo = $serviciosProductos->traerProductosStockMin();
 
 <script type="text/javascript">
 $(document).ready(function(){
+	
+
+	$('.verificar').live("click",function(event){
+		  usersid =  $(this).attr("id");
+		  if (!isNaN(usersid)) {
+			$.ajax({
+					data:  {idturno: usersid,
+							usuacrea: <?php echo "'".$_SESSION['nombre_se']."'"; ?>,
+							accion: 'insertarTurnoVerificado'},
+					url:   '../ajax/ajax.php',
+					type:  'post',
+					beforeSend: function () {
+							
+					},
+					success:  function (response) {
+							url = "index.php";
+							$(location).attr('href',url);
+							
+					}
+			});
+			
+		  } else {
+			alert("Error, vuelva a realizar la acción.");	
+		  }
+	});//fin del boton verificar
 	
 	$('.nuevoTurno').click(function(event){
 			url = "turnos/";
