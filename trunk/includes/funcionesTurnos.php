@@ -68,7 +68,7 @@ function traerTurnosPorDia($fecha) {
 	$sql = "select t.idturno,t.refcancha,t.fechautilizacion,t.horautilizacion,t.refcliente,t.fechacreacion,t.usuacrea,t.cliente
 			from lcdd_turnos t
 			left join lcdd_clientes c on t.refcliente = c.idcliente 
-			where activo = 1 WEEKDAY(t.fechautilizacion) = WEEKDAY('".$fecha."') order by t.horautilizacion";
+			where activo = 1 and WEEKDAY(t.fechautilizacion) = WEEKDAY('".$fecha."') order by t.horautilizacion";
 	$res = $this->query($sql,0);
 	return $res;
 }
@@ -99,7 +99,7 @@ function traerTurnosPorDiaAgrupado($fecha) {
 			        when t.refcancha = 3 then t.idturno
 			        else ''
 			    end) as turno3,
-			    t.fechautilizacion,
+			    max(t.fechautilizacion) as fechautilizacion,
 			    t.horautilizacion
 			from
 			    lcdd_turnos t
@@ -107,7 +107,7 @@ function traerTurnosPorDiaAgrupado($fecha) {
 			    lcdd_clientes c ON t.refcliente = c.idcliente
 			where
 			    WEEKDAY(t.fechautilizacion) = WEEKDAY('".$fecha."') and t.activo = 1
-			group by t.fechautilizacion , t.horautilizacion
+			group by t.horautilizacion
 			order by t.horautilizacion";
 	$res = $this->query($sql,0);
 	return $res;
@@ -117,7 +117,7 @@ function traerTurnosPorDiaCanchaFecha($fecha,$horario,$refcancha) {
 	$sql = "select t.cliente,t.idturno,c.idcliente
 			from lcdd_turnos t 
 			left join lcdd_clientes c on t.refcliente = c.idcliente
-			where t.activo = 1 and WEEKDAY(t.fechautilizacion) = WEEKDAY('".$fecha."') and hour(t.horautilizacion) = '".$horario."' and t.refcancha =".$refcancha;
+			where t.activo = 1 and WEEKDAY(t.fechautilizacion) = WEEKDAY('".$fecha."') and hour(t.horautilizacion) = '".$horario."' and t.refcancha =".$refcancha." order by idturno desc";
 	$res = $this->query($sql,0);
 
 	return $res;
@@ -125,7 +125,7 @@ function traerTurnosPorDiaCanchaFecha($fecha,$horario,$refcancha) {
 
 function hayTurnos($fecha,$horario,$refcancha) {
 	$sql = "select idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea
-			from lcdd_turnos where activo = 1 and WEEKDAY(t.fechautilizacion) = WEEKDAY('".$fecha."') and hour(horautilizacion) = '".$horario."' and refcancha =".$refcancha;
+			from lcdd_turnos where activo = 1 and WEEKDAY(fechautilizacion) = WEEKDAY('".$fecha."') and hour(horautilizacion) = '".$horario."' and refcancha =".$refcancha;
 	$res = $this->query($sql,0);
 
 	if (mysql_num_rows($res) > 0) {
@@ -137,7 +137,7 @@ function hayTurnos($fecha,$horario,$refcancha) {
 
 function existeTurno($fecha,$horario,$refcancha,$id) {
 	$sql = "select idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea
-			from lcdd_turnos where activo = 1 and WEEKDAY(t.fechautilizacion) = WEEKDAY('".$fecha."') and hour(horautilizacion) = '".$horario."' and refcancha =".$refcancha;
+			from lcdd_turnos where activo = 1 and WEEKDAY(fechautilizacion) = WEEKDAY('".$fecha."') and hour(horautilizacion) = '".$horario."' and refcancha =".$refcancha;
 	$res = $this->query($sql,0);
 	if (mysql_num_rows($res) > 0) {
 			if (mysql_result($res,0,0) != $id) {
