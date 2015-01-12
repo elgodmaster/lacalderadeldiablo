@@ -77,7 +77,7 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
         	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Proveedor</p>
         </div>
     	<div class="cuerpoBox">
-        <form class="form-horizontal" role="form">
+        <form class="form-horizontal formulario" role="form">
                 	
                 <!--proveedor,direccion, telefono, cuit, nombre -->
                 
@@ -254,7 +254,7 @@ $(document).ready(function(){
     }
 	
 	//al enviar el formulario
-    $('#cargar').click(function(){
+    $('#modificar').click(function(){
 		if (validador() == "")
         {
 			//información del formulario
