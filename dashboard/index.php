@@ -330,6 +330,7 @@ $stockminimo = $serviciosProductos->traerProductosStockMin();
                         <th>Hora Desde</th>
                         <th>Hora Hasta</th>
                         <th>Con Catering</th>
+                        <th>Pago</th>
                         <th style="padding-left:9%;">Acciones</th>
                     </tr>
                 </thead>
@@ -347,7 +348,9 @@ $stockminimo = $serviciosProductos->traerProductosStockMin();
                                     echo 'Con catering';
                                     else
                                     echo 'Sin Catering'; ?></td>
+                        <td><?php echo $row['saldo']; ?></td>
                         <td>
+                        
                                     <div class="btn-group">
                                         <button class="btn btn-success" type="button">Acciones</button>
                                         

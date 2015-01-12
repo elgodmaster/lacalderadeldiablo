@@ -81,6 +81,11 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Fiestas");
 		      onSelect: function(textoFecha, objDatepicker){
 				 $('#fechaCambio').html(textoFecha);
 		       
+				if( (new Date($("#dia").val()).getTime() < $.now()))
+				{
+					alert('La fecha no puede ser menor al dia actual.');
+					$("#dia").val('');
+				}
 		      }
 		 });
       });
@@ -180,7 +185,7 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Fiestas");
                  </div>
 				 
                  <div class="row">
-                 <div class="form-group col-md-6">
+                 	<div class="form-group col-md-6">
                     	<label for="tipoventa" class="control-label" style="text-align:left">Tipo Venta</label>
                         <div class="input-group col-md-12">
                         	<select class="form-control" id="tipoventa" name="tipoventa" tabindex="5">
@@ -190,6 +195,15 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Fiestas");
                                 
                             </select>
 							
+                        </div>
+                    </div>
+                    
+                    <div class="form-group col-md-3">
+                    	<label for="Pago" class="control-label" style="text-align:left">Pago</label>
+                        <div class="input-group col-md-12">
+                        	<span class="input-group-addon">$</span>
+                        	<input type="text" class="form-control" id="saldo" name="saldo" placeholder="Ingrese el Pago..." required>
+                            <span class="input-group-addon">.00</span>
                         </div>
                     </div>
                   </div>
@@ -234,6 +248,7 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Fiestas");
                         <th>Hora Desde</th>
                         <th>Hora Hasta</th>
                         <th>Con Catering</th>
+                        <th>Pago</th>
                         <th style="padding-left:9%;">Acciones</th>
                     </tr>
                 </thead>
@@ -251,6 +266,7 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Fiestas");
                         			echo 'Con catering';
                         			else
                         			echo 'Sin Catering'; ?></td>
+                        <td><?php echo $row['saldo']; ?></td>         
                         <td>
                             		<div class="btn-group">
 										<button class="btn btn-success" type="button">Acciones</button>
@@ -393,6 +409,7 @@ $(document).ready(function(){
 	$("#fechautilizacion").change(function(event) {
 		$("#fechautilizacion").removeClass("alert-danger");
 		$("#fechautilizacion").attr('placeholder','Ingrese el Fecha Utilizacin');
+		
 	});
 	
 	function validaDisponibilidadCancha(cancha,fecha,hora,e) {
@@ -432,6 +449,12 @@ $(document).ready(function(){
 			
 			if ($("#dia").val() == "") {
 				$error = "Es obligatorio el campo día.";
+
+				alert($error);
+			}
+			
+			if ($("#saldo").val() == "") {
+				$error = "Es obligatorio el campo Pago.";
 
 				alert($error);
 			}

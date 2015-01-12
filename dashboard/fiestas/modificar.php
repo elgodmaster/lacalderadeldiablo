@@ -15,8 +15,12 @@ $resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Fiestas',$_SESSION['rol_se
 
 
 require '../../includes/funcionesFiestas.php';
+require '../../includes/funcionesVentas.php';
+require '../../includes/funcionesConfiguraciones.php';
 
 $serviciosFiestas = new ServiciosFiestas();
+$serviciosVentas = new ServiciosVentas();
+$serviciosConfiguraciones = new ServiciosConfiguraciones();
 
 $id = $_GET['id'];
 
@@ -24,8 +28,11 @@ $fecha = date('Y-m-d');
 
 $resFiestas = $serviciosFiestas->traerFiestasId($id);
 
+$resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Fiestas");
+
 $mov		= $serviciosVentas->traerIdVenta($id,'Fiestas');
 $idtipoventa	= mysql_result($mov,0,1);
+//echo $idtipoventa;
 ?>
 
 <!DOCTYPE HTML>
@@ -76,6 +83,7 @@ $idtipoventa	= mysql_result($mov,0,1);
 		      numberOfMonths: 2,
 		      onSelect: function(textoFecha, objDatepicker){
 				 $('#fechaCambio').html(textoFecha);
+				 
 		         $.ajax({
 					data:  {fecha: textoFecha,
 							accion: 'crearTablaTurnos'},
@@ -90,6 +98,12 @@ $idtipoventa	= mysql_result($mov,0,1);
 						$("#load").html('');
 					}
 				});
+				
+				if( (new Date($("#dia").val()).getTime() < $.now()))
+				{
+					alert('La fecha no puede ser menor al dia actual.');
+					$("#dia").val('');
+				}
 		      }
 		 });
       });
@@ -97,7 +111,9 @@ $idtipoventa	= mysql_result($mov,0,1);
 	
     </script>
     <style>
-			
+			.form-group {
+				padding:10px;
+			}
 			$("#fechautilizacion").datepicker({
 		   showOn: 'both',
 		   buttonImage: 'calendar.png',
@@ -207,7 +223,7 @@ $idtipoventa	= mysql_result($mov,0,1);
                     </div>
                  </div>
 				
-                
+                <div class="row">
                 <div class="form-group col-md-6">
                     <label for="tipoventa" class="control-label" style="text-align:left">Tipo Venta</label>
                     <div class=" col-md-12">
@@ -224,7 +240,16 @@ $idtipoventa	= mysql_result($mov,0,1);
                         
                     </div>
                 </div>
-                    
+                
+                <div class="form-group col-md-3">
+                    <label for="Pago" class="control-label" style="text-align:left">Pago</label>
+                    <div class="input-group col-md-12">
+                        <span class="input-group-addon">$</span>
+                        <input type="text" class="form-control" id="saldo" value="<?php echo mysql_result($resFiestas,0,'saldo'); ?>" name="saldo" placeholder="Ingrese el Pago..." required>
+                        <span class="input-group-addon">.00</span>
+                    </div>
+                </div>
+                </div>
                 
                 
                 	<input type="hidden" id="usuacrea" name="usuacrea" value="<?php echo $_SESSION['nombre_se']; ?>"/>
@@ -366,6 +391,14 @@ $(document).ready(function(){
 				alert($error);
 			}
 
+
+			if ($("#saldo").val() == "") {
+				$error = "Es obligatorio el campo Pago.";
+
+				alert($error);
+			}
+			
+			
 			if ($("#horadesde").val() == $("#horahasta").val()) {
 				$error = "Es las fechas no pueden ser iguales.";
 
@@ -418,7 +451,7 @@ $(document).ready(function(){
 												
 											});
 											$("#load").html('');
-											url = "index.php";
+											//url = "index.php";
 											//$(location).attr('href',url);
                                             
 											

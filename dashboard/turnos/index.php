@@ -109,7 +109,7 @@ $diasMes = cal_days_in_month(CAL_GREGORIAN,date('m'),date('Y')) - (integer)date(
 			if($(this).is(":checked")) {
 
 				$("#tipoventa option[value=8]").attr("selected",true);
-
+				/*
 				var diasquequedan = Date.parse('t + <?php echo $diasMes; ?> d');
 
 				if (diasquequedan >= Date.parse('t + 7 d')) {
@@ -127,12 +127,16 @@ $diasMes = cal_days_in_month(CAL_GREGORIAN,date('m'),date('Y')) - (integer)date(
 				if (diasquequedan >= Date.parse('t + 28 d')) {
 					$('#fec5').show();	
 				}
-
+				*/
+				$('#fec2').show();
+				$('#fec3').show();
+				$('#fec4').show();
+				//$('#fec5').show();
 			} else {
 				$('#fec2').hide();
 				$('#fec3').hide();
 				$('#fec4').hide();
-				$('#fec5').hide();
+				//$('#fec5').hide();
 			}
        
 		});

@@ -71,16 +71,17 @@ function camposTabla($accion) {
 
 //$idVenta,$Venta,$precio,$detalle
 
-function insertarFiesta($nombre,$horadesde,$horahasta,$dia,$concatering) {
+function insertarFiesta($nombre,$horadesde,$horahasta,$dia,$concatering,$saldo) {
 	
-	$sql	=	"insert into lcdd_fiestas(idfiesta,nombre,horadesde,horahasta,dia,concatering)
+	$sql	=	"insert into lcdd_fiestas(idfiesta,nombre,horadesde,horahasta,dia,concatering,saldo)
 				 values
 				 ('',
 				 '".utf8_decode($nombre)."',
 				 '".$horadesde."',
 				 '".$horahasta."',
 				 '".$dia."',
-				 ".$concatering.")";
+				 ".$concatering.",
+				 ".$saldo.")";
 	//return $sql;
 	$res 	=	$this->query($sql,1);
 	if ($res == false) {
@@ -90,14 +91,15 @@ function insertarFiesta($nombre,$horadesde,$horahasta,$dia,$concatering) {
 	}
 }
 
-function modificarFiesta($id,$nombre,$horadesde,$horahasta,$dia,$concatering) {
+function modificarFiesta($id,$nombre,$horadesde,$horahasta,$dia,$concatering,$saldo) {
 	$sql	=	"update lcdd_fiestas
 				SET 
 					nombre = '".utf8_decode($nombre)."',
 					horadesde = '".$horadesde."',
 					horahasta = '".$horahasta."',
 					dia = '".$dia."',
-					concatering = '".$concatering."'
+					concatering = '".$concatering."',
+					saldo = ".$saldo."
 				where 	idfiesta = ".$id;
 	$res  	=	$this->query($sql,0);
 	if ($res == false) {
@@ -130,7 +132,8 @@ function traerFiestas() {
 				    f.dia,
 				    f.horadesde,
 				    f.horahasta,
-				    f.concatering
+				    f.concatering,
+					f.saldo
 				FROM
 				    lcdd_fiestas f
 
@@ -152,7 +155,8 @@ function traerFiestasId($id) {
 				    f.dia,
 				    f.horadesde,
 				    f.horahasta,
-				    f.concatering
+				    f.concatering,
+					f.saldo
 				FROM
 				    lcdd_fiestas f
 				where f.idfiesta = ".$id;
@@ -172,7 +176,8 @@ function traerFiestasDia($dia) {
 				    f.dia,
 				    f.horadesde,
 				    f.horahasta,
-				    f.concatering
+				    f.concatering,
+					f.saldo
 				FROM
 				    lcdd_fiestas f
 				where f.dia = '".$dia."'";
@@ -192,7 +197,8 @@ function traerFiestasPost($dia) {
 				    f.dia,
 				    f.horadesde,
 				    f.horahasta,
-				    f.concatering
+				    f.concatering,
+					f.saldo
 				FROM
 				    lcdd_fiestas f
 				where f.dia >= '".$dia."'";
