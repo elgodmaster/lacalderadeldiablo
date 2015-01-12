@@ -393,8 +393,9 @@ function insertarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraci
 	$concatering=	$_POST['concatering'];
 	$tipoventa	=	$_POST['tipoventa'];
 	$usuacrea 	=	$_POST['usuacrea'];
+	$saldo		=	$_POST['saldo'];
 	
-	$res = $serviciosFiestas->insertarFiesta($nombre,$horadesde,$horahasta,$dia,$concatering);
+	$res = $serviciosFiestas->insertarFiesta($nombre,$horadesde,$horahasta,$dia,$concatering,$saldo);
 	
 	if ((integer)$res > 0) {
 		$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
@@ -419,8 +420,9 @@ function modificarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfigurac
 	$concatering=	$_POST['concatering'];
 	$tipoventa	=	$_POST['tipoventa'];
 	$usuacrea 	=	$_POST['usuacrea'];
+	$saldo		=	$_POST['saldo'];
 	
-	$res = $serviciosFiestas->modificarFiesta($id,$nombre,$horadesde,$horahasta,$dia,$concatering);
+	$res = $serviciosFiestas->modificarFiesta($id,$nombre,$horadesde,$horahasta,$dia,$concatering,$saldo);
 	
 	if ($res == '') {
 		$monto 		= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
@@ -436,9 +438,10 @@ function modificarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfigurac
 		
 		$serviciosMovimientos->eliminarMovimiento($idmov);
 		
-		$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,'',$usuacrea,$res,'Alquiler de Fiesta');
+		$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,'',$usuacrea,$id,'Alquiler de Fiesta');
+		
 	}
-	
+	//echo $c;
 	echo $res;
 }
 

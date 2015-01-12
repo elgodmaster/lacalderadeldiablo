@@ -152,7 +152,9 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                         </div>
                     </div>
 
-
+					<?php if ($_SESSION['rol_se'] == "Empleado") { ?>
+                    <div style="display:none">
+                    <?php } ?>
                     <div class="form-group col-md-6">
                     	<label for="stock" class="control-label" style="text-align:left">Stock</label>
                         <div class="input-group col-md-12">
@@ -166,7 +168,9 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                         	<input type="text" value="<?php echo mysql_result($resProductos,0,'stock_min'); ?>" class="form-control" id="stock_min" name="stock_min" placeholder="Ingrese el Stock Minimo..." required>
                         </div>
                     </div>
-
+					<?php if ($_SESSION['rol_se'] == "Empleado") { ?>
+                    </div>
+                    <?php } ?>
 
                     <div class="form-group col-md-6">
                     	<label for="caracteristicas" class="control-label" style="text-align:left">Caracteristicas</label>

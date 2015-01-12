@@ -130,7 +130,7 @@ function traerIdVenta($refid,$valor) {
 			on			m.reftipoventa = tv.idtipoventa
 			inner
 			join		lcdd_valores v
-			on			v.descripcion = '".$valor."'
+			on			v.descripcion = '".$valor."' and v.idvalor = tv.refvalores
 			where		m.refid = ".$refid;	
 	$res 	=	$this->query($sql,0);
 	if ($res == false) {
