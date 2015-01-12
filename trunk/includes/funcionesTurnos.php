@@ -206,6 +206,30 @@ function eliminarTurno($i) {
 
 /* fin */
 
+/* logica de negicio para los turnos y los clientes indefinidos */
+
+function insertarTurnoCliente($refcliente,$numdia,$dia,$comienzo,$hora,$refcancha) {
+	$sql 		=	"insert into lcdd_clientesturnos(idclienteturno,refcliente,numdia,dia,comienzo,hora,refcancha)
+					 values
+					 ('',
+					 ".$refcliente.",
+					 ".$numdia.",
+					 '".$dia."',
+					 '".$comienzo."',
+					 ".$hora.",
+					 ".$refcancha.")";
+	$res 		=	$this->query($sql,1);
+	echo $res;
+}
+
+
+function eliminarTurnoCliente($id) {
+	$sql 		=	"delete from lcdd_clientesturnos where idclienteturno =".$id;
+	$res 		=	$this->query($sql,0);
+	echo "";
+}
+/* fin */
+
 function query($sql,$accion) {
 		
 		
