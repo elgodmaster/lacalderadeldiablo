@@ -279,7 +279,7 @@ $(document).ready(function(){
 		var suma = 0;
 		$('.detalle tr').each(function(){
 			
-			suma += parseFloat($(this).find('td').eq(2).text()||0,10); //numero de la celda 3
+			suma += parseFloat($(this).find('td').eq(3).text()||0,10); //numero de la celda 3
 		})
 		return suma;
 
