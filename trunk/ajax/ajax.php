@@ -295,7 +295,7 @@ function eliminarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracion
 	
 	$refcliente = mysql_result($serviciosTurnos->traerTurnosPorId($id),0,4);
 	
-	$res = $serviciosTurnos->eliminarTurno($id);
+	//$res = $serviciosTurnos->eliminarTurno($id);
 	
 	if ($res == '') {
 		$cancha 	= mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
@@ -307,13 +307,13 @@ function eliminarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracion
 		$idventa 		= mysql_result($mov,0,0);
 		$tipoventa	= mysql_result($mov,0,1);
 		
-		$serviciosVentas->modificarVenta($refid,1,'Se cancelo el turno de la cancha: '.$cancha);
-		$serviciosMovimientos->insertarMovimiento($tipoventa,$idventa,0,'',$usuacrea,$id,'Alquiler de '.$cancha);
+		//$serviciosVentas->modificarVenta($refid,1,'Se cancelo el turno de la cancha: '.$cancha);
+		$c=$serviciosMovimientos->insertarMovimiento($tipoventa,$idventa,0,'',$usuacrea,$id,'Alquiler de '.$cancha);
 		//descuento el saldo del cliente
-		$serviciosClientes->cargarSaldo($refcliente,$monto);
+		$d=$serviciosClientes->cargarSaldo($refcliente,$monto);
 	}
-	
-	echo $res;
+	echo $c."-".$d;
+	//echo $res;
 }
 
 

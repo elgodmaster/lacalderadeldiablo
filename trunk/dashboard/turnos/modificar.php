@@ -406,6 +406,7 @@ $(document).ready(function(){
 											url = "modificar.php?id=<?php echo $id; ?>";
 											$(location).attr('href',url);
 											
+											
 									}
 							});
                                                         
@@ -450,8 +451,8 @@ $(document).ready(function(){
 									},
 									success:  function (response) {
 											url = "index.php";
-											$(location).attr('href',url);
-											
+											//$(location).attr('href',url);
+											$(".alert").html('<strong>Error!</strong>'+response);
 									}
 							});
 						$( this ).dialog( "close" );
