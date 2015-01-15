@@ -98,17 +98,17 @@ function menu($usuario,$titulo,$rol) {
 
 Function query($sql,$accion) {
 		
-		
+		/*
 		$hostname = "localhost";
 		$database = "lacalderadeldiablo";
 		$username = "root";
 		$password = "";
-		/*
-		$hostname = "localhost";
-		$database = "inflable_reycanguro";
-		$username = "inflable_marcos";
-		$password = "reycanguro7575";
 		*/
+		$hostname = "localhost";
+		$database = "lacalder_diablo";
+		$username = "lacalderadeldiab";
+		$password = "caldera4415";
+		
 		
 		$conex = mysql_connect($hostname,$username,$password) or die ("no se puede conectar".mysql_error());
 		

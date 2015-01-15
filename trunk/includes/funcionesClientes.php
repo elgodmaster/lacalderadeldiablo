@@ -226,17 +226,16 @@ function eliminarCuenta($idCliente) {
 
 function query($sql,$accion) {
 		
-		
-		
+		/*
 		$hostname = "localhost";
 		$database = "lacalderadeldiablo";
 		$username = "root";
 		$password = "";
-		
-/*		$hostname = "db494455387.db.1and1.com";
-		$database = "db494455387";
-		$username = "dbo494455387";
-		$password = "Admin1234";*/
+		*/
+		$hostname = "localhost";
+		$database = "lacalder_diablo";
+		$username = "lacalderadeldiab";
+		$password = "caldera4415";
 		
 		$conex = mysql_connect($hostname,$username,$password) or die ("no se puede conectar".mysql_error());
 		
