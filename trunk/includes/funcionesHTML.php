@@ -2,7 +2,9 @@
 
 date_default_timezone_set('America/Buenos_Aires');
 
+
 class ServiciosHTML {
+
 
 function enviarMail($nombre,$mensaje,$email)
 {
@@ -37,7 +39,7 @@ function enviarMail($nombre,$mensaje,$email)
 
 function menu($usuario,$titulo,$rol) {
 	
-	$sql = "select idmenu,url,icono, nombre, permiso from lcdd_menu order by orden";
+	$sql = "select idmenu,url,icono, nombre, permiso from lcdd_menu where permiso like '%".$rol."%' order by orden";
 	$res = $this->query($sql,0);
 	
 	$cadmenu = "";
@@ -98,17 +100,20 @@ function menu($usuario,$titulo,$rol) {
 
 Function query($sql,$accion) {
 		
-		/*
-		$hostname = "localhost";
-		$database = "lacalderadeldiablo";
-		$username = "root";
-		$password = "";
-		*/
-		$hostname = "localhost";
+		require_once 'appconfig.php';
+
+		$appconfig	= new appconfig();
+		$datos		= $appconfig->conexion();
+		$hostname	= $datos['hostname'];
+		$database	= $datos['database'];
+		$username	= $datos['username'];
+		$password	= $datos['password'];
+		
+/*		$hostname = "localhost";
 		$database = "lacalder_diablo";
 		$username = "lacalderadeldiab";
 		$password = "caldera4415";
-		
+		*/
 		
 		$conex = mysql_connect($hostname,$username,$password) or die ("no se puede conectar".mysql_error());
 		

@@ -254,7 +254,7 @@ $idtipoventa	= mysql_result($mov,0,1);
                     <div class="form-group">
                     	<label for="refcancha" class="control-label col-lg-3" style="text-align:left">Indeterminado</label>
                         <div class="col-lg-1">
-                        	<input type="checkbox" class="form-control" id="activo" name="activo"/>
+                        	<input type="checkbox" class="form-control" <?php if (mysql_result($resTurno,0,8) == '1') { echo 'checked'; }; ?> id="activo" name="activo"/>
                         </div>
                     </div>
                     
@@ -451,8 +451,8 @@ $(document).ready(function(){
 									},
 									success:  function (response) {
 											url = "index.php";
-											//$(location).attr('href',url);
-											$(".alert").html('<strong>Error!</strong>'+response);
+											$(location).attr('href',url);
+											//$(".alert").html('<strong>Error!</strong>'+response);
 									}
 							});
 						$( this ).dialog( "close" );

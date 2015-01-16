@@ -2,20 +2,23 @@
 
 session_start();
 
-if ((!isset($_SESSION['usua_se'])) && ($_SESSION['refrol_se'] == 1))
+if ((!isset($_SESSION['usua_se'])) || ($_SESSION['rol_se']!= 'SuperAdmin'))
 {
-	header('Location: /wportalinmobiliario/vistas/');
+	header('Location: /lacalderadeldiablo/vistas/');
 } else {
 
+require '../../includes/funcionesHTML.php';
+$serviciosHTML = new ServiciosHTML();
+$resMenu = $serviciosHTML->menu($_SESSION['usua_se'],'Usuarios',$_SESSION['rol_se']);
 
-require '../../includes/funcionesProductos.php';
+require '../../includes/funcionesUsuarios.php';
 
 
-$serviciosProductos = new ServiciosProductos();
+$serviciosUsuarios = new ServiciosUsuarios();
 
 $id = $_GET['id'];
 
-$resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
+$resUsuarios = $serviciosUsuarios->traerUsuariosPorId($id);
 
 ?>
 
@@ -47,155 +50,7 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
 		
 	</style>
     
-    <script type="text/javascript">
-		$( document ).ready(function() {
-			$('.icodashboard2, .icoalquileres2, .icousuarios2, .icoinmubles2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
-				$('.menuHober').hide();
-				$('.todoMenu').show(100, function() {
-					$('#navigation').animate({'margin-left':'0px'}, {
-													duration: 800,
-													specialEasing: {
-													width: "linear",
-													height: "easeOutBounce"
-													}});
-				});
-			});
-			
-			$('.ocultar').click(function(){
-				$('.menuHober').show(100, function() {
-					$('#navigation').animate({'margin-left':'-185px'}, {
-													duration: 800,
-													specialEasing: {
-													width: "linear",
-													height: "easeOutBounce"
-													}});
-				});
-				$('.todoMenu').hide();
-			});
-			
-			
-						$("#tooltip2").mouseover(function(){
-							$("#tooltip2").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip3").mouseover(function(){
-							$("#tooltip3").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip4").mouseover(function(){
-							$("#tooltip4").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip5").mouseover(function(){
-							$("#tooltip5").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip6").mouseover(function(){
-							$("#tooltip6").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip7").mouseover(function(){
-							$("#tooltip7").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip8").mouseover(function(){
-							$("#tooltip8").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-						
-						$("#tooltip9").mouseover(function(){
-							$("#tooltip9").mousemove(function(e){
-								 $(this).next().css({left : e.pageX , top: e.pageY});
-							  });
-							eleOffset = $(this).offset();
-							$(this).next().fadeIn("fast").css({
-								
-									left: eleOffset.left + $(this).outerWidth(),
-									top: eleOffset.top
-
-								});
-						}).mouseout(function(){
-							$(this).next().fadeOut("fast");
-						});
-
-		});
-	</script>
+<script src="../../js/dashboard.js"></script>
    	  <link href="../../css/perfect-scrollbar.css" rel="stylesheet">
       <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>-->
       <script src="../../js/jquery.mousewheel.js"></script>
@@ -211,73 +66,7 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
 <body>
 
 
-
- 
-<div id="navigation" >
-	<div class="todoMenu">
-        <div id="mobile-header">
-            Menu
-            <p>Usuario: <span style="color: #333; font-weight:900;">AdminMarcos</span></p>
-            <p class="ocultar" style="color: #900; font-weight:bold; cursor:pointer; font-family:'Courier New', Courier, monospace; height:20px;">(Ocultar)</p>
-        </div>
-    
-        <nav class="nav">
-            <ul>
-                <li class="arriba"><div class="icodashboard"></div><a href="../index.php">Dashboard</a></li>
-                <li><div class="icoturnos"></div><a href="../turnos/">Turnos</a></li>
-                <li><div class="icoventas"></div><a href="../ventas/">Ventas</a></li>
-                <li><div class="icousuarios"></div><a href="../clientes/">Clientes</a></li>
-                <li><div class="icoproductos"></div><a href="../productos/">Productos</a></li>
-                <li><div class="icocontratos"></div><a href="index.php">Proveedores</a></li>
-                <li><div class="icoreportes"></div><a href="../reportes/">Reportes</a></li>
-                <li><div class="icosalir"></div><a href="../salir/">Salir</a></li>
-            </ul>
-        </nav>
-        
-        <div id="infoMenu">
-            <p>Información del Menu</p>
-        </div>
-        <div id="infoDescrMenu">
-            <p>La descripción breve de cada item sera detallada aqui, deslizando el mouse por encima de cada menu.</p>
-        </div>
-     </div>
-     <div class="menuHober">
-     	<ul class="ulHober">
-                <li class="arriba">
-                	<div class="icodashboard2" id="tooltip2"></div>
-                    <div class="tooltip-dash">Dashboard</div>
-                </li>
-                <li>
-                	<div class="icoturnos2" id="tooltip3"></div>
-                    <div class="tooltip-inmu">Turnos</div>
-                </li>
-                <li>
-                	<div class="icoventas2" id="tooltip4"></div>
-                    <div class="tooltip-alqui">Ventas</div>
-                </li>
-                <li>
-                	<div class="icousuarios2" id="tooltip5"></div>
-                    <div class="tooltip-usua">Clientes</div>
-                </li>
-                <li>
-                	<div class="icoproductos2" id="tooltip9"></div>
-                    <div class="tooltip-con">Productos</div>
-                </li>
-                <li>
-                	<div class="icocontratos2" id="tooltip6"></div>
-                    <div class="tooltip-con">Proveedores</div>
-                </li>
-                <li>
-                	<div class="icoreportes2" id="tooltip7"></div>
-                    <div class="tooltip-rep">Reportes</div>
-                </li>
-                <li>
-                	<div class="icosalir2" id="tooltip8"></div>
-                    <div class="tooltip-sal">Salir</div>
-                </li>
-            </ul>
-     </div>
-</div>
+ <?php echo $resMenu; ?>
 
 <div id="ingoGral" style=" margin-left:240px; padding-top:20px;">
 
@@ -285,85 +74,44 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
 
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Nuevo Proveedor</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Cargar Usuarios</p>
         </div>
     	<div class="cuerpoBox">
-        <form class="form-horizontal" role="form">
+        
+        <div class="row"> 
+        <div class="col-sm-12 col-md-12">
+        <form class="form-inline formulario" role="form">
                 	
-                <!--proveedor,direccion, telefono, cuit, nombre -->
-                
-                	<div class="form-group">
-                    	<label for="proveedor" class="col-lg-3 control-label" style="text-align:left">Proveedor</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'proveedor'); ?>" class="form-control" id="proveedor" name="proveedor" placeholder="Ingrese el Proveedor..." required>
-                        </div>
+                	
+				              	
+                    <?php echo $serviciosUsuarios->camposTablaMod('modificarUsuario',$id); ?>
+
                     </div>
-                    
-                    <div class="form-group">
-                    	<label for="direccion" class="col-lg-3 control-label" style="text-align:left">Dirección</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'direccion'); ?>" class="form-control" id="direccion" name="direccion" placeholder="Ingrese el Dirección..." required>
-                        </div>
                     </div>
-                    
-                    
-                    <div class="form-group">
-                    	<label for="nombre" class="col-lg-3 control-label" style="text-align:left">Nombre</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'nombre'); ?>" class="form-control" id="nombre" name="nombre" placeholder="Ingrese el Nombre..." required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                    	<label for="telefono" class="col-lg-3 control-label" style="text-align:left">Teléfono</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'telefono'); ?>" class="form-control" id="telefono" name="telefono" placeholder="Ingrese el Teléfono..." required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                    	<label for="cuit" class="col-lg-3 control-label" style="text-align:left">Cuit</label>
-                        <div class="col-lg-5">
-                        	<input type="text" value="<?php echo mysql_result($resProveedores,0,'cuit'); ?>" class="form-control" id="cuit" name="cuit" placeholder="Ingrese el Cuit..." required>
-                        </div>
-                    </div>
-                    
-                    
-                	<div class="form-group">
-                    	<label for="eamil" class="col-lg-3 control-label" style="text-align:left">E-Mail</label>
-                        <div class="col-lg-5">
-                        	<input type="email" value="<?php echo mysql_result($resProveedores,0,'email'); ?>" class="form-control" id="email" name="email" placeholder="Ingrese el E-Mail..." required>
-                        </div>
-                    </div>
-                
-                    
-                    
-                    <ul class="list-inline">
+                    <ul class="list-inline" style="padding-top:15px;">
                     	<li>
-                    		<button type="button" class="btn btn-warning" id="modificar" style="margin-left:0px;">Modificar</button>
+                    		<button type="button" class="btn btn-primary" id="modificar" style="margin-left:0px;">Modificar</button>
                         </li>
                         <li>
-                        	<button type="button" class="btn btn-danger varborrar" id="<?php echo $id; ?>" style="margin-left:0px;">Eliminar</button>
+                    		<button type="button" class="btn btn-danger varborrar" id="<?php echo $id; ?>" style="margin-left:0px;">Eliminar</button>
                         </li>
                         <li>
- 							<button type="button" class="btn btn-default volver" style="margin-left:0px;">Volver</button>                       
+                    		<button type="button" class="btn btn-default volver" id="modificar" style="margin-left:0px;">Volver</button>
                         </li>
+                        
    
                     </ul>
                     <div id="load">
                     
                     </div>
-                    <div class="alert">
-                    
-                    </div>
-                    <input type="hidden" id="accion" name="accion" value="modificarProveedores"/>
-                    <input type="hidden" id="id" name="id" value="<?php echo $id; ?>"/>
+                    <div id="error" class="alert alert-info">
+                		<p><strong>Importante!:</strong> Todos los campos son obligatorios</p>
+                	</div>
                 </form>
                 
                 <br>
-                <div id="error">
                 
-                </div>
+                
         </div>
     </div>
 
@@ -375,9 +123,8 @@ $resProveedores = $serviciosProductos->traerProveedoresPorId($id);;
 <div id="dialog2" title="Eliminar Proveedor">
     	<p>
         	<span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>
-            ¿Esta seguro que desea eliminar al Proveedor?.<span id="proveedorEli"></span>
+            ¿Esta seguro que desea eliminar al Usuario?.<span id="proveedorEli"></span>
         </p>
-        <p><strong>Importante: </strong>También se borrara la relación con los productos asociados</p>
         <input type="hidden" value="" id="idEliminar" name="idEliminar">
 </div>
 
@@ -396,7 +143,7 @@ $(document).ready(function(){
 	});//fin del boton eliminar
 	
 	$('.volver').click(function(event){
-				url = "../proveedores/index.php";
+				url = "../usuarios/index.php";
 				$(location).attr('href',url);
 	});//fin del boton eliminar
 
@@ -411,7 +158,7 @@ $(document).ready(function(){
 				    "Eliminar": function() {
 	
 						$.ajax({
-									data:  {id: $('#idEliminar').val(), accion: 'eliminarProveedores'},
+									data:  {id: $('#idEliminar').val(), accion: 'eliminarUsuario'},
 									url:   '../../ajax/ajax.php',
 									type:  'post',
 									beforeSend: function () {
@@ -438,26 +185,88 @@ $(document).ready(function(){
 		 
 	 		}); //fin del dialogo para eliminar
 
-	$("#proveedor").click(function(event) {
-		$("#proveedor").removeClass("alert-danger");
-		$("#proveedor").attr('value','');
-		$("#proveedor").attr('placeholder','Ingrese el Proveedor...');
+	$("#usuario").click(function(event) {
+		$("#usuario").removeClass("alert-danger");
+		if ($(this).val() != '') {
+			$("#usuario").attr('value','');
+			$("#usuario").attr('placeholder','Ingrese el Usuario...');
+		}
     });
 
-	$("#proveedor").change(function(event) {
-		$("#proveedor").removeClass("alert-danger");
-		$("#proveedor").attr('placeholder','Ingrese el Proveedor');
+	$("#usuario").change(function(event) {
+		$("#usuario").removeClass("alert-danger");
+		$("#usuario").attr('placeholder','Ingrese el Usuario');
 	});
+	
+	
+	$("#password").click(function(event) {
+		$("#password").removeClass("alert-danger");
+		if ($(this).val() != '') {
+			$("#password").attr('value','');
+			$("#password").attr('placeholder','Ingrese el Password...');
+		}
+    });
+
+	$("#password").change(function(event) {
+		$("#password").removeClass("alert-danger");
+		$("#password").attr('placeholder','Ingrese el Password');
+	});
+	
+	$("#email").click(function(event) {
+		$("#email").removeClass("alert-danger");
+		if ($(this).val() != '') {
+			$("#email").attr('value','');
+			$("#email").attr('placeholder','Ingrese el Email...');
+		}
+    });
+
+	$("#email").change(function(event) {
+		$("#email").removeClass("alert-danger");
+		$("#email").attr('placeholder','Ingrese el Email');
+	});
+	
+	$("#nombrecompleto").click(function(event) {
+		$("#nombrecompleto").removeClass("alert-danger");
+		if ($(this).val() != '') {
+			$("#nombrecompleto").attr('value','');
+			$("#nombrecompleto").attr('placeholder','Ingrese el Nombre Completo...');
+		}
+    });
+
+	$("#nombrecompleto").change(function(event) {
+		$("#nombrecompleto").removeClass("alert-danger");
+		$("#nombrecompleto").attr('placeholder','Ingrese el Nombre Completo');
+	});
+	
+	
 	
 	function validador(){
 
 			$error = "";
 
 			
-			if ($("#proveedor").val() == "") {
-				$error = "Es obligatorio el campo proveedor.";
-				$("#proveedor").addClass("alert-danger");
-				$("#proveedor").attr('placeholder',$error);
+			if ($("#usuario").val() == "") {
+				$error = "Es obligatorio el campo Usuario.";
+				$("#usuario").addClass("alert-danger");
+				$("#usuario").attr('placeholder',$error);
+			}
+			
+			if ($("#password").val() == "") {
+				$error = "Es obligatorio el campo Password.";
+				$("#password").addClass("alert-danger");
+				$("#password").attr('placeholder',$error);
+			}
+			
+			if ($("#email").val() == "") {
+				$error = "Es obligatorio el campo Email.";
+				$("#email").addClass("alert-danger");
+				$("#email").attr('placeholder',$error);
+			}
+			
+			if ($("#nombrecompleto").val() == "") {
+				$error = "Es obligatorio el campo Nombre Completo.";
+				$("#nombrecompleto").addClass("alert-danger");
+				$("#nombrecompleto").attr('placeholder',$error);
 			}
 
 
@@ -465,7 +274,7 @@ $(document).ready(function(){
     }
 	
 	//al enviar el formulario
-    $('#cargar').click(function(){
+    $('#modificar').click(function(){
 		if (validador() == "")
         {
 			//información del formulario

@@ -117,6 +117,17 @@ switch ($accion) {
 	case 'modificarAdministrativo':
 		modificarAdministrativo($serviciosAdministrativo);
 		break;
+	case 'insertarUsuario':
+		insertarUsuario($serviciosUsuarios);
+		break;
+	case 'modificarUsuario':
+		modificarUsuario($serviciosUsuarios);
+		break;
+	case 'eliminarUsuario':
+		eliminarUsuario($serviciosUsuarios);
+		break;	
+		
+		
 		
 		
 	case 'insertarTurnoVerificado':
@@ -144,6 +155,7 @@ switch ($accion) {
 		modificarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos);
 		break;
 }
+
 
 
 /* functiones que trabajan con ventas y movimientos */
@@ -218,6 +230,7 @@ function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracion
 		$nocliente = mysql_result($serviciosClientes->traerClientePorId($refcliente), 0,1);
 	}
 
+	//entra aca para cargar varios turnos a la vez
 	if ($mesentero == 1) {
 		$fechautilizacion2	=	$_POST['fechautilizacion2'];
 		$fechautilizacion3	=	$_POST['fechautilizacion3'];
@@ -271,7 +284,9 @@ function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracion
 		
 		
 	}
-
+	//fin del ems entero
+	
+	//gravo el turno
 	$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
 
 	if ((integer)$res > 0) {
@@ -290,30 +305,33 @@ function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracion
 }
 
 function eliminarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes) {
-	$id 	=	$_POST['id'];
-	$usuacrea			=	$_POST['usuacrea'];
+	$id 		=	$_POST['id'];
+	$usuacrea	=	$_POST['usuacrea'];
 	
-	$refcliente = mysql_result($serviciosTurnos->traerTurnosPorId($id),0,4);
+	$turno = $serviciosTurnos->traerTurnosPorId($id);
 	
-	//$res = $serviciosTurnos->eliminarTurno($id);
-	
+	$refcliente		= mysql_result($turno,0,4);
+	$refcancha		= mysql_result($turno,0,1);
+	$res = $serviciosTurnos->eliminarTurno($id);
+	$res = '';
 	if ($res == '') {
 		$cancha 	= mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
-		$monto 		= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
-		$producto 	= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
 		
 		$mov		= $serviciosVentas->traerIdVenta($id,'Canchas');
 		
-		$idventa 		= mysql_result($mov,0,0);
+		$idventa 	= mysql_result($mov,0,0);
 		$tipoventa	= mysql_result($mov,0,1);
 		
-		//$serviciosVentas->modificarVenta($refid,1,'Se cancelo el turno de la cancha: '.$cancha);
-		$c=$serviciosMovimientos->insertarMovimiento($tipoventa,$idventa,0,'',$usuacrea,$id,'Alquiler de '.$cancha);
+		$monto 		= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+		$producto 	= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+		
+		$serviciosVentas->modificarVenta($idventa,1,'Se cancelo el turno de la cancha: '.$cancha);
+		$$serviciosMovimientos->insertarMovimiento($tipoventa,$idventa,-1*$monto,'',$usuacrea,$id,'Alquiler de '.$cancha." Cancelado");
 		//descuento el saldo del cliente
-		$d=$serviciosClientes->cargarSaldo($refcliente,$monto);
+		$serviciosClientes->cargarSaldo($refcliente,$monto);
 	}
-	echo $c."-".$d;
-	//echo $res;
+	//echo $c."-".$d;
+	echo $res;
 }
 
 
@@ -328,7 +346,7 @@ function modificarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguracio
 	$usuacrea			=	$_POST['usuacrea'];
 	$tipoventa			=	$_POST['tipoventa'];
 	
-	$res = $serviciosTurnos->modificarTurno($id,$refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea);	
+	$res = $serviciosTurnos->modificarTurno($id,$refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$indefinido);	
 	
 	if ($res == '') {
 		$cancha 	= mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
@@ -452,21 +470,75 @@ function eliminarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraci
 	$res = $serviciosFiestas->eliminarFiesta($id);
 	
 	if ($res == '') {
-		$monto 		= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
-		$producto 	= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
 		
 		$mov		= $serviciosVentas->traerIdVenta($id,'Fiestas');
 		
 		$idventa 		= mysql_result($mov,0,0);
 		$tipoventa	= mysql_result($mov,0,1);
 		
-		$serviciosVentas->modificarVenta($refid,1,'Se cancelo la fiesta ');
-		$serviciosMovimientos->insertarMovimiento($tipoventa,$idventa,0,'',$usuacrea,$id,'Alquiler de Fiesta');
+		$monto 		= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+		$producto 	= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+		
+		$serviciosVentas->modificarVenta($idventa,1,'Se cancelo la fiesta ');
+		$serviciosMovimientos->insertarMovimiento($tipoventa,$idventa,0,'',$usuacrea,$id,'Alquiler de Fiesta cancelado');
 	}
 	
 	echo $res;
 }
 /* fin de las funciones que trabajan con los movimientos */
+
+
+
+function insertarUsuario($serviciosUsuarios) {
+	
+	$usuario		= $_POST['usuario'];
+	$password		= $_POST['password'];
+	$refroll		= $_POST['refroll'];
+	$email			= $_POST['email'];
+	$nombrecompleto = $_POST['nombrecompleto'];
+	
+	$res = $serviciosUsuarios->insertarUsuario($usuario,$password,$refroll,$email,$nombrecompleto);
+	
+	if ((integer)$res > 0) {
+		echo '';	
+	} else {
+		echo $res;	
+	}
+}
+
+
+function modificarUsuario($serviciosUsuarios) {
+	
+	$usuario		= $_POST['usuario'];
+	$password		= $_POST['password'];
+	$refroll		= $_POST['refroll'];
+	$email			= $_POST['email'];
+	$nombrecompleto = $_POST['nombrecompleto'];
+	$id				= $_POST['id'];
+	
+	$res = $serviciosUsuarios->modificarUsuario($id,$usuario,$password,$refroll,$email,$nombrecompleto);
+	
+	if ((integer)$res > 0) {
+		echo '';	
+	} else {
+		echo $res;	
+	}
+}
+
+
+function eliminarUsuario($serviciosUsuarios) {
+	
+	$id				= $_POST['id'];
+	
+	$res = $serviciosUsuarios->eliminarUsuario($id);
+	
+	if ((integer)$res > 0) {
+		echo '';	
+	} else {
+		echo $res;	
+	}
+}
+
 
 function insertarAdministrativo($serviciosAdministrativo) {
 	
