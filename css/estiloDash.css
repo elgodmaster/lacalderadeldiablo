@@ -345,6 +345,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 			margin-right:10px;
 		}
 		
+		.icopersonal {
+			background:url(../imagenes/iconmenu/personal.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			float:left;
+			margin-right:10px;
+		}
+		
 		.icosalir {
 			background:url(../imagenes/iconmenu/salir.png) no-repeat;
 			background-position: center center;
@@ -356,6 +365,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 		
 		.icoproductos2 {
 			background:url(../imagenes/iconmenu/barras.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			margin-right:9px;
+			margin-bottom:25px;
+			cursor:pointer;
+		}
+		
+		.icopersonal2 {
+			background:url(../imagenes/iconmenu/personal.png) no-repeat;
 			background-position: center center;
 			width:40px;
 			height:25px;

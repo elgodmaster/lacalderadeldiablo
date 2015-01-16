@@ -99,7 +99,7 @@ $idtipoventa	= mysql_result($mov,0,1);
 					}
 				});
 				
-				if( (new Date($("#dia").val()).getTime() < $.now()))
+				if (new Date($("#dia").val()).getTime() < new Date('<?php echo date('Y'); ?>-<?php echo date('m'); ?>-<?php echo date('d'); ?>').getTime())
 				{
 					alert('La fecha no puede ser menor al dia actual.');
 					$("#dia").val('');

@@ -56,7 +56,7 @@ function traerTurnos() {
 }
 
 function traerTurnosPorId($id) {
-	$sql = "select t.idturno,t.refcancha,t.fechautilizacion,t.horautilizacion,t.refcliente,t.fechacreacion,t.usuacrea,t.cliente
+	$sql = "select t.idturno,t.refcancha,t.fechautilizacion,t.horautilizacion,t.refcliente,t.fechacreacion,t.usuacrea,t.cliente,t.indefinido
 			from lcdd_turnos t
 			left join lcdd_clientes c on t.refcliente = c.idcliente
 			where activo = 1 and idturno = ".$id;
@@ -233,16 +233,19 @@ function eliminarTurnoCliente($id) {
 function query($sql,$accion) {
 		
 		
-		/*
-		$hostname = "localhost";
-		$database = "lacalderadeldiablo";
-		$username = "root";
-		$password = "";
-		*/
-		$hostname = "localhost";
+		require_once 'appconfig.php';
+
+		$appconfig	= new appconfig();
+		$datos		= $appconfig->conexion();
+		$hostname	= $datos['hostname'];
+		$database	= $datos['database'];
+		$username	= $datos['username'];
+		$password	= $datos['password'];
+		
+/*		$hostname = "localhost";
 		$database = "lacalder_diablo";
 		$username = "lacalderadeldiab";
-		$password = "caldera4415";
+		$password = "caldera4415";*/
 		
 		$conex = mysql_connect($hostname,$username,$password) or die ("no se puede conectar".mysql_error());
 		

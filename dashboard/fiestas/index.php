@@ -80,8 +80,11 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Fiestas");
 		      numberOfMonths: 2,
 		      onSelect: function(textoFecha, objDatepicker){
 				 $('#fechaCambio').html(textoFecha);
-		       
-				if( (new Date($("#dia").val()).getTime() < $.now()))
+		       	
+
+				//alert(new Date($("#dia").val()).getTime());
+				
+				if (new Date($("#dia").val()).getTime() < new Date('<?php echo date('Y'); ?>-<?php echo date('m'); ?>-<?php echo date('d'); ?>').getTime())
 				{
 					alert('La fecha no puede ser menor al dia actual.');
 					$("#dia").val('');
@@ -235,7 +238,7 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Fiestas");
     </div>
 
     
-    <div class="boxInfo">
+    <div class="boxInfoLargo">
         <div id="headBoxInfo">
         	<p style="color: #fff; font-size:18px; height:16px;">Turnos del día de la fecha: <span id="fechaCambio"><?php echo date('Y-m-d'); ?></span></p>
         </div>
@@ -249,7 +252,7 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Fiestas");
                         <th>Hora Hasta</th>
                         <th>Con Catering</th>
                         <th>Pago</th>
-                        <th style="padding-left:9%;">Acciones</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -294,7 +297,7 @@ $resTipoVenta = $serviciosConfiguraciones->traerTipoVentaValor("Fiestas");
 					 <?php
 					 } else {
 					 ?>
-					 	<td colspan="6">
+					 	<td colspan="7">
 					 		<h3>No hay fiestas cargadas.</h3>
 					 	</td>
 					 <?php	

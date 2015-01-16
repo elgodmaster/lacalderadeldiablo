@@ -132,7 +132,10 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                             </select>
                         </div>
                     </div>
-
+					
+                    <?php if ($_SESSION['rol_se'] == "Empleado") { ?>
+                    <div style="display:none">
+                    <?php } ?>
 
                     <div class="form-group col-md-6">
                     	<label for="precio_unit" class="control-label" style="text-align:left">Precio Unitario</label>
@@ -152,9 +155,7 @@ $resTipoProducto = $serviciosProductos->traerTipoProducto();
                         </div>
                     </div>
 
-					<?php if ($_SESSION['rol_se'] == "Empleado") { ?>
-                    <div style="display:none">
-                    <?php } ?>
+					
                     <div class="form-group col-md-6">
                     	<label for="stock" class="control-label" style="text-align:left">Stock</label>
                         <div class="input-group col-md-12">

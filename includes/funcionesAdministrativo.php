@@ -308,16 +308,19 @@ function traerMontosAdministrativos($anio,$mes) {
 
 function query($sql,$accion) {
 		
-		/*
-		$hostname = "localhost";
-		$database = "lacalderadeldiablo";
-		$username = "root";
-		$password = "";
-		*/
-		$hostname = "localhost";
+		require_once 'appconfig.php';
+
+		$appconfig	= new appconfig();
+		$datos		= $appconfig->conexion();	
+		$hostname	= $datos['hostname'];
+		$database	= $datos['database'];
+		$username	= $datos['username'];
+		$password	= $datos['password'];
+		
+/*		$hostname = "localhost";
 		$database = "lacalder_diablo";
 		$username = "lacalderadeldiab";
-		$password = "caldera4415";
+		$password = "caldera4415";*/
 		
 		$conex = mysql_connect($hostname,$username,$password) or die ("no se puede conectar".mysql_error());
 		

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 16-01-2015 a las 22:42:15
+-- Tiempo de generación: 12-12-2014 a las 16:54:41
 -- Versión del servidor: 5.1.36-community-log
 -- Versión de PHP: 5.4.3
 
@@ -91,16 +91,14 @@ CREATE TABLE IF NOT EXISTS `lcdd_clientes` (
   `nrodocumento` int(11) DEFAULT NULL,
   `telefono` varchar(25) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`idcliente`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=15 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=13 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_clientes`
 --
 
 INSERT INTO `lcdd_clientes` (`idcliente`, `nombre`, `nrocliente`, `email`, `nrodocumento`, `telefono`) VALUES
-(12, 'Milanovich Gaston', 'Mi0001', '', NULL, ''),
-(13, 'daniel duranti', 'da0013', '', NULL, ''),
-(14, 'gaston', 'ga0014', '', NULL, '');
+(12, 'Milanovich Gaston', 'Mi0001', '', NULL, '');
 
 -- --------------------------------------------------------
 
@@ -113,16 +111,14 @@ CREATE TABLE IF NOT EXISTS `lcdd_cuentas` (
   `refcliente` int(11) NOT NULL,
   `saldo` decimal(10,0) NOT NULL,
   PRIMARY KEY (`idcuenta`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=12 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=10 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_cuentas`
 --
 
 INSERT INTO `lcdd_cuentas` (`idcuenta`, `refcliente`, `saldo`) VALUES
-(11, 14, '760'),
-(10, 13, '0'),
-(9, 12, '-1240');
+(9, 12, '100');
 
 -- --------------------------------------------------------
 
@@ -137,9 +133,15 @@ CREATE TABLE IF NOT EXISTS `lcdd_fiestas` (
   `horahasta` time NOT NULL,
   `dia` date NOT NULL,
   `concatering` bit(1) DEFAULT NULL,
-  `saldo` decimal(10,0) DEFAULT NULL,
   PRIMARY KEY (`idfiesta`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=9 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=8 ;
+
+--
+-- Volcado de datos para la tabla `lcdd_fiestas`
+--
+
+INSERT INTO `lcdd_fiestas` (`idfiesta`, `nombre`, `horadesde`, `horahasta`, `dia`, `concatering`) VALUES
+(7, 'Viviana', '12:00:00', '17:00:00', '2014-12-20', b'0');
 
 -- --------------------------------------------------------
 
@@ -156,25 +158,24 @@ CREATE TABLE IF NOT EXISTS `lcdd_menu` (
   `hover` varchar(45) COLLATE utf8_spanish_ci DEFAULT NULL,
   `permiso` varchar(50) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`idmenu`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=12 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_menu`
 --
 
 INSERT INTO `lcdd_menu` (`idmenu`, `url`, `icono`, `nombre`, `Orden`, `hover`, `permiso`) VALUES
-(1, '../index.php', 'icodashboard', 'Dashboard', 1, NULL, 'Empleado, Administrador, SuperAdministrador'),
-(2, '../turnos/', 'icoturnos', 'Turnos', 2, NULL, 'Empleado, Administrador, SuperAdministrador'),
-(3, '../ventas/', 'icoventas', 'Ventas', 3, NULL, 'Empleado, Administrador, SuperAdministrador'),
-(4, '../clientes/', 'icousuarios', 'Clientes', 4, NULL, 'Empleado, Administrador, SuperAdministrador'),
-(5, '../productos/', 'icoproductos', 'Productos', 5, NULL, 'Empleado, Administrador, SuperAdministrador'),
-(6, '../proveedores/', 'icocontratos', 'Proveedores', 6, NULL, 'Empleado, Administrador, SuperAdministrador'),
-(7, '../reportes/', 'icoreportes', 'Reportes', 11, NULL, 'Empleado, Administrador, SuperAdministrador'),
-(8, '../logout.php', 'icosalir', 'Salir', 30, NULL, 'Empleado, Administrador, SuperAdministrador'),
-(9, '../configuraciones/', 'icoconfiguracion', 'Configuraciones', 7, NULL, 'SuperAdministrador'),
-(10, '../fiestas/', 'icotorta', 'Fiestas', 8, NULL, 'Empleado, Administrador, SuperAdministrador'),
-(11, '../administrativo/', 'icoadministrativo', 'Administrativo', 9, NULL, 'SuperAdministrador'),
-(12, '../usuarios/', 'icopersonal', 'Usuarios', 10, NULL, 'SuperAdministrador');
+(1, '../index.php', 'icodashboard', 'Dashboard', 1, NULL, 'Empleado, Administrador'),
+(2, '../turnos/', 'icoturnos', 'Turnos', 2, NULL, 'Empleado, Administrador'),
+(3, '../ventas/', 'icoventas', 'Ventas', 3, NULL, 'Empleado, Administrador'),
+(4, '../clientes/', 'icousuarios', 'Clientes', 4, NULL, 'Empleado, Administrador'),
+(5, '../productos/', 'icoproductos', 'Productos', 5, NULL, 'Empleado, Administrador'),
+(6, '../proveedores/', 'icocontratos', 'Proveedores', 6, NULL, 'Empleado, Administrador'),
+(7, '../reportes/', 'icoreportes', 'Reportes', 10, NULL, 'Empleado, Administrador'),
+(8, '../logout.php', 'icosalir', 'Salir', 30, NULL, 'Empleado, Administrador'),
+(9, '../configuraciones/', 'icoconfiguracion', 'Configuraciones', 7, NULL, 'Administrador'),
+(10, '../fiestas/', 'icotorta', 'Fiestas', 8, NULL, 'Empleado, Administrador'),
+(11, '../administrativo/', 'icoadministrativo', 'Administrativo', 9, NULL, 'Administrador');
 
 -- --------------------------------------------------------
 
@@ -192,17 +193,21 @@ CREATE TABLE IF NOT EXISTS `lcdd_movimientos` (
   `refid` int(11) NOT NULL,
   `observacion` varchar(300) COLLATE utf8_spanish_ci DEFAULT NULL,
   PRIMARY KEY (`idmovimiento`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=57 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=31 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_movimientos`
 --
 
 INSERT INTO `lcdd_movimientos` (`idmovimiento`, `reftipoventa`, `refventa`, `monto`, `fechacreacion`, `usuacrea`, `refid`, `observacion`) VALUES
-(56, 3, 58, '0', '2015-01-16 21:58:07', 'Saupurein Marcos', 8, 'Alquiler de Fiesta cancelado'),
-(55, 3, 58, '330', '2015-01-16 21:57:55', 'Saupurein Marcos', 8, 'Alquiler de Fiesta'),
-(52, 2, 57, '260', '2015-01-16 21:32:21', 'Saupurein Marcos', 36, 'Alquiler de Cancha 2 Fecha:2015-01-16'),
-(54, 2, 57, '-260', '2015-01-16 21:34:53', '', 36, 'Alquiler de Cancha 2 Cancelado');
+(29, 1, 37, '0', '2014-12-12 14:11:58', 'Saupurein Marcos', 10, 'Venta de las heladeras'),
+(28, 9, 36, '0', '2014-12-11 20:21:00', 'Saupurein Marcos', 12, 'Carga de saldo del cliente'),
+(27, 9, 35, '-20', '2014-12-11 20:20:24', 'Saupurein Marcos', 12, 'Carga de saldo del cliente'),
+(25, 9, 33, '100', '2014-12-11 20:13:20', 'Saupurein Marcos', 12, 'Carga de saldo del cliente'),
+(26, 5, 34, '300', '2014-12-11 20:13:42', 'Saupurein Marcos', 28, 'Alquiler de Cancha 1 Fecha:2014-12-11'),
+(24, 9, 32, '320', '2014-12-11 20:08:38', 'Saupurein Marcos', 12, 'Carga de nuevo cliente'),
+(19, 1, 27, '0', '2014-12-11 19:20:05', 'Saupurein Marcos', 7, 'Venta de las heladeras'),
+(30, 3, 38, '330', '2014-12-12 14:30:15', 'Saupurein Marcos', 7, 'Alquiler de Fiesta');
 
 -- --------------------------------------------------------
 
@@ -338,9 +343,15 @@ CREATE TABLE IF NOT EXISTS `lcdd_turnos` (
   `usuacrea` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL,
   `activo` bit(1) NOT NULL DEFAULT b'1',
   `cliente` varchar(45) COLLATE utf8_spanish_ci DEFAULT NULL,
-  `indefinido` bit(1) DEFAULT NULL,
   PRIMARY KEY (`idturno`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=37 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=29 ;
+
+--
+-- Volcado de datos para la tabla `lcdd_turnos`
+--
+
+INSERT INTO `lcdd_turnos` (`idturno`, `refcancha`, `fechautilizacion`, `horautilizacion`, `refcliente`, `fechacreacion`, `usuacrea`, `activo`, `cliente`) VALUES
+(28, 1, '2014-12-11', '21:00:00', 12, '2014-12-11 20:13:42', 'Saupurein ', b'1', 'Milanovich');
 
 -- --------------------------------------------------------
 
@@ -384,15 +395,21 @@ CREATE TABLE IF NOT EXISTS `lcdd_ventas` (
   `observaciones` varchar(150) COLLATE utf8_spanish_ci DEFAULT NULL,
   `cantidad` smallint(6) DEFAULT NULL,
   PRIMARY KEY (`idventa`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=59 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci AUTO_INCREMENT=39 ;
 
 --
 -- Volcado de datos para la tabla `lcdd_ventas`
 --
 
 INSERT INTO `lcdd_ventas` (`idventa`, `refproducto`, `reftipoventa`, `importe`, `fechacreacion`, `cancelado`, `usuacrea`, `fechamodificacion`, `usuamodi`, `concepto`, `observaciones`, `cantidad`) VALUES
-(57, NULL, 2, '260.00', '2015-01-16 21:32:21', b'1', 'Saupurein Marcos', NULL, '', 'Alquiler de cancha de d?a antes de las 18:00 hs', 'Se cancelo el turno de la cancha: Cancha 2', 1),
-(58, NULL, 3, '330.00', '2015-01-16 21:57:55', b'1', 'Saupurein Marcos', NULL, '', 'Alquiler para cumplea?os', 'Se cancelo la fiesta ', 1);
+(27, 7, 1, '75.00', '2014-12-11 19:20:05', b'0', 'Saupurein Marcos', NULL, '', 'Cerveza Quilmes 1 litro', 'Venta de Productos', 3),
+(32, NULL, 9, '0.00', '2014-12-11 20:08:38', b'1', 'Saupurein Marcos', NULL, '', 'Idcliente:12', 'Carga de nuevo cliente', 1),
+(33, NULL, 9, '0.00', '2014-12-11 20:13:20', b'1', 'Saupurein Marcos', NULL, '', 'Idcliente:12', 'Carga de saldo del cliente', 1),
+(34, NULL, 5, '300.00', '2014-12-11 20:13:42', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler de canchas de noche despues de las 18:00', 'Alquiler de Cancha 1 Fecha:2014-12-11', 1),
+(35, NULL, 9, '0.00', '2014-12-11 20:20:24', b'1', 'Saupurein Marcos', NULL, '', 'Idcliente:12', 'Carga de saldo del cliente', 1),
+(36, NULL, 9, '0.00', '2014-12-11 20:21:00', b'1', 'Saupurein Marcos', NULL, '', 'Idcliente:12', 'Carga de saldo del cliente', 1),
+(37, 10, 1, '16.50', '2014-12-12 14:11:58', b'0', 'Saupurein Marcos', NULL, '', 'Cigarrillos ', 'Venta de Productos', 1),
+(38, NULL, 3, '330.00', '2014-12-12 14:30:15', b'0', 'Saupurein Marcos', NULL, '', 'Alquiler para cumplea?os', 'Alquiler de Fiesta', 1);
 
 -- --------------------------------------------------------
 
