@@ -96,7 +96,7 @@ function camposTabla($accion) {
 							<label for="'.$campo.'" class="control-label" style="text-align:left">'.$label.'</label>
 							<div class="input-group col-md-12">
 								<select class="form-control" id="'.$campo.'" name="'.$campo.'">
-									<option value="SuperAdmin">SuperAdministrador</option>
+									<option value="SuperAdmin">SuperAdmin</option>
 									<option value="Administrador">Administrador</option>
 									<option value="Empleado">Empleado</option>
 								</select>
