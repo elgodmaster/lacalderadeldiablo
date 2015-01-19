@@ -98,6 +98,141 @@ function menu($usuario,$titulo,$rol) {
 	
 }
 
+
+
+function validacion($tabla) {
+	$sql	=	"show columns from ".$tabla;
+	$res 	=	$this->query($sql,0);
+	
+	$formJquery = '';
+	$formValidador = '';
+	
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		
+		$jquery	=	'';
+		$cuerpoValidacion = '';
+		
+		while ($row = mysql_fetch_array($res)) {
+			if (($row[3] != 'PRI') && ($row[2] == 'NO')) {
+				if (strpos($row[1],"decimal") !== false) {
+					//debo validar que sea un numero
+					
+					$jquery	=	$jquery.'
+					
+					$("#'.$row[0].'").click(function(event) {
+						$("#'.$row[0].'").removeClass("alert-danger");
+						if ($(this).val() == "") {
+							$("#'.$row[0].'").attr("value","");
+							$("#'.$row[0].'").attr("placeholder","Ingrese el '.ucwords($row[0]).'...");
+						}
+					});
+				
+					$("#'.$row[0].'").change(function(event) {
+						$("#'.$row[0].'").removeClass("alert-danger");
+						$("#'.$row[0].'").attr("placeholder","Ingrese el '.ucwords($row[0]).'");
+					});
+					
+					';
+					
+					$cuerpoValidacion = $cuerpoValidacion.'
+					
+						if ($("#'.$row[0].'").val() == "") {
+							$error = "Es obligatorio el campo '.ucwords($row[0]).'.";
+							$("#'.$row[0].'").addClass("alert-danger");
+							$("#'.$row[0].'").attr("placeholder",$error);
+						}
+					
+					';
+					
+					
+				} else {
+					if ($row[0] == "refroll") {
+						$label = "Rol";
+						$campo = $row[0];
+						
+						$jquery	=	$jquery.'
+					
+						$("#'.$campo.'").click(function(event) {
+							$("#'.$campo.'").removeClass("alert-danger");
+							if ($(this).val() == "") {
+								$("#'.$campo.'").attr("value","");
+								$("#'.$campo.'").attr("placeholder","Ingrese el '.$label.'...");
+							}
+						});
+					
+						$("#'.$campo.'").change(function(event) {
+							$("#'.$campo.'").removeClass("alert-danger");
+							$("#'.$campo.'").attr("placeholder","Ingrese el '.$label.'");
+						});
+						
+						';
+						
+						
+						$cuerpoValidacion = $cuerpoValidacion.'
+					
+							if ($("#'.$campo.'").val() == "") {
+								$error = "Es obligatorio el campo '.$label.'.";
+								$("#'.$campo.'").addClass("alert-danger");
+								$("#'.$campo.'").attr("placeholder",$error);
+							}
+						
+						';
+						
+					} else {
+						$label = ucwords($row[0]);
+						$campo = $row[0];
+						
+						$jquery	=	$jquery.'
+					
+						$("#'.$campo.'").click(function(event) {
+							$("#'.$campo.'").removeClass("alert-danger");
+							if ($(this).val() == "") {
+								$("#'.$campo.'").attr("value","");
+								$("#'.$campo.'").attr("placeholder","Ingrese el '.$label.'...");
+							}
+						});
+					
+						$("#'.$campo.'").change(function(event) {
+							$("#'.$campo.'").removeClass("alert-danger");
+							$("#'.$campo.'").attr("placeholder","Ingrese el '.$label.'");
+						});
+						
+						';
+						
+						
+						$cuerpoValidacion = $cuerpoValidacion.'
+					
+							if ($("#'.$campo.'").val() == "") {
+								$error = "Es obligatorio el campo '.$label.'.";
+								$("#'.$campo.'").addClass("alert-danger");
+								$("#'.$campo.'").attr("placeholder",$error);
+							}
+						
+						';
+					}
+					
+					
+				}
+			}
+		}
+		
+		$formJquery = $formJquery.$jquery;
+		
+		$formValidador = $formValidador.'
+			function validador(){
+
+					$error = "";
+					'.$cuerpoValidacion.'
+					return $error;
+			}
+		';
+		
+		return $formJquery.$formValidador;
+	}	
+}
+
 Function query($sql,$accion) {
 		
 		require_once 'appconfig.php';
