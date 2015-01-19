@@ -268,6 +268,11 @@ function camposTablaMod($accion,$id) {
 }
 
 
+
+
+
+
+
 function traerUsuarios() {
 	$sql = "select idusuario,
 			usuario,
