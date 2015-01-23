@@ -396,6 +396,194 @@ function ExportarLocal() {
 ////*************************************************************************************************************
 ////*************************************************************************************************************
 
+
+
+
+//EXPORT DE LA TABLA 	lcdd_proveedores
+	//recorro la tabla para crear los insert
+	$sql = "SELECT idproveedor,
+					proveedor,
+					direccion,
+					telefono,
+					cuit,
+					nombre,
+					email
+				FROM lcdd_proveedores order by idproveedor";
+	$res = $this->query($sql,0);
+	
+	$insert = '';
+	while ($row = mysql_fetch_array($res)) {
+		$insert = $insert." insert into lcdd_proveedores(idproveedor,
+														proveedor,
+														direccion,
+														telefono,
+														cuit,
+														nombre,
+														email)
+												Values
+													(".$row[0].",
+													 '".$row[1]."',
+													 '".$row[2]."',
+													 '".$row[3]."',
+													 '".$row[4]."',
+													 '".$row[5]."',
+													 '".$row[6]."');";	
+	}
+	
+	//creo el eliminar
+	$eliminarTabla = $eliminarTabla."DROP TABLE lcdd_proveedores;";
+	
+	//$this->query($eliminarTabla,0);
+	
+	//creo la tabla
+	$crearTabla = $crearTabla."
+		CREATE TABLE `lcdd_proveedores` (
+		  `idproveedor` int(11) NOT NULL AUTO_INCREMENT,
+		  `proveedor` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+		  `direccion` varchar(200) COLLATE utf8_spanish_ci DEFAULT NULL,
+		  `telefono` varchar(20) COLLATE utf8_spanish_ci DEFAULT NULL,
+		  `cuit` varchar(11) COLLATE utf8_spanish_ci DEFAULT NULL,
+		  `nombre` varchar(45) COLLATE utf8_spanish_ci DEFAULT NULL,
+		  `email` varchar(45) COLLATE utf8_spanish_ci DEFAULT NULL,
+		  PRIMARY KEY (`idproveedor`)
+		) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+	";	
+	
+	//$this->query($crearTabla,0);
+	
+	
+//FIN DEL EXPORT DE LA TABLA lcdd_proveedores
+
+////*************************************************************************************************************
+////*************************************************************************************************************
+////*************************************************************************************************************
+
+
+
+//EXPORT DE LA TABLA 	lcdd_tipoproducto
+	//recorro la tabla para crear los insert
+	$sql = "SELECT SELECT idtipoproducto,
+						tipoproducto,
+						activo
+					FROM lcdd_tipoproducto; order by idtipoproducto";
+	$res = $this->query($sql,0);
+	
+	$insert = '';
+	while ($row = mysql_fetch_array($res)) {
+		$insert = $insert." insert into lcdd_tipoproducto(idtipoproducto,
+															tipoproducto,
+															activo)
+												Values
+													(".$row[0].",
+													 '".$row[1]."',
+													 ".$row[2].");";	
+	}
+	
+	//creo el eliminar
+	$eliminarTabla = $eliminarTabla."DROP TABLE lcdd_tipoproducto;";
+	
+	//$this->query($eliminarTabla,0);
+	
+	//creo la tabla
+	$crearTabla = $crearTabla."
+		CREATE TABLE `lcdd_tipoproducto` (
+		  `idtipoproducto` int(11) NOT NULL AUTO_INCREMENT,
+		  `tipoproducto` varchar(45) COLLATE utf8_spanish_ci NOT NULL,
+		  `activo` bit(1) DEFAULT NULL,
+		  PRIMARY KEY (`idtipoproducto`)
+		) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+	";	
+	
+	//$this->query($crearTabla,0);
+	
+	
+//FIN DEL EXPORT DE LA TABLA lcdd_tipoproducto
+
+////*************************************************************************************************************
+////*************************************************************************************************************
+////*************************************************************************************************************
+
+
+
+//EXPORT DE LA TABLA 	lcdd_turnos
+	//recorro la tabla para crear los insert
+	$sql = "SELECT SELECT idturno,
+						refcancha,
+						fechautilizacion,
+						horautilizacion,
+						refcliente,
+						fechacreacion,
+						usuacrea,
+						activo,
+						cliente,
+						indefinido
+					FROM lcdd_turnos order by idturno";
+	$res = $this->query($sql,0);
+	
+	$insert = '';
+	while ($row = mysql_fetch_array($res)) {
+		$insert = $insert." insert into lcdd_turnos(idturno,
+													refcancha,
+													fechautilizacion,
+													horautilizacion,
+													refcliente,
+													fechacreacion,
+													usuacrea,
+													activo,
+													cliente,
+													indefinido)
+												Values
+													(".$row[0].",
+													 ".$row[1].",
+													 '".$row[2]."',
+													 '".$row[3]."',
+													 ".$row[4].",
+													 '".$row[5]."',
+													 '".$row[6]."',
+													 ".$row[7].",
+													 '".$row[8]."',
+													 ".$row[9].");";	
+	}
+	
+	//creo el eliminar
+	$eliminarTabla = $eliminarTabla."DROP TABLE lcdd_turnos;";
+	
+	//$this->query($eliminarTabla,0);
+	
+	//creo la tabla
+	$crearTabla = $crearTabla."
+		CREATE TABLE `lcdd_turnos` (
+		  `idturno` int(11) NOT NULL AUTO_INCREMENT,
+		  `refcancha` smallint(6) NOT NULL,
+		  `fechautilizacion` date NOT NULL,
+		  `horautilizacion` time NOT NULL,
+		  `refcliente` int(11) DEFAULT NULL,
+		  `fechacreacion` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		  `usuacrea` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL,
+		  `activo` bit(1) NOT NULL DEFAULT b'1',
+		  `cliente` varchar(45) COLLATE utf8_spanish_ci DEFAULT NULL,
+		  `indefinido` bit(1) DEFAULT NULL,
+		  PRIMARY KEY (`idturno`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+	";	
+	
+	//$this->query($crearTabla,0);
+	
+	
+//FIN DEL EXPORT DE LA TABLA lcdd_turnos
+
+////*************************************************************************************************************
+////*************************************************************************************************************
+////*************************************************************************************************************
+
+
+	$armarExportador = $eliminarTabla.$crearTabla.$insert;
+	
+	$this->query($armarExportador,0);
+	
+	echo $armarExportador;
+
+
 }
 
 function ExportarWeb() {
