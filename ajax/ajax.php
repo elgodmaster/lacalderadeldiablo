@@ -174,7 +174,7 @@ function insertarTurnoVerificado($serviciosTurnos,$serviciosVentas,$serviciosCon
 	
 	$horautilizacion	=	mysql_result($resTraerTurrno,0,'horautilizacion');
 	$refcliente			=	mysql_result($resTraerTurrno,0,'refcliente');
-	$fechacreacion		=	mysql_result($resTraerTurrno,0,'fechacreacion');
+	$fechacreacion		=	date('Y-m-d');
 	$usuacrea			=	$_POST['usuacrea'];
 	//5 alquiler de canchas de noche - 2 alquiler de canchas de dia
 	if (mysql_result($resTraerTurrno,0,'horautilizacion') >= 18) {
@@ -186,8 +186,9 @@ function insertarTurnoVerificado($serviciosTurnos,$serviciosVentas,$serviciosCon
 	
 	$nocliente			=	mysql_result($resTraerTurrno,0,'cliente');
 
-	$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
+	$res = $serviciosTurnos->insertarTurnoVerificado($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
 
+	
 	if ((integer)$res > 0) {
 		$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
 		$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
