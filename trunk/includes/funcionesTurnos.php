@@ -126,6 +126,8 @@ function traerTurnosPorDiaCanchaFecha($fecha,$horario,$refcancha) {
 function hayTurnos($fecha,$horario,$refcancha) {
 	$sql = "select idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea
 			from lcdd_turnos where activo = 1 and WEEKDAY(fechautilizacion) = WEEKDAY('".$fecha."') and hour(horautilizacion) = '".$horario."' and refcancha =".$refcancha;
+	//return $sql;
+	
 	$res = $this->query($sql,0);
 
 	if (mysql_num_rows($res) > 0) {
@@ -176,7 +178,26 @@ function insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente
 		$res		=	$this->query($sql,1);
 	} else {
 		return 'Ya existe un turno';	
+		//return $this->hayTurnos($fechautilizacion,$horautilizacion,$refcancha);
 	}
+	return $res;
+}
+
+function insertarTurnoVerificado($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$cliente,$indefinido) {
+	$sql		=	"insert into lcdd_turnos(idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea,activo,cliente,indefinido)
+					values
+						('',
+						".$refcancha.",
+						'".$fechautilizacion."',
+						'".$horautilizacion.":00:00',
+						".$refcliente.",
+						null,
+						'".utf8_decode($usuacrea)."',
+						1,
+						'".utf8_decode($cliente)."',
+						".$indefinido.")";
+
+	$res		=	$this->query($sql,1);
 	return $res;
 }
 
