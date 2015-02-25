@@ -174,9 +174,15 @@ $stockminimo = $serviciosProductos->traerProductosStockMin();
                                           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Verificado
                                         </button>
                                     <?php } else { ?>
+                                        <?php if (date('Y-m-d') != $row['fechautilizacion1']) { ?>
                                         <button type="button" class="btn btn-info btn-sm verificar" id="<?php echo $row['turno1']; ?>">
                                           <span class="glyphicon glyphicon-check" aria-hidden="true"></span> Verificar
                                         </button>
+                                        <?php } else { ?>
+                                        <button type="button" class="btn btn-success btn-sm">
+                                          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Verificado
+                                        </button>
+                                        <?php } ?>
                                     <?php } ?>
                                 <?php } ?>
                             </td>
@@ -188,9 +194,15 @@ $stockminimo = $serviciosProductos->traerProductosStockMin();
                                           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Verificado
                                         </button>
                                     <?php } else { ?>
+                                    	<?php if (date('Y-m-d') != $row['fechautilizacion2']) { ?>
                                         <button type="button" class="btn btn-info btn-sm verificar" id="<?php echo $row['turno2']; ?>">
                                           <span class="glyphicon glyphicon-check" aria-hidden="true"></span> Verificar
                                         </button>
+                                        <?php } else { ?>
+                                        <button type="button" class="btn btn-success btn-sm">
+                                          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Verificado
+                                        </button>
+                                        <?php } ?>
                                     <?php } ?>
                                 <?php } ?>
                             
@@ -203,9 +215,15 @@ $stockminimo = $serviciosProductos->traerProductosStockMin();
                                           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Verificado
                                         </button>
                                     <?php } else { ?>
+                                        <?php if (date('Y-m-d') != $row['fechautilizacion3']) { ?>
                                         <button type="button" class="btn btn-info btn-sm verificar" id="<?php echo $row['turno3']; ?>">
                                           <span class="glyphicon glyphicon-check" aria-hidden="true"></span> Verificar
                                         </button>
+                                        <?php } else { ?>
+                                        <button type="button" class="btn btn-success btn-sm">
+                                          <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Verificado
+                                        </button>
+                                        <?php } ?>
                                     <?php } ?>
                                 <?php } ?>
                             
