@@ -109,7 +109,8 @@ $(document).ready(function(){
 	
 	$('#exportar').click(function(event) {
 		$.ajax({
-			data:  {accion:	'exportarweb'},
+			data:  {donde:	'<?php echo $_SERVER['SERVER_NAME']; ?>',
+					accion:	'exportarweb'},
 			url:   '../../ajax/ajax.php',
 			type:  'post',
 			beforeSend: function () {

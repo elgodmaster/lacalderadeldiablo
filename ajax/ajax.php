@@ -504,18 +504,28 @@ switch ($accion) {
 /* para las importaciones y exportaciones */
 
 function exportarweb($serviciosExportar) {
-	$res = $serviciosExportar->ExportarWeb();
-	echo $res;	
-}
-
-function exportarlocal($serviciosExportar) {
-	$res = $serviciosExportar->ExportarLocal();
+	$donde = $_POST['donde'];
+	if ($donde == 'localhost') {
+		$res = $serviciosExportar->ExportarLocal();
+	} else {
+		$res = $serviciosExportar->ExportarWeb();	
+	}
+	
 	echo $res;	
 }
 
 function importar($serviciosImportar) {
-	$archivo = $_FILES['archivo']['name'];
-	$res = $serviciosImportar->Importar($archivo);
+	
+	$donde = $_POST['donde'];
+	if ($donde == 'localhost') {
+		$archivo = $_FILES['archivo']['name'];
+		$res = $serviciosImportar->ImportarLocal($archivo);
+	} else {
+		$archivo = 'archivo';
+		$resArchivo = $serviciosImportar->subirArchivo($archivo);
+		$res = $serviciosImportar->ImportarWeb($resArchivo);	
+	}
+	
 	echo $res;	
 }
 

@@ -17,7 +17,7 @@ require '../../includes/funcionesImportar.php';
 $serviciosConfiguraciones = new ServiciosConfiguraciones();
 $serviciosImportar = new ServiciosImportar();
 
-
+//echo $_SERVER['SERVER_NAME'];
 
 ?>
 
@@ -83,6 +83,7 @@ $serviciosImportar = new ServiciosImportar();
         <div class="col-sm-12 col-md-12">
         	<h4 class="alert alert-info"><span class="glyphicon glyphicon-info-sign"></span> El proceso de importar es sencillo, debera seleccionar al archivo a importar y presionar <strong>Importar</strong></h4>
             <h4 class="alert alert-warning"><span class="glyphicon glyphicon-warning-sign"></span> Recuerde que primero le deberan enviar el archivo para importar ya que si importa un archivo viejo se perderan datos.</h4>
+            <h4 class="alert alert-danger"><span class="glyphicon glyphicon-warning-sign"></span> El archivo enviado se debe guardar en el directorio <strong>c:/</strong> de otra forma no funcionaria la importacion.</h4>
 			<form role="form" class="formulario">
         		<div class="row">
                     <div class="col-md-6">
@@ -94,7 +95,8 @@ $serviciosImportar = new ServiciosImportar();
                 </div>
             <ul class="list-inline">
             <input type="hidden" id="accion" name="accion" value="importar">
-            	<li><button type="button" class="btn btn-primary btn-lg" id="importar" style="margin-left:0px;">Importar</button></li>
+            <input type="hidden" id="donde" name="donde" value="<?php echo $_SERVER['SERVER_NAME']; ?>">
+            	<li><button type="button" class="btn btn-primary btn-lg" id="btnimportar" style="margin-left:0px;">Importar</button></li>
             </ul>
             
             <div class="load"></div>
@@ -110,7 +112,7 @@ $serviciosImportar = new ServiciosImportar();
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	$('#importar').click(function(event) {
+	$('#btnimportar').click(function(event) {
 		var formData = new FormData($(".formulario")[0]);
 			var message = "";
 			//hacemos la petición ajax  
