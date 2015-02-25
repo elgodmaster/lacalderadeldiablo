@@ -132,7 +132,7 @@ padding-bottom: 10px;
 #navigation {
 			height:100%;
 			background-color: #F30;
-			padding-top:15px;
+			padding-top:3px;
 			overflow-y: auto;
 			position: fixed;
 			top: 0;
@@ -354,6 +354,24 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 			margin-right:10px;
 		}
 		
+		.icoexportar {
+			background:url(../imagenes/iconmenu/exportar.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			float:left;
+			margin-right:10px;
+		}
+		
+		.icoimportar {
+			background:url(../imagenes/iconmenu/importar.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			float:left;
+			margin-right:10px;
+		}
+		
 		.icosalir {
 			background:url(../imagenes/iconmenu/salir.png) no-repeat;
 			background-position: center center;
@@ -494,6 +512,27 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d60000', end
 			cursor:pointer;
 		}
 		
+		
+		.icoexportar2 {
+			background:url(../imagenes/iconmenu/exportar.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			margin-right:10px;
+			margin-bottom:25px;
+			cursor:pointer;
+		}
+		
+		.icoimportar2 {
+			background:url(../imagenes/iconmenu/importar.png) no-repeat;
+			background-position: center center;
+			width:40px;
+			height:25px;
+			margin-right:10px;
+			margin-bottom:25px;
+			cursor:pointer;
+		}
+		
 		.icosalir2 {
 			background:url(../imagenes/iconmenu/salir.png) no-repeat;
 			background-position: center center;
@@ -594,7 +633,12 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc3bc', end
 
  padding:6px; height:36px; border-bottom:1px solid #C40000;
 			}
-  
+
+.btn-group {
+	width:110px;
+}
+
+
 #alertasstock {
 	position:absolute; 
 	top:10; 
@@ -606,12 +650,13 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc3bc', end
 	border:1px solid #006; 
 	z-index:9999; 
 	padding:10px;
-	color:#000;
+
 	font-weight:bold;
 }
 
 #alertasstock p {
 	border-bottom:1px solid #003;
+	color:#fff;
 }
 
 #alertasstock a {

@@ -12,10 +12,10 @@ $serviciosHTML = new ServiciosHTML();
 $resMenu = $serviciosHTML->menu($_SESSION['nombre_se'],"Configuraciones",$_SESSION['rol_se']);
 
 require '../../includes/funcionesConfiguraciones.php';
-require '../../includes/funcionesExportar.php';
+require '../../includes/funcionesImportar.php';
 
 $serviciosConfiguraciones = new ServiciosConfiguraciones();
-$serviciosExportar = new ServiciosExportar();
+$serviciosImportar = new ServiciosImportar();
 
 
 
@@ -62,16 +62,6 @@ $serviciosExportar = new ServiciosExportar();
         $('#navigation').perfectScrollbar();
       });
     </script>
-    <style type="text/css">
-		.form-group {
-			padding:10px;
-		}
-		h4 {
-			padding:12px;
-			text-align:justify;
-			line-height:30px;
-		}
-	</style>
 </head>
 
 <body>
@@ -85,19 +75,32 @@ $serviciosExportar = new ServiciosExportar();
 
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Exportar</p>
+        	<p style="color: #fff; font-size:18px; height:16px;">Importar</p>
         </div>
     	<div class="cuerpoBox">
         
         <div class="row"> 
         <div class="col-sm-12 col-md-12">
-        	<h4 class="alert alert-info"><span class="glyphicon glyphicon-info-sign"></span> El proceso de exportar es sencillo, al hacer click sobre el boton <strong>"Exportar"</strong> se creara un archivo en el directorio c:/ de su PC con el nombre "Exportar año-mes-dia hora minutos segundos"</h4>
-            <h4 class="alert alert-success"><span class="glyphicon glyphicon-certificate"></span> Ejemplo: <strong>Exportar2015-02-25040320</strong> donde el archivo fue exportado el año: 2015, mes:2, dia:25 hora:04,minutos:03,segundos:20 .</h4>
+        	<h4 class="alert alert-info"><span class="glyphicon glyphicon-info-sign"></span> El proceso de importar es sencillo, debera seleccionar al archivo a importar y presionar <strong>Importar</strong></h4>
+            <h4 class="alert alert-warning"><span class="glyphicon glyphicon-warning-sign"></span> Recuerde que primero le deberan enviar el archivo para importar ya que si importa un archivo viejo se perderan datos.</h4>
+			<form role="form" class="formulario">
+        		<div class="row">
+                    <div class="col-md-6">
+                        <label class="control-label" for="archivos">Ingrese un nombre a la subida</label>
+                        <div class="form-group col-md-12">
+                            <input type="file" id="archivo" name="archivo"/>
+                        </div>
+                    </div>
+                </div>
+            <ul class="list-inline">
+            <input type="hidden" id="accion" name="accion" value="importar">
+            	<li><button type="button" class="btn btn-primary btn-lg" id="importar" style="margin-left:0px;">Importar</button></li>
+            </ul>
             
-               <?php //echo $serviciosExportar->ExportarWeb(); ?>
-        	<button type="button" class="btn btn-primary btn-lg" id="exportar" style="margin-left:0px;">Exportar</button>
             <div class="load"></div>
             <h4>Resultado: <span id="resultado"></span></h4>
+            </form>    
+                
         </div>
     </div>
  
@@ -107,24 +110,44 @@ $serviciosExportar = new ServiciosExportar();
 <script type="text/javascript">
 $(document).ready(function(){
 	
-	$('#exportar').click(function(event) {
-		$.ajax({
-			data:  {accion:	'exportarweb'},
-			url:   '../../ajax/ajax.php',
-			type:  'post',
-			beforeSend: function () {
+	$('#importar').click(function(event) {
+		var formData = new FormData($(".formulario")[0]);
+			var message = "";
+			//hacemos la petición ajax  
+			$.ajax({
+				url: '../../ajax/ajax.php',  
+				type: 'POST',
+				// Form data
+				//datos del formulario
+				data: formData,
+				//necesario para subir archivos via ajax
+				cache: false,
+				contentType: false,
+				processData: false,
+				//mientras enviamos el archivo
+				beforeSend: function(){
 					$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');
-			},
-			success:  function (response) {
-				$('#resultado').html(response);
-				$("#load").html('');
-			}
-		});
+       
+				},
+				//una vez finalizado correctamente
+				success: function(data){
+					
+					$('#resultado').html(data);
+					$("#load").html('');
+				},
+				//si ha ocurrido un error
+				error: function(){
+					$('.cuerpoBox2').prepend('Error');
+				}
+			});//fin del ajax
+		
+		
 	
 	});
 
 });
 </script>
+
 
 <?php } ?>
 

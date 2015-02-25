@@ -104,7 +104,7 @@ function ExportarLocal() {
 				FROM lcdd_productos order by idproducto";
 	$res = $this->query($sql,0);
 	
-	$insert = '';
+
 	while ($row = mysql_fetch_array($res)) {
 		$insert = $insert." insert into lcdd_productos(idproducto,
 														nombre,
@@ -179,7 +179,7 @@ function ExportarLocal() {
 				FROM lcdd_clientes order by idcliente";
 	$res = $this->query($sql,0);
 	
-	$insert = '';
+
 	while ($row = mysql_fetch_array($res)) {
 		$insert = $insert." insert into lcdd_clientes(idcliente,
 														nombre,
@@ -233,7 +233,7 @@ function ExportarLocal() {
 			FROM lcdd_cuentas order by idcuenta";
 	$res = $this->query($sql,0);
 	
-	$insert = '';
+
 	while ($row = mysql_fetch_array($res)) {
 		$insert = $insert." insert into lcdd_cuentas(idcuenta,
 													refcliente,
@@ -283,7 +283,7 @@ function ExportarLocal() {
 				FROM lcdd_fiestas order by idfiesta";
 	$res = $this->query($sql,0);
 	
-	$insert = '';
+
 	while ($row = mysql_fetch_array($res)) {
 		$insert = $insert." insert into lcdd_fiestas(idfiesta,
 													nombre,
@@ -346,7 +346,7 @@ function ExportarLocal() {
 				FROM lcdd_movimientos order by idmovimiento";
 	$res = $this->query($sql,0);
 	
-	$insert = '';
+
 	while ($row = mysql_fetch_array($res)) {
 		$insert = $insert." insert into lcdd_movimientos(idmovimiento,
 														reftipoventa,
@@ -411,7 +411,7 @@ function ExportarLocal() {
 				FROM lcdd_proveedores order by idproveedor";
 	$res = $this->query($sql,0);
 	
-	$insert = '';
+
 	while ($row = mysql_fetch_array($res)) {
 		$insert = $insert." insert into lcdd_proveedores(idproveedor,
 														proveedor,
@@ -468,7 +468,7 @@ function ExportarLocal() {
 					FROM lcdd_tipoproducto; order by idtipoproducto";
 	$res = $this->query($sql,0);
 	
-	$insert = '';
+
 	while ($row = mysql_fetch_array($res)) {
 		$insert = $insert." insert into lcdd_tipoproducto(idtipoproducto,
 															tipoproducto,
@@ -520,7 +520,7 @@ function ExportarLocal() {
 					FROM lcdd_turnos order by idturno";
 	$res = $this->query($sql,0);
 	
-	$insert = '';
+
 	while ($row = mysql_fetch_array($res)) {
 		$insert = $insert." insert into lcdd_turnos(idturno,
 													refcancha,
@@ -579,12 +579,26 @@ function ExportarLocal() {
 
 	$armarExportador = $eliminarTabla.$crearTabla.$insert;
 	
-	$this->query($armarExportador,0);
+	//ejecuto la consulta
+	//$this->query($armarExportador,0);
 	
-	echo $armarExportador;
+	//echo $armarExportador;
+	
+	$nombrearchivo = 'Exportar'.str_replace(' ','',str_replace(':','',date('Y-m-d H:i:s')));
+	
+	$file = fopen("C:/".$nombrearchivo.".txt", "w");
+		
+	fwrite($file, $armarExportador . PHP_EOL);
+	
+	fclose($file);
+	
+	return 'Archivo generado con el nombre: '.$nombrearchivo;
+	
 
 
 }
+
+/*************************** fin del exportar local *********************************/
 
 function ExportarWeb() {
 	
@@ -706,7 +720,6 @@ function ExportarWeb() {
 				FROM se_usuarios";
 	$res = $this->query($sql,0);
 	
-	$insert = '';
 	while ($rowU = mysql_fetch_array($res)) {
 		$insert = $insert." insert into se_usuarios(idusuario,
 													usuario,
@@ -761,7 +774,6 @@ function ExportarWeb() {
 			FROM lcdd_tipoventa;";
 	$res = $this->query($sql,0);
 	
-	$insert = '';
 	while ($rowU = mysql_fetch_array($res)) {
 		$insert = $insert." insert into lcdd_tipoventa(idtipoventa,
 														tipoventa,
@@ -801,9 +813,19 @@ function ExportarWeb() {
 	
 	$armarExportador = $eliminarTabla.$crearTabla.$insert;
 	
-	$this->query($armarExportador,0);
+	//$this->query($armarExportador,0);
 	
-	echo $armarExportador;
+	//echo $armarExportador;
+	
+	$nombrearchivo = 'Exportar'.str_replace(' ','',str_replace(':','',date('Y-m-d H:i:s')));
+	
+	$file = fopen("C:/".$nombrearchivo.".txt", "w");
+		
+	fwrite($file, $armarExportador . PHP_EOL);
+	
+	fclose($file);
+	
+	return 'Archivo generado con el nombre: '.$nombrearchivo;
 }
 
 Function query($sql,$accion) {

@@ -7,6 +7,63 @@ date_default_timezone_set('America/Buenos_Aires');
 
 class ServiciosProductos {
 
+/* logica de negocio para los movimientos de los productos */
+
+function insertarMovimientoProducto($refproducto,$stockactual,$stocknuevo,$cantidadingresada,$usuacrea,$fechacreacion) {
+	$sql = "INSERT INTO lcdd_movimientosproductos
+				(idmovimientoproducto,
+				refproducto,
+				stockactual,
+				stocknuevo,
+				cantidadingresada,
+				usuacrea,
+				fechacreacion)
+			VALUES
+				('',
+				".$refproducto.",
+				".$stockactual.",
+				".$stocknuevo.",
+				".$cantidadingresada.",
+				'".$usuacrea."',
+				'".date('Y-m-d H:i:s')."')";
+	$res = $this->query($sql,1);
+	if ($res == false) {
+		return 'Error al insertar datos';
+	} else {
+		return $res;
+	}	
+}
+
+function modificarMovimientoProducto($idmovimientoproducto,$refproducto,$stockactual,$stocknuevo,$cantidadingresada,$usuacrea,$fechacreacion) {
+	$sql = "update lcdd_movimientosproductos
+			set
+				refproducto = ".$refproducto.",
+				stockactual = ".$stockactual.",
+				stocknuevo = ".$stocknuevo.",
+				cantidadingresada = ".$cantidadingresada.",
+				usuacrea = '".$usuacrea."'
+			where idmovimientoproducto = ".$idmovimientoproducto;
+
+	$res = $this->query($sql,0);
+	if ($res == false) {
+		return 'Error al modificar datos';
+	} else {
+		return '';
+	}	
+}
+
+
+function eliminarMovimientoProducto($idmovimientoproducto) {
+	$sql = "delete lcdd_movimientosproductos where idmovimientoproducto = ".$idmovimientoproducto;
+
+	$res = $this->query($sql,0);
+	if ($res == false) {
+		return 'Error al eliminar datos';
+	} else {
+		return '';
+	}	
+}
+/* fin */
 
 /* logica de negocio para los tipos productos */
 
