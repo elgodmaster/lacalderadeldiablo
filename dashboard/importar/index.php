@@ -128,7 +128,7 @@ $(document).ready(function(){
 				processData: false,
 				//mientras enviamos el archivo
 				beforeSend: function(){
-					$("#load").html('<img src="../imagenes/load13.gif" width="50" height="50" />');
+					$("#load").html('<img src="../../imagenes/load13.gif" width="50" height="50" />');
        
 				},
 				//una vez finalizado correctamente
