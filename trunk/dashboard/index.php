@@ -168,8 +168,8 @@ $stockminimo = $serviciosProductos->traerProductosStockMin();
                         	<td><?php echo $row['horautilizacion']; ?></td>
                             <td>
                             	<?php if ($row['turno1'] != '') { ?>
-                                    <a href="turnos/modificar.php?id=<?php echo $row['turno1']; ?>"><?php echo $row['Cancha1']; ?></a>
-                                    <?php if (date('Y-m-d') == $row['fechautilizacion']) { ?>
+                                    <a href="turnos/modificar.php?id=<?php echo $row['turno1']; ?>"><?php echo $row['Cancha1']; ?></a>								<?php //echo $row['fechautilizacion'].$row['indefinido']; ?>
+                                    <?php if ($row['indefinido1'] == 0) { ?>
                                         <button type="button" class="btn btn-success btn-sm">
                                           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Verificado
                                         </button>
@@ -183,7 +183,7 @@ $stockminimo = $serviciosProductos->traerProductosStockMin();
                             <td>
                             	<?php if ($row['turno2'] != '') { ?>
                                     <a href="turnos/modificar.php?id=<?php echo $row['turno2']; ?>"><?php echo $row['Cancha2']; ?></a>
-                                    <?php if (date('Y-m-d') == $row['fechautilizacion']) { ?>
+                                    <?php if ($row['indefinido2'] == 0) { ?>
                                         <button type="button" class="btn btn-success btn-sm">
                                           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Verificado
                                         </button>
@@ -198,7 +198,7 @@ $stockminimo = $serviciosProductos->traerProductosStockMin();
                             <td>
                             	<?php if ($row['turno3'] != '') { ?>
                                     <a href="turnos/modificar.php?id=<?php echo $row['turno3']; ?>"><?php echo $row['Cancha3']; ?></a>
-                                    <?php if (date('Y-m-d') == $row['fechautilizacion']) { ?>
+                                    <?php if ($row['indefinido3'] == 0) { ?>
                                         <button type="button" class="btn btn-success btn-sm">
                                           <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Verificado
                                         </button>

@@ -88,6 +88,18 @@ function traerTurnosPorDiaAgrupado($fecha) {
 			        else ''
 			    end) as Cancha3,
 				max(case
+			        when t.refcancha = 1 then abs(t.indefinido)
+			        else ''
+			    end) as indefinido1,
+			    max(case
+			        when t.refcancha = 2 then abs(t.indefinido)
+			        else ''
+			    end) as indefinido2,
+			    max(case
+			        when t.refcancha = 3 then abs(t.indefinido)
+			        else ''
+			    end) as indefinido3,
+				max(case
 			        when t.refcancha = 1 then t.idturno
 			        else ''
 			    end) as turno1,
@@ -125,7 +137,7 @@ function traerTurnosPorDiaCanchaFecha($fecha,$horario,$refcancha) {
 
 function hayTurnos($fecha,$horario,$refcancha) {
 	$sql = "select idturno,refcancha,fechautilizacion,horautilizacion,refcliente,fechacreacion,usuacrea
-			from lcdd_turnos where activo = 1 and WEEKDAY(fechautilizacion) = WEEKDAY('".$fecha."') and hour(horautilizacion) = '".$horario."' and refcancha =".$refcancha;
+			from lcdd_turnos where activo = 1 and WEEKDAY(fechautilizacion) = WEEKDAY('".$fecha."') and hour(horautilizacion) = '".$horario."' and indefinido = 1 and refcancha =".$refcancha;
 	//return $sql;
 	
 	$res = $this->query($sql,0);
