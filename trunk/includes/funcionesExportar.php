@@ -39,7 +39,7 @@ function ExportarLocal() {
 													cantidad)
 												Values
 													(".$row[0].",
-													 ".$row[1].",
+													 ".($row[1] == '' ? 'null' : $row[1]).",
 													 ".$row[2].",
 													 ".$row[3].",
 													 '".$row[4]."',
@@ -192,7 +192,7 @@ function ExportarLocal() {
 													 '".$row[1]."',
 													 '".$row[2]."',
 													 '".$row[3]."',
-													 ".$row[4].",
+													 ".($row[4] == '' ? 0 : $row[4]).",
 													 '".$row[5]."');";	
 	}
 	
@@ -462,10 +462,10 @@ function ExportarLocal() {
 
 //EXPORT DE LA TABLA 	lcdd_tipoproducto
 	//recorro la tabla para crear los insert
-	$sql = "SELECT SELECT idtipoproducto,
+	$sql = "SELECT idtipoproducto,
 						tipoproducto,
 						activo
-					FROM lcdd_tipoproducto; order by idtipoproducto";
+					FROM lcdd_tipoproducto order by idtipoproducto";
 	$res = $this->query($sql,0);
 	
 
@@ -507,7 +507,7 @@ function ExportarLocal() {
 
 //EXPORT DE LA TABLA 	lcdd_turnos
 	//recorro la tabla para crear los insert
-	$sql = "SELECT SELECT idturno,
+	$sql = "SELECT idturno,
 						refcancha,
 						fechautilizacion,
 						horautilizacion,
@@ -584,7 +584,7 @@ function ExportarLocal() {
 	
 	//echo $armarExportador;
 	
-	$nombrearchivo = 'Exportar'.str_replace(' ','',str_replace(':','',date('Y-m-d H:i:s')));
+	$nombrearchivo = 'ExportarLocal'.str_replace(' ','',str_replace(':','',date('Y-m-d H:i:s')));
 	
 	$file = fopen("C:/".$nombrearchivo.".txt", "w");
 		
@@ -817,15 +817,15 @@ function ExportarWeb() {
 	
 	//echo $armarExportador;
 	
-	$nombrearchivo = 'Exportar'.str_replace(' ','',str_replace(':','',date('Y-m-d H:i:s')));
+	$nombrearchivo = 'ExportarWeb'.str_replace(' ','',str_replace(':','',date('Y-m-d H:i:s')));
 	
-	$file = fopen("C:/".$nombrearchivo.".txt", "w");
+	$file = fopen("../archivos/".$nombrearchivo.".txt", "w");
 		
 	fwrite($file, $armarExportador . PHP_EOL);
 	
 	fclose($file);
 	
-	return 'Archivo generado con el nombre: '.$nombrearchivo;
+	return 'Archivo generado con el nombre: '.$nombrearchivo.' <br>Descargar para enviarlo<br> <a href="../../archivos/'.$nombrearchivo.'.txt"> Descargar aqui</a>';
 }
 
 Function query($sql,$accion) {
