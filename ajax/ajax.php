@@ -11,6 +11,8 @@ include ('../includes/funcionesFiestas.php');
 include ('../includes/funcionesMovimientos.php');
 include ('../includes/funcionesClientes.php');
 require ('../includes/funcionesAdministrativo.php');
+require ('../includes/funcionesExportar.php');
+require ('../includes/funcionesImportar.php');
 
 $serviciosClientes  = new ServiciosClientes();
 
@@ -24,6 +26,9 @@ $serviciosFiestas = new ServiciosFiestas();
 $serviciosAdministrativo = new ServiciosAdministrativo();
 
 $serviciosMovimientos = new ServiciosMovimientos();
+
+$serviciosExportar = new ServiciosExportar();
+$serviciosImportar = new ServiciosImportar();
 
 $accion = $_POST['accion'];
 
@@ -126,7 +131,15 @@ switch ($accion) {
 	case 'eliminarUsuario':
 		eliminarUsuario($serviciosUsuarios);
 		break;	
-		
+	case 'exportarweb':
+		exportarweb($serviciosExportar);
+		break;
+	case 'exportarlocal':
+		exportarlocal($serviciosExportar);
+		break;
+	case 'importar':
+		importar($serviciosImportar);
+		break;		
 		
 		
 		
@@ -160,334 +173,354 @@ switch ($accion) {
 
 /* functiones que trabajan con ventas y movimientos */
 
-
-function insertarTurnoVerificado($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes) {
-	$id			=	$_POST['idturno'];
-	$usuacrea	=	$_POST['usuacrea'];
 	
-	$resTraerTurrno = $serviciosTurnos->traerTurnosPorId($id);
+	function insertarTurnoVerificado($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes) {
+		$id			=	$_POST['idturno'];
+		$usuacrea	=	$_POST['usuacrea'];
+		
+		$resTraerTurrno = $serviciosTurnos->traerTurnosPorId($id);
+		
+		$refcancha			=	mysql_result($resTraerTurrno,0,'refcancha');
+		$fechautilizacion	=	date('Y-m-d');
 	
-	$refcancha			=	mysql_result($resTraerTurrno,0,'refcancha');
-	$fechautilizacion	=	date('Y-m-d');
-
+		
+		
+		$horautilizacion	=	mysql_result($resTraerTurrno,0,'horautilizacion');
+		$refcliente			=	mysql_result($resTraerTurrno,0,'refcliente');
+		$fechacreacion		=	date('Y-m-d');
+		$usuacrea			=	$_POST['usuacrea'];
+		//5 alquiler de canchas de noche - 2 alquiler de canchas de dia
+		if (mysql_result($resTraerTurrno,0,'horautilizacion') >= 18) {
+			$tipoventa			=	5;
+		} else {
+			$tipoventa			=	2;
+		}
+		$indefinido			=	1;
+		
+		$nocliente			=	mysql_result($resTraerTurrno,0,'cliente');
 	
+		$res = $serviciosTurnos->insertarTurnoVerificado($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
 	
-	$horautilizacion	=	mysql_result($resTraerTurrno,0,'horautilizacion');
-	$refcliente			=	mysql_result($resTraerTurrno,0,'refcliente');
-	$fechacreacion		=	date('Y-m-d');
-	$usuacrea			=	$_POST['usuacrea'];
-	//5 alquiler de canchas de noche - 2 alquiler de canchas de dia
-	if (mysql_result($resTraerTurrno,0,'horautilizacion') >= 18) {
-		$tipoventa			=	5;
-	} else {
-		$tipoventa			=	2;
+		
+		if ((integer)$res > 0) {
+			$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
+			$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+			$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+	
+			$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion,1);
+			$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion);
+			//descuento el saldo del cliente
+			$serviciosClientes->descontarSaldo($refcliente,$monto);
+			$res = '';
+		}
+	
+		echo $res;
 	}
-	$indefinido			=	1;
-	
-	$nocliente			=	mysql_result($resTraerTurrno,0,'cliente');
-
-	$res = $serviciosTurnos->insertarTurnoVerificado($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
-
-	
-	if ((integer)$res > 0) {
-		$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
-		$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
-		$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
-
-		$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion,1);
-		$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion);
-		//descuento el saldo del cliente
-		$serviciosClientes->descontarSaldo($refcliente,$monto);
-		$res = '';
-	}
-
-	echo $res;
-}
-
-
-
-
-
-
-function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes) {
-	$refcancha			=	$_POST['refcancha'];
-	$fechautilizacion	=	$_POST['fechautilizacion'];
-
 	
 	
-	$horautilizacion	=	$_POST['horautilizacion'];
-	$refcliente			=	$_POST['refcliente'];
-	$fechacreacion		=	'';
-	$usuacrea			=	$_POST['usuacrea'];
-	$tipoventa			=	$_POST['tipoventa'];
-	$indefinido			=	$_POST['indefinido'];
 	
-	$nocliente			=	$_POST['nocliente'];
-	$mesentero 			=	$_POST['mesentero'];
-
-	if ($refcliente == '') {
-		$refcliente = 0;
-	} else {
-		$nocliente = mysql_result($serviciosClientes->traerClientePorId($refcliente), 0,1);
-	}
-
-	//entra aca para cargar varios turnos a la vez
-	if ($mesentero == 1) {
-		$fechautilizacion2	=	$_POST['fechautilizacion2'];
-		$fechautilizacion3	=	$_POST['fechautilizacion3'];
-		$fechautilizacion4	=	$_POST['fechautilizacion4'];
-
-		if ($fechautilizacion2 != '0000-00-00') {
-			$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion2,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
-			if ((integer)$res > 0) {
-				$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
-				$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
-				$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
-
-				$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion2,1);
-				$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion2);
-				//descuento el saldo del cliente
-				$serviciosClientes->descontarSaldo($refcliente,$monto);
-				$res = '';
+	
+	
+	
+	function insertarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes) {
+		$refcancha			=	$_POST['refcancha'];
+		$fechautilizacion	=	$_POST['fechautilizacion'];
+	
+		
+		
+		$horautilizacion	=	$_POST['horautilizacion'];
+		$refcliente			=	$_POST['refcliente'];
+		$fechacreacion		=	'';
+		$usuacrea			=	$_POST['usuacrea'];
+		$tipoventa			=	$_POST['tipoventa'];
+		$indefinido			=	$_POST['indefinido'];
+		
+		$nocliente			=	$_POST['nocliente'];
+		$mesentero 			=	$_POST['mesentero'];
+	
+		if ($refcliente == '') {
+			$refcliente = 0;
+		} else {
+			$nocliente = mysql_result($serviciosClientes->traerClientePorId($refcliente), 0,1);
+		}
+	
+		//entra aca para cargar varios turnos a la vez
+		if ($mesentero == 1) {
+			$fechautilizacion2	=	$_POST['fechautilizacion2'];
+			$fechautilizacion3	=	$_POST['fechautilizacion3'];
+			$fechautilizacion4	=	$_POST['fechautilizacion4'];
+	
+			if ($fechautilizacion2 != '0000-00-00') {
+				$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion2,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
+				if ((integer)$res > 0) {
+					$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
+					$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+					$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+	
+					$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion2,1);
+					$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion2);
+					//descuento el saldo del cliente
+					$serviciosClientes->descontarSaldo($refcliente,$monto);
+					$res = '';
+				}
+	
 			}
-
+			
+			if ($fechautilizacion3 != '0000-00-00') {
+				$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion3,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
+				if ((integer)$res > 0) {
+					$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
+					$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+					$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+	
+					$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion3,1);
+					$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion3);
+					//descuento el saldo del cliente
+					$serviciosClientes->descontarSaldo($refcliente,$monto);
+					$res = '';
+				}
+			}
+	
+			if ($fechautilizacion4 != '0000-00-00') {
+				$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion4,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
+				if ((integer)$res > 0) {
+					$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
+					$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+					$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+	
+					$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion4,1);
+					$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion4);
+					//descuento el saldo del cliente
+					$serviciosClientes->descontarSaldo($refcliente,$monto);
+					$res = '';
+				}
+			}
+			
+			
+		}
+		//fin del ems entero
+		
+		//gravo el turno
+		$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
+	
+		if ((integer)$res > 0) {
+			$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
+			$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+			$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+	
+			$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion,1);
+			$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion);
+			//descuento el saldo del cliente
+			$serviciosClientes->descontarSaldo($refcliente,$monto);
+			$res = '';
+		}
+	
+		echo $res;
+	}
+	
+	function eliminarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes) {
+		$id 		=	$_POST['id'];
+		$usuacrea	=	$_POST['usuacrea'];
+		
+		$turno = $serviciosTurnos->traerTurnosPorId($id);
+		
+		$refcliente		= mysql_result($turno,0,4);
+		$refcancha		= mysql_result($turno,0,1);
+		$res = $serviciosTurnos->eliminarTurno($id);
+		$res = '';
+		if ($res == '') {
+			$cancha 	= mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
+			
+			$mov		= $serviciosVentas->traerIdVenta($id,'Canchas');
+			
+			$idventa 	= mysql_result($mov,0,0);
+			$tipoventa	= mysql_result($mov,0,1);
+			
+			$monto 		= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+			$producto 	= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+			
+			$serviciosVentas->modificarVenta($idventa,1,'Se cancelo el turno de la cancha: '.$cancha);
+			$$serviciosMovimientos->insertarMovimiento($tipoventa,$idventa,-1*$monto,'',$usuacrea,$id,'Alquiler de '.$cancha." Cancelado");
+			//descuento el saldo del cliente
+			$serviciosClientes->cargarSaldo($refcliente,$monto);
+		}
+		//echo $c."-".$d;
+		echo $res;
+	}
+	
+	
+	function modificarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes) {
+		$id 				=	$_POST['id'];
+		$refcancha			=	$_POST['refcancha'];
+		$fechautilizacion	=	$_POST['fechautilizacion'];
+		$horautilizacion	=	$_POST['horautilizacion'];
+		$refcliente			=	$_POST['refcliente'];
+		$fechacreacion		=	'';
+		$indefinido			=	$_POST['indefinido'];
+		$usuacrea			=	$_POST['usuacrea'];
+		$tipoventa			=	$_POST['tipoventa'];
+		
+		$res = $serviciosTurnos->modificarTurno($id,$refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$indefinido);	
+		
+		if ($res == '') {
+			$cancha 	= mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
+			$monto 		= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+			$producto 	= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+			
+			$mov		= $serviciosVentas->traerIdVenta($id,'Canchas');
+			
+			$idmov		= mysql_result($mov,0,2);
+			$idventa 	= mysql_result($mov,0,0);
+			$montoSaldo = mysql_result($mov,0,3);
+			
+			$serviciosVentas->eliminarVenta($idventa);
+			$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion,1);
+			
+			$serviciosMovimientos->eliminarMovimiento($idmov);
+			
+			$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,'',$usuacrea,$id,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion);
+			
+			//devuelvo el saldo y descuento el saldo del cliente
+			$serviciosClientes->cargarSaldo($refcliente,$montoSaldo);
+			
+			$serviciosClientes->descontarSaldo($refcliente,$monto);
 		}
 		
-		if ($fechautilizacion3 != '0000-00-00') {
-			$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion3,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
-			if ((integer)$res > 0) {
-				$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
-				$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
-				$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
-
-				$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion3,1);
-				$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion3);
-				//descuento el saldo del cliente
-				$serviciosClientes->descontarSaldo($refcliente,$monto);
-				$res = '';
-			}
-		}
-
-		if ($fechautilizacion4 != '0000-00-00') {
-			$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion4,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
-			if ((integer)$res > 0) {
-				$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
-				$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
-				$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
-
-				$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion4,1);
-				$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion4);
-				//descuento el saldo del cliente
-				$serviciosClientes->descontarSaldo($refcliente,$monto);
-				$res = '';
-			}
+		echo $res;
+	}
+	
+	
+	
+	function insertarDetalle($serviciosVentas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosProductos) {
+		$id  		= $_POST['id'];
+		$producto 	= $_POST['producto'];
+		$cantidad 	= $_POST['cantidad'];
+		$monto 		= $_POST['monto'];
+		$tipoventa  = $_POST['tipoventa'];
+		$usuacrea	= $_POST['usuacrea'];
+		$tipoventa	=	$_POST['tipoventa'];
+		
+		$res = $serviciosVentas->insertarVenta($id,$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Venta de Productos',$cantidad);
+		
+		if ((integer)$res > 0) {
+			$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+			$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+	
+			$serviciosMovimientos->insertarMovimiento($tipoventa,$res,$monto,'',$usuacrea,$id,'Venta de las heladeras');
+			
+			$serviciosProductos->descontarStock($id,$cantidad);
+			$res = '';
 		}
 		
 		
+		echo $res;
 	}
-	//fin del ems entero
 	
-	//gravo el turno
-	$res = $serviciosTurnos->insertarTurno($refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$nocliente,$indefinido);
-
-	if ((integer)$res > 0) {
-		$cancha = mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
-		$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
-		$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
-
-		$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion,1);
-		$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,$fechacreacion,$usuacrea,$res,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion);
-		//descuento el saldo del cliente
-		$serviciosClientes->descontarSaldo($refcliente,$monto);
-		$res = '';
+	
+	function insertarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
+		$nombre		=	$_POST['nombre'];
+		$dia 		=	$_POST['dia'];
+		$horadesde  =	$_POST['horadesde'];
+		$horahasta  =	$_POST['horahasta'];
+		$concatering=	$_POST['concatering'];
+		$tipoventa	=	$_POST['tipoventa'];
+		$usuacrea 	=	$_POST['usuacrea'];
+		$saldo		=	$_POST['saldo'];
+		
+		$res = $serviciosFiestas->insertarFiesta($nombre,$horadesde,$horahasta,$dia,$concatering,$saldo);
+		
+		if ((integer)$res > 0) {
+			$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+			$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+	
+			$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de Fiesta',1);
+			$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,'',$usuacrea,$res,'Alquiler de Fiesta');
+			
+			$res = '';
+		}
+		
+		echo $res;
 	}
+	
+	
+	function modificarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
+		$id 		=	$_POST['id'];
+		$nombre		=	$_POST['nombre'];
+		$horadesde	=	$_POST['horadesde'];
+		$horahasta  =	$_POST['horahasta'];
+		$dia 		=	$_POST['dia'];
+		$concatering=	$_POST['concatering'];
+		$tipoventa	=	$_POST['tipoventa'];
+		$usuacrea 	=	$_POST['usuacrea'];
+		$saldo		=	$_POST['saldo'];
+		
+		$res = $serviciosFiestas->modificarFiesta($id,$nombre,$horadesde,$horahasta,$dia,$concatering,$saldo);
+		
+		if ($res == '') {
+			$monto 		= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+			$producto 	= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+			
+			$mov		= $serviciosVentas->traerIdVenta($id,'Fiestas');
+			
+			$idmov		= mysql_result($mov,0,2);
+			$idventa 	= mysql_result($mov,0,0);
+			
+			$serviciosVentas->eliminarVenta($idventa);
+			$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de Fiesta',1);
+			
+			$serviciosMovimientos->eliminarMovimiento($idmov);
+			
+			$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,'',$usuacrea,$id,'Alquiler de Fiesta');
+			
+		}
+		//echo $c;
+		echo $res;
+	}
+	
+	function eliminarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
+		$id 	=	$_POST['id'];
+		$usuacrea			=	$_POST['usuacrea'];
+		
+		$res = $serviciosFiestas->eliminarFiesta($id);
+		
+		if ($res == '') {
+			
+			$mov		= $serviciosVentas->traerIdVenta($id,'Fiestas');
+			
+			$idventa 		= mysql_result($mov,0,0);
+			$tipoventa	= mysql_result($mov,0,1);
+			
+			$monto 		= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
+			$producto 	= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
+			
+			$serviciosVentas->modificarVenta($idventa,1,'Se cancelo la fiesta ');
+			$serviciosMovimientos->insertarMovimiento($tipoventa,$idventa,0,'',$usuacrea,$id,'Alquiler de Fiesta cancelado');
+		}
+		
+		echo $res;
+	}
+/*************************** fin de las funciones que trabajan con los movimientos *************************/
 
-	echo $res;
+/* para las importaciones y exportaciones */
+
+function exportarweb($serviciosExportar) {
+	$res = $serviciosExportar->ExportarWeb();
+	echo $res;	
 }
 
-function eliminarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes) {
-	$id 		=	$_POST['id'];
-	$usuacrea	=	$_POST['usuacrea'];
-	
-	$turno = $serviciosTurnos->traerTurnosPorId($id);
-	
-	$refcliente		= mysql_result($turno,0,4);
-	$refcancha		= mysql_result($turno,0,1);
-	$res = $serviciosTurnos->eliminarTurno($id);
-	$res = '';
-	if ($res == '') {
-		$cancha 	= mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
-		
-		$mov		= $serviciosVentas->traerIdVenta($id,'Canchas');
-		
-		$idventa 	= mysql_result($mov,0,0);
-		$tipoventa	= mysql_result($mov,0,1);
-		
-		$monto 		= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
-		$producto 	= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
-		
-		$serviciosVentas->modificarVenta($idventa,1,'Se cancelo el turno de la cancha: '.$cancha);
-		$$serviciosMovimientos->insertarMovimiento($tipoventa,$idventa,-1*$monto,'',$usuacrea,$id,'Alquiler de '.$cancha." Cancelado");
-		//descuento el saldo del cliente
-		$serviciosClientes->cargarSaldo($refcliente,$monto);
-	}
-	//echo $c."-".$d;
-	echo $res;
+function exportarlocal($serviciosExportar) {
+	$res = $serviciosExportar->ExportarLocal();
+	echo $res;	
 }
 
-
-function modificarTurno($serviciosTurnos,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosClientes) {
-	$id 				=	$_POST['id'];
-	$refcancha			=	$_POST['refcancha'];
-	$fechautilizacion	=	$_POST['fechautilizacion'];
-	$horautilizacion	=	$_POST['horautilizacion'];
-	$refcliente			=	$_POST['refcliente'];
-	$fechacreacion		=	'';
-	$indefinido			=	$_POST['indefinido'];
-	$usuacrea			=	$_POST['usuacrea'];
-	$tipoventa			=	$_POST['tipoventa'];
-	
-	$res = $serviciosTurnos->modificarTurno($id,$refcancha,$fechautilizacion,$horautilizacion,$refcliente,$fechacreacion,$usuacrea,$indefinido);	
-	
-	if ($res == '') {
-		$cancha 	= mysql_result($serviciosTurnos->traerCanchasId($refcancha),0,0);
-		$monto 		= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
-		$producto 	= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
-		
-		$mov		= $serviciosVentas->traerIdVenta($id,'Canchas');
-		
-		$idmov		= mysql_result($mov,0,2);
-		$idventa 	= mysql_result($mov,0,0);
-		$montoSaldo = mysql_result($mov,0,3);
-		
-		$serviciosVentas->eliminarVenta($idventa);
-		$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion,1);
-		
-		$serviciosMovimientos->eliminarMovimiento($idmov);
-		
-		$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,'',$usuacrea,$id,'Alquiler de '.$cancha.' Fecha:'.$fechautilizacion);
-		
-		//devuelvo el saldo y descuento el saldo del cliente
-		$serviciosClientes->cargarSaldo($refcliente,$montoSaldo);
-		
-		$serviciosClientes->descontarSaldo($refcliente,$monto);
-	}
-	
-	echo $res;
-}
-
-
-
-function insertarDetalle($serviciosVentas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos,$serviciosProductos) {
-	$id  		= $_POST['id'];
-	$producto 	= $_POST['producto'];
-	$cantidad 	= $_POST['cantidad'];
-	$monto 		= $_POST['monto'];
-	$tipoventa  = $_POST['tipoventa'];
-	$usuacrea	= $_POST['usuacrea'];
-	$tipoventa	=	$_POST['tipoventa'];
-	
-	$res = $serviciosVentas->insertarVenta($id,$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Venta de Productos',$cantidad);
-	
-	if ((integer)$res > 0) {
-		$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
-		$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
-
-		$serviciosMovimientos->insertarMovimiento($tipoventa,$res,$monto,'',$usuacrea,$id,'Venta de las heladeras');
-		
-		$serviciosProductos->descontarStock($id,$cantidad);
-		$res = '';
-	}
-	
-	
-	echo $res;
+function importar($serviciosImportar) {
+	$archivo = $_FILES['archivo']['name'];
+	$res = $serviciosImportar->Importar($archivo);
+	echo $res;	
 }
 
 
-function insertarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
-	$nombre		=	$_POST['nombre'];
-	$dia 		=	$_POST['dia'];
-	$horadesde  =	$_POST['horadesde'];
-	$horahasta  =	$_POST['horahasta'];
-	$concatering=	$_POST['concatering'];
-	$tipoventa	=	$_POST['tipoventa'];
-	$usuacrea 	=	$_POST['usuacrea'];
-	$saldo		=	$_POST['saldo'];
-	
-	$res = $serviciosFiestas->insertarFiesta($nombre,$horadesde,$horahasta,$dia,$concatering,$saldo);
-	
-	if ((integer)$res > 0) {
-		$monto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
-		$producto = mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
-
-		$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de Fiesta',1);
-		$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,'',$usuacrea,$res,'Alquiler de Fiesta');
-		
-		$res = '';
-	}
-	
-	echo $res;
-}
-
-
-function modificarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
-	$id 		=	$_POST['id'];
-	$nombre		=	$_POST['nombre'];
-	$horadesde	=	$_POST['horadesde'];
-	$horahasta  =	$_POST['horahasta'];
-	$dia 		=	$_POST['dia'];
-	$concatering=	$_POST['concatering'];
-	$tipoventa	=	$_POST['tipoventa'];
-	$usuacrea 	=	$_POST['usuacrea'];
-	$saldo		=	$_POST['saldo'];
-	
-	$res = $serviciosFiestas->modificarFiesta($id,$nombre,$horadesde,$horahasta,$dia,$concatering,$saldo);
-	
-	if ($res == '') {
-		$monto 		= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
-		$producto 	= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
-		
-		$mov		= $serviciosVentas->traerIdVenta($id,'Fiestas');
-		
-		$idmov		= mysql_result($mov,0,2);
-		$idventa 	= mysql_result($mov,0,0);
-		
-		$serviciosVentas->eliminarVenta($idventa);
-		$resVenta = $serviciosVentas->insertarVenta('',$tipoventa,$monto,'',0,$usuacrea,'','',$producto,'Alquiler de Fiesta',1);
-		
-		$serviciosMovimientos->eliminarMovimiento($idmov);
-		
-		$serviciosMovimientos->insertarMovimiento($tipoventa,$resVenta,$monto,'',$usuacrea,$id,'Alquiler de Fiesta');
-		
-	}
-	//echo $c;
-	echo $res;
-}
-
-function eliminarFiesta($serviciosFiestas,$serviciosVentas,$serviciosConfiguraciones,$serviciosMovimientos) {
-	$id 	=	$_POST['id'];
-	$usuacrea			=	$_POST['usuacrea'];
-	
-	$res = $serviciosFiestas->eliminarFiesta($id);
-	
-	if ($res == '') {
-		
-		$mov		= $serviciosVentas->traerIdVenta($id,'Fiestas');
-		
-		$idventa 		= mysql_result($mov,0,0);
-		$tipoventa	= mysql_result($mov,0,1);
-		
-		$monto 		= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,'precio');
-		$producto 	= mysql_result($serviciosConfiguraciones->traerTipoVentaId($tipoventa), 0,3);
-		
-		$serviciosVentas->modificarVenta($idventa,1,'Se cancelo la fiesta ');
-		$serviciosMovimientos->insertarMovimiento($tipoventa,$idventa,0,'',$usuacrea,$id,'Alquiler de Fiesta cancelado');
-	}
-	
-	echo $res;
-}
-/* fin de las funciones que trabajan con los movimientos */
-
+/*************************** fin del importar exportar *******************/
 
 
 function insertarUsuario($serviciosUsuarios) {
@@ -878,7 +911,10 @@ function modificarProducto($serviciosProductos) {
 	$codigobarra	=	$_POST['codigobarra'];
 	$caracteristicas=	$_POST['caracteristicas'];
 	$egreso			=	$_POST['egreso'];
-
+	
+	//cargo un movimiento en la tabla de movimientos de los productos, para llevar un historial.
+	
+	
 	$res 			= $serviciosProductos->modificarProducto($id,$nombre, $precio_unit, $precio_venta, $stock, $stock_min, $reftipoproducto, $refproveedor, $codigo, $codigobarra, $caracteristicas, $egreso);
 	echo $res;
 }

@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-			$('.icodashboard2, .icoventas2,.icotorta2, .icopersonal2, .icoadministrativo2, .icousuarios2,.icoconfiguracion2 , .icoturnos2, .icoproductos2, .icoreportes2, .icocontratos2, .icosalir2').click(function() {
+			$('.icodashboard2, .icoventas2,.icotorta2, .icopersonal2, .icoadministrativo2, .icousuarios2,.icoconfiguracion2 , .icoturnos2, .icoproductos2, .icoreportes2, .icocontratos2, .icosalir2, .icoexportar2, .icoimportar2').click(function() {
 				$('.menuHober').hide();
 				$('.todoMenu').show(100, function() {
 					$('#navigation').animate({'margin-left':'0px'}, {
@@ -206,6 +206,36 @@ $( document ).ready(function() {
 						
 						$("#tooltip13").mouseover(function(){
 							$("#tooltip13").mousemove(function(e){
+								 $(this).next().css({left : e.pageX , top: e.pageY});
+							  });
+							eleOffset = $(this).offset();
+							$(this).next().fadeIn("fast").css({
+								
+									left: eleOffset.left + $(this).outerWidth(),
+									top: eleOffset.top
+
+								});
+						}).mouseout(function(){
+							$(this).next().fadeOut("fast");
+						});
+						
+						$("#tooltip14").mouseover(function(){
+							$("#tooltip14").mousemove(function(e){
+								 $(this).next().css({left : e.pageX , top: e.pageY});
+							  });
+							eleOffset = $(this).offset();
+							$(this).next().fadeIn("fast").css({
+								
+									left: eleOffset.left + $(this).outerWidth(),
+									top: eleOffset.top
+
+								});
+						}).mouseout(function(){
+							$(this).next().fadeOut("fast");
+						});
+						
+						$("#tooltip15").mouseover(function(){
+							$("#tooltip15").mousemove(function(e){
 								 $(this).next().css({left : e.pageX , top: e.pageY});
 							  });
 							eleOffset = $(this).offset();
