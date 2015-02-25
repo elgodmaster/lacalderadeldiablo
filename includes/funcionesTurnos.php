@@ -74,53 +74,144 @@ function traerTurnosPorDia($fecha) {
 }
 
 function traerTurnosPorDiaAgrupado($fecha) {
-	$sql = "select 
-			    max(case
-			        when t.refcancha = 1 then t.cliente
-			        else ''
-			    end) as Cancha1,
-			    max(case
-			        when t.refcancha = 2 then t.cliente
-			        else ''
-			    end) as Cancha2,
-			    max(case
-			        when t.refcancha = 3 then t.cliente
-			        else ''
-			    end) as Cancha3,
-				max(case
-			        when t.refcancha = 1 then abs(t.indefinido)
-			        else ''
-			    end) as indefinido1,
-			    max(case
-			        when t.refcancha = 2 then abs(t.indefinido)
-			        else ''
-			    end) as indefinido2,
-			    max(case
-			        when t.refcancha = 3 then abs(t.indefinido)
-			        else ''
-			    end) as indefinido3,
-				max(case
-			        when t.refcancha = 1 then t.idturno
-			        else ''
-			    end) as turno1,
-			    max(case
-			        when t.refcancha = 2 then t.idturno
-			        else ''
-			    end) as turno2,
-			    max(case
-			        when t.refcancha = 3 then t.idturno
-			        else ''
-			    end) as turno3,
-			    max(t.fechautilizacion) as fechautilizacion,
-			    t.horautilizacion
+	$sql = "select
+	
+				max(r.Cancha1) as Cancha1,
+				max(r.Cancha2) as Cancha2,
+				max(r.Cancha3) as Cancha3,
+				max(r.indefinido1) as indefinido1,
+				max(r.indefinido2) as indefinido2,
+				max(r.indefinido3) as indefinido3,
+				max(r.turno1) as turno1,
+				max(r.turno2) as turno2,
+				max(r.turno3) as turno3,
+				max(r.fechautilizacion1) as fechautilizacion1,
+				max(r.fechautilizacion2) as fechautilizacion2,
+				max(r.fechautilizacion3) as fechautilizacion3,
+				r.horautilizacion
+			
 			from
-			    lcdd_turnos t
-			        left join
-			    lcdd_clientes c ON t.refcliente = c.idcliente
-			where
-			    WEEKDAY(t.fechautilizacion) = WEEKDAY('".$fecha."') and t.activo = 1
-			group by t.horautilizacion
-			order by t.horautilizacion";
+				(select 
+							max(case
+								when t.refcancha = 1 then t.cliente
+								else ''
+							end) as Cancha1,
+							max(case
+								when t.refcancha = 2 then t.cliente
+								else ''
+							end) as Cancha2,
+							max(case
+								when t.refcancha = 3 then t.cliente
+								else ''
+							end) as Cancha3,
+							 max(case
+								when t.refcancha = 1 then abs(t.indefinido)
+								else ''
+							end) as indefinido1,
+							max(case
+								when t.refcancha = 2 then abs(t.indefinido)
+								else ''
+							end) as indefinido2,
+							max(case
+								when t.refcancha = 3 then abs(t.indefinido)
+								else ''
+							end) as indefinido3,
+							max(case
+								when t.refcancha = 1 then t.idturno
+								else ''
+							end) as turno1,
+							max(case
+								when t.refcancha = 2 then t.idturno
+								else ''
+							end) as turno2,
+							max(case
+								when t.refcancha = 3 then t.idturno
+								else ''
+							end) as turno3,
+							max(case
+								when t.refcancha = 1 then t.fechautilizacion
+								else ''
+							end) as fechautilizacion1,
+							max(case
+								when t.refcancha = 2 then t.fechautilizacion
+								else ''
+							end) as fechautilizacion2,
+							max(case
+								when t.refcancha = 3 then t.fechautilizacion
+								else ''
+							end) as fechautilizacion3,
+							t.horautilizacion
+						from
+							lcdd_turnos t
+								left join
+							lcdd_clientes c ON t.refcliente = c.idcliente
+						where
+							WEEKDAY(t.fechautilizacion) = WEEKDAY('".$fecha."') and t.activo = 1 and t.indefinido = 1
+						group by t.horautilizacion
+			
+			
+				union all
+			
+				select 
+							max(case
+								when t.refcancha = 1 then t.cliente
+								else ''
+							end) as Cancha1,
+							max(case
+								when t.refcancha = 2 then t.cliente
+								else ''
+							end) as Cancha2,
+							max(case
+								when t.refcancha = 3 then t.cliente
+								else ''
+							end) as Cancha3,
+							 max(case
+								when t.refcancha = 1 then abs(t.indefinido)
+								else ''
+							end) as indefinido1,
+							max(case
+								when t.refcancha = 2 then abs(t.indefinido)
+								else ''
+							end) as indefinido2,
+							max(case
+								when t.refcancha = 3 then abs(t.indefinido)
+								else ''
+							end) as indefinido3,
+							max(case
+								when t.refcancha = 1 then t.idturno
+								else ''
+							end) as turno1,
+							max(case
+								when t.refcancha = 2 then t.idturno
+								else ''
+							end) as turno2,
+							max(case
+								when t.refcancha = 3 then t.idturno
+								else ''
+							end) as turno3,
+							max(case
+								when t.refcancha = 1 then t.fechautilizacion
+								else ''
+							end) as fechautilizacion1,
+							max(case
+								when t.refcancha = 2 then t.fechautilizacion
+								else ''
+							end) as fechautilizacion2,
+							max(case
+								when t.refcancha = 3 then t.fechautilizacion
+								else ''
+							end) as fechautilizacion3,
+							t.horautilizacion
+						from
+							lcdd_turnos t
+								left join
+							lcdd_clientes c ON t.refcliente = c.idcliente
+						where
+							t.fechautilizacion = '".$fecha."' and t.activo = 1 and t.indefinido = 0
+						group by t.horautilizacion
+			) r
+			group by r.horautilizacion
+			order by r.horautilizacion";
 	$res = $this->query($sql,0);
 	return $res;
 }
