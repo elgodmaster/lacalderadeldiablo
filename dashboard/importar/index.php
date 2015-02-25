@@ -2,7 +2,7 @@
 
 session_start();
 
-if ((!isset($_SESSION['usua_se'])) || ($_SESSION['rol_se']!= 'SuperAdmin'))
+if ((!isset($_SESSION['usua_se'])) || ($_SESSION['rol_se']== 'Empleado'))
 {
 	header('Location: /lacalderadeldiablo/vistas/');
 } else {
