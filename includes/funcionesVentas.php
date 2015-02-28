@@ -204,7 +204,7 @@ function traerVentasPorDiaEntero() {
 				        INNER JOIN
 				    lcdd_valores vv ON tv.refvalores = vv.idvalor
 				WHERE
-				    vv.descripcion IN ('Canchas' , 'Fiestas', 'Productos')
+				    vv.descripcion IN ('Productos')
 				        AND v.cancelado = 0
 				        and (date(v.fechacreacion) = date(now()) or (date(v.fechacreacion) = date(DATE_ADD(NOW(), INTERVAL 1 DAY)) and hour(v.fechacreacion)<3))
 				ORDER BY v.fechacreacion DESC";
