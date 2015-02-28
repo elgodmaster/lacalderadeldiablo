@@ -194,7 +194,8 @@ function traerVentasPorDiaEntero() {
 				    p.codigo,
 				    p.precio_unit,
 				    tv.detalle,
-				    v.cantidad
+				    v.cantidad,
+    				p.egreso
 				FROM
 				    lcdd_ventas v
 				        INNER JOIN
