@@ -241,7 +241,7 @@ $stockminimo = $serviciosProductos->traerProductosStockMin();
     </div>
     <div class="boxInfo">
         <div id="headBoxInfo">
-        	<p style="color: #fff; font-size:18px; height:16px;">Ultimas 10 Ventas  <button type="button" class="btn btn-default btn-xs nuevoVentas">
+        	<p style="color: #fff; font-size:18px; height:16px;">Ultimas Ventas  <button type="button" class="btn btn-default btn-xs nuevoVentas">
   <span class="glyphicon glyphicon-plus-sign"><span style="padding-left:3px;">Nuevo</span></button></p>
         </div>
     	<div class="cuerpoBox">
@@ -259,11 +259,15 @@ $stockminimo = $serviciosProductos->traerProductosStockMin();
                 	<?php
 						if (mysql_num_rows($resVentas)>0) {
 							$cant = 0;
+                            $total = 0;
+                            $totalEgreso = 0;
 							while ($row = mysql_fetch_array($resVentas)) {
 								$cant+=1;
-								if ($cant == 11) {
-									break;	
-								}
+                                if ($row['egreso'] == 0) {
+                                    $total = $total + $row['importe'];
+                                } else {
+                                    $totalEgreso = $totalEgreso + $row['importe'];
+                                }
 					?>
                     	<tr>
                         	<td><?php echo utf8_encode($row['detalle']); ?></td>
@@ -276,6 +280,10 @@ $stockminimo = $serviciosProductos->traerProductosStockMin();
                     <?php } else { ?>
                     	<h3>No hay ventas cargados.</h3>
                     <?php } ?>
+                    <tr>
+                        <td colspan="2" class="success"><b>Total ingresado:$ <?php echo $total; ?></b></td>
+                        <td colspan="2" class="warning"><b>Dinero que salio:$ <?php echo $totalEgreso; ?></b></td>
+                    </tr>
                 </tbody>
             </table>
     	</div>
