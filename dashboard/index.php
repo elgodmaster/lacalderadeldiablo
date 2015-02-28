@@ -47,9 +47,9 @@ $cantFiestas = mysql_num_rows($serviciosFiestas->traerFiestasPost($fecha));
 
 $resFiestas = $serviciosFiestas->traerFiestasPost($fecha);
 
-$resVentas = $serviciosVentas->traerVenta();
+$resVentas = $serviciosVentas->traerVentasPorDiaEntero();
 
-$cantVentas = mysql_num_rows($serviciosVentas->traerVenta());
+$cantVentas = mysql_num_rows($serviciosVentas->traerVentasPorDiaEntero());
 
 $stockminimo = $serviciosProductos->traerProductosStockMin();
 
