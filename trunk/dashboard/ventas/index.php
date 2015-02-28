@@ -269,6 +269,13 @@ $(document).ready(function(){
 							$('#stock').html(prod[2]);
 							$('#carateristicas').html(prod[5]);
 							$('#idprod').val(prod[6]);
+
+							monto = prod[1] * parseInt($('#cantidad').val());
+        					$('.detalle').prepend('<tr><td>'+prod[6]+'</td><td>'+prod[0]+' '+prod[5]+'</td><td>'+$('#cantidad').val()+'</td><td>'+monto+'</td><td><button type="button" class="btn btn-danger eliminarfila" id="eliminar" style="margin-left:0px;">Eliminar</button></td></tr>');
+		
+							$('#total').val(SumarTabla());
+							$('#cantidad').val(1);
+							$(this).val('');
 						}
 					}
 			});
@@ -338,6 +345,12 @@ $(document).ready(function(){
 											
     });
 	
+	function AgregarRapido() {
+		monto = parseFloat($('#precio').val()) * parseInt($('#cantidad').val());
+        $('.detalle').prepend('<tr><td>'+$('#idprod').val()+'</td><td>'+$('#producto').html()+' '+$('#carateristicas').html()+'</td><td>'+$('#cantidad').val()+'</td><td>'+monto+'</td><td><button type="button" class="btn btn-danger eliminarfila" id="eliminar" style="margin-left:0px;">Eliminar</button></td></tr>');
+		
+		$('#total').val(SumarTabla());
+	}
 	
 	$('#agregar').click(function(e) {
 		monto = parseFloat($('#precio').val()) * parseInt($('#cantidad').val());
@@ -456,37 +469,47 @@ $(document).ready(function(){
 	
 	$('#codbarra').keypress(function() {
 		//alert($(this).val().length);
-		
-        if ($(this).val().length >12) {
+		if (parseInt($(this).val())>0) {
+	        if ($(this).val().length >12) {
 
+				
+				$.ajax({
+						data:  {idproducto: $("#codbarra").val(),
+								accion: 'traerProductoVentaBarra'},
+						url:   '../../ajax/ajax.php',
+						type:  'post',
+						beforeSend: function () {
+								
+						},
+						success:  function (response) {
+							if (response == '') {
+								$('#precio').val('');
+								$('#precioprod').html('');
+								$('#producto').html('');
+								$('#stock').html('');
+								$('#carateristicas').html('');
+								$('#idprod').val();
+							} else {
+								prod = response.split('##');
+								$('#precio').val(prod[1]);
+								$('#precioprod').html(prod[1]);
+								$('#producto').html(prod[0]);
+								$('#stock').html(prod[2]);
+								$('#carateristicas').html(prod[5]);
+								$('#idprod').val(prod[6]);
+
+								monto = prod[1] * parseInt($('#cantidad').val());
+	        					$('.detalle').prepend('<tr><td>'+prod[6]+'</td><td>'+prod[0]+' '+prod[5]+'</td><td>'+$('#cantidad').val()+'</td><td>'+monto+'</td><td><button type="button" class="btn btn-danger eliminarfila" id="eliminar" style="margin-left:0px;">Eliminar</button></td></tr>');
 			
-			$.ajax({
-					data:  {idproducto: $("#codbarra").val(),
-							accion: 'traerProductoVentaBarra'},
-					url:   '../../ajax/ajax.php',
-					type:  'post',
-					beforeSend: function () {
-							
-					},
-					success:  function (response) {
-						if (response == '') {
-							$('#precio').val('');
-							$('#precioprod').html('');
-							$('#producto').html('');
-							$('#stock').html('');
-							$('#carateristicas').html('');
-							$('#idprod').val();
-						} else {
-							prod = response.split('##');
-							$('#precio').val(prod[1]);
-							$('#precioprod').html(prod[1]);
-							$('#producto').html(prod[0]);
-							$('#stock').html(prod[2]);
-							$('#carateristicas').html(prod[5]);
-							$('#idprod').val(prod[6]);
+								$('#total').val(SumarTabla());
+								$('#cantidad').val(1);
+								$(this).val('');
+							}
 						}
-					}
-			});
+				});
+
+
+			}
 		}
     });
 	
