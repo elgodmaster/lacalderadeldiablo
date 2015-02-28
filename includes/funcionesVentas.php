@@ -177,6 +177,46 @@ function traerVenta() {
 	}
 }
 
+function traerVentasPorDiaEntero() {
+	$sql	=	"SELECT 
+				    v.idventa,
+				    v.refproducto,
+				    v.reftipoventa,
+				    v.importe,
+				    v.fechacreacion,
+				    v.cancelado,
+				    v.usuacrea,
+				    v.fechamodificacion,
+				    v.usuamodi,
+				    v.concepto,
+				    v.observaciones,
+				    p.nombre,
+				    p.codigo,
+				    p.precio_unit,
+				    tv.detalle,
+				    v.cantidad
+				FROM
+				    lcdd_ventas v
+				        INNER JOIN
+				    lcdd_tipoventa tv ON v.reftipoventa = tv.idtipoventa
+				        LEFT JOIN
+				    lcdd_productos p ON v.refproducto = p.idproducto
+				        INNER JOIN
+				    lcdd_valores vv ON tv.refvalores = vv.idvalor
+				WHERE
+				    vv.descripcion IN ('Canchas' , 'Fiestas', 'Productos')
+				        AND v.cancelado = 0
+				        and (date(v.fechacreacion) = date(now()) or (date(v.fechacreacion) = date(DATE_ADD(NOW(), INTERVAL 1 DAY)) and hour(v.fechacreacion)<3))
+				ORDER BY v.fechacreacion DESC";
+				
+	$res 	=	$this->query($sql,0);
+	if ($res == false) {
+		return 'Error al traer datos';
+	} else {
+		return $res;
+	}
+}
+
 
 
 /* fin */
