@@ -257,10 +257,11 @@ $stockminimo = $serviciosProductos->traerProductosStockMin();
                 <tbody>
 <!--idproducto,nombre,precio_unit,precio_venta,stock,stock_min,reftipoproducto,refproveedor,codigo,codigobarra,caracteristicas -->
                 	<?php
+						$total = 0;
+                            $totalEgreso = 0;
 						if (mysql_num_rows($resVentas)>0) {
 							$cant = 0;
-                            $total = 0;
-                            $totalEgreso = 0;
+                            
 							while ($row = mysql_fetch_array($resVentas)) {
 								$cant+=1;
                                 if ($row['egreso'] == 0) {
